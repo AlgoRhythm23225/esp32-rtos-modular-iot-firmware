@@ -1,0 +1,10 @@
+Command: ninja flash
+
+A fatal error occurred: Secure Boot V1 detected, writing to flash regions < 0x8000 is disabled to protect the bootloader. Use the force argument to override, please use with caution, otherwise it may brick your device!
+CMake Error at D:/esp/v6.0/esp-idf/components/esptool_py/run_serial_tool.cmake:67 (message):
+  
+  C:/Espressif/tools/python/v6.0/venv/Scripts/python.exe;-m;esptool;--chip;esp32
+  failed.
+
+
+
