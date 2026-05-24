@@ -50,3 +50,10 @@ uint8_t bme280_app_deinit(void);
  * @note   none
  */
 uint8_t bme280_I2C_init(void);
+
+/**         
+ * @brief  test if the app work
+ * @return none
+ * @note   none
+ */
+void bme280_app_test(void);

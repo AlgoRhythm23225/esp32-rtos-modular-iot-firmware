@@ -71,7 +71,7 @@ uint8_t bme280_interface_iic_init(void)
     i2c_device_config_t dev_cfg = {
         .dev_addr_length = I2C_ADDR_BIT_7,
         .device_address = BME280_ADDRESS,
-        .scl_speed_hz = 10000,                                      // 100k Hhz
+        .scl_speed_hz = 100000,                                      // 100k Hhz
     };
 
     ESP_ERROR_CHECK(i2c_master_bus_add_device(bus_handle, &dev_cfg, &dev_handle));
