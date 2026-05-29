@@ -4,6 +4,7 @@
 #define WIFI_SSID      "TuanNga"
 #define WIFI_PASSWORD  "vutuank61975"
 
-#define WIFI_MAXIMUM_RETRY 5
+#define WIFI_RETRY_BASE_DELAY_MS 1000
+#define WIFI_RETRY_MAX_DELAY_MS  30000
 
 #endif

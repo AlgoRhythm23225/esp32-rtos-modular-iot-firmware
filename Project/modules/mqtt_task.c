@@ -15,7 +15,9 @@
 #include "esp_netif.h"
 #include "esp_timer.h"
 #include "esp_tls.h"
+#include "esp_netif_ip_addr.h"
 #include "driver/gpio.h"
+#include "lwip/netdb.h"
 #include <stdlib.h>
 
 #define CORE_MQTT_CONFIG_H_
@@ -55,6 +57,115 @@ typedef struct NetworkContext NetworkContext_t;
 
 static MQTTContext_t mqtt_ctx;
 
+static uint32_t s_reconnect_delay_ms = MQTT_RECONNECT_DELAY_MS;
+
+static void reset_reconnect_backoff(void)
+{
+    s_reconnect_delay_ms = MQTT_RECONNECT_DELAY_MS;
+}
+
+static uint32_t next_reconnect_backoff_ms(void)
+{
+    uint32_t delay = s_reconnect_delay_ms;
+    if (s_reconnect_delay_ms < 60000U) {
+        s_reconnect_delay_ms = s_reconnect_delay_ms * 2U;
+        if (s_reconnect_delay_ms > 60000U) {
+            s_reconnect_delay_ms = 60000U;
+        }
+    }
+    return delay;
+}
+
+static bool is_wifi_connected(void)
+{
+    if (g_system_event_group == NULL) {
+        return false;
+    }
+    EventBits_t bits = xEventGroupGetBits(g_system_event_group);
+    return (bits & EVT_WIFI_CONNECTED) != 0;
+}
+
+static void log_dns_servers(void)
+{
+    esp_netif_t *netif = esp_netif_get_handle_from_ifkey("WIFI_STA_DEF");
+    if (netif == NULL) {
+        ESP_LOGW(TAG, "Cannot query DNS servers: STA netif not found");
+        return;
+    }
+
+    esp_netif_dns_info_t dns = {0};
+
+    if (esp_netif_get_dns_info(netif, ESP_NETIF_DNS_MAIN, &dns) == ESP_OK &&
+        dns.ip.type == ESP_IPADDR_TYPE_V4) {
+        ESP_LOGI(TAG, "DNS main: " IPSTR, IP2STR(&dns.ip.u_addr.ip4));
+    }
+
+    if (esp_netif_get_dns_info(netif, ESP_NETIF_DNS_BACKUP, &dns) == ESP_OK &&
+        dns.ip.type == ESP_IPADDR_TYPE_V4) {
+        ESP_LOGI(TAG, "DNS backup: " IPSTR, IP2STR(&dns.ip.u_addr.ip4));
+    }
+
+    if (esp_netif_get_dns_info(netif, ESP_NETIF_DNS_FALLBACK, &dns) == ESP_OK &&
+        dns.ip.type == ESP_IPADDR_TYPE_V4) {
+        ESP_LOGI(TAG, "DNS fallback: " IPSTR, IP2STR(&dns.ip.u_addr.ip4));
+    }
+}
+
+static bool wait_for_dns_and_internet_ready(const char *host)
+{
+    const uint32_t probe_interval_ms = 1000U;
+    const uint32_t max_wait_ms = 15000U;
+    uint32_t elapsed_ms = 0U;
+
+    while (elapsed_ms < max_wait_ms) {
+        struct addrinfo hints = {0};
+        struct addrinfo *res = NULL;
+        hints.ai_family = AF_INET;
+        hints.ai_socktype = SOCK_STREAM;
+
+        int err = getaddrinfo(host, NULL, &hints, &res);
+        if (err == 0 && res != NULL) {
+            freeaddrinfo(res);
+            return true;
+        }
+
+        if (res != NULL) {
+            freeaddrinfo(res);
+        }
+
+        ESP_LOGW(TAG, "DNS check failed for %s: getaddrinfo=%d", host, err);
+        vTaskDelay(pdMS_TO_TICKS(probe_interval_ms));
+        elapsed_ms += probe_interval_ms;
+    }
+
+    return false;
+}
+
+static bool wait_for_ip_stable(uint32_t max_wait_ms)
+{
+    const uint32_t probe_ms = 500U;
+    uint32_t elapsed_ms = 0U;
+
+    while (elapsed_ms < max_wait_ms) {
+        if (is_wifi_connected()) {
+            esp_netif_t *netif = esp_netif_get_handle_from_ifkey("WIFI_STA_DEF");
+            if (netif != NULL) {
+                esp_netif_ip_info_t ip_info;
+                if (esp_netif_get_ip_info(netif, &ip_info) == ESP_OK && ip_info.ip.addr != 0) {
+                    // Give routing stack a short settle window after got-ip.
+                    vTaskDelay(pdMS_TO_TICKS(1500U));
+                    return true;
+                }
+            }
+        }
+
+        vTaskDelay(pdMS_TO_TICKS(probe_ms));
+        elapsed_ms += probe_ms;
+    }
+
+    return false;
+}
+
 
 static int32_t tls_recv(NetworkContext_t *ctx, void *buf, size_t len){
     ssize_t n = esp_tls_conn_read(ctx->tls, buf, len);
@@ -62,6 +173,14 @@ static int32_t tls_recv(NetworkContext_t *ctx, void *buf, size_t len){
     if (n == 0) return -1;
     if (n == ESP_TLS_ERR_SSL_WANT_READ) return 0;
     if (errno == EAGAIN || errno == EWOULDBLOCK) return 0;
+
+    // Downgrade expected socket errors when Wi-Fi link is down.
+    if (!is_wifi_connected() &&
+        (errno == ENETUNREACH || errno == ENETDOWN || errno == ENOTCONN || errno == ECONNRESET)) {
+        ESP_LOGW(TAG, "TLS recv interrupted by WiFi disconnect (errno=%d)", errno);
+        return -1;
+    }
+
     ESP_LOGE(TAG, "TLS recv error %d (errno=%d)", (int)n, errno);
     return -1;
 }
@@ -72,6 +191,14 @@ static int32_t tls_send(NetworkContext_t *ctx, const void *buf, size_t len){
     if (n == 0) return -1;
     if (n == ESP_TLS_ERR_SSL_WANT_WRITE) return 0;
     if (errno == EAGAIN || errno == EWOULDBLOCK) return 0;
+
+    // Downgrade expected socket errors when Wi-Fi link is down.
+    if (!is_wifi_connected() &&
+        (errno == ENETUNREACH || errno == ENETDOWN || errno == ENOTCONN || errno == ECONNRESET)) {
+        ESP_LOGW(TAG, "TLS send interrupted by WiFi disconnect (errno=%d)", errno);
+        return -1;
+    }
+
     ESP_LOGE(TAG, "TLS send error %d (errno=%d)", (int)n, errno);
     return -1;
 }
@@ -90,6 +217,8 @@ static esp_tls_t * tlsconnect(const char *host, const char *port){
         .clientcert_bytes = (unsigned int)(device_crt_end - device_crt_start),
         .clientkey_buf    = device_key_start,
         .clientkey_bytes  = (unsigned int)(device_key_end - device_key_start),
+        .timeout_ms       = 15000,
+        .non_block        = false,
     };
     esp_tls_t *tls = esp_tls_init();
     if (tls == NULL) {
@@ -101,6 +230,14 @@ static esp_tls_t * tlsconnect(const char *host, const char *port){
         esp_tls_conn_destroy(tls);
         return NULL;
     }
+
+    // Keep recv timeout short so MQTT_Connect can retry within its deadline.
+    int sock = -1;
+    if (esp_tls_get_conn_sockfd(tls, &sock) == ESP_OK && sock >= 0) {
+        struct timeval tv = { .tv_sec = 1, .tv_usec = 0 };
+        setsockopt(sock, SOL_SOCKET, SO_RCVTIMEO, &tv, sizeof(tv));
+    }
+
     return tls;
 }
 
@@ -293,13 +430,31 @@ void mqtt_task(void *pvParameters)
     ESP_LOGI(TAG, "Waiting for WiFi...");
     xEventGroupWaitBits(g_system_event_group, EVT_WIFI_CONNECTED, pdFALSE, pdTRUE, portMAX_DELAY);
     ESP_LOGI(TAG, "WiFi ready, connecting to AWS IoT Core");
+    reset_reconnect_backoff();
 
     while (1) {
+        if (!wait_for_ip_stable(10000U)) {
+            uint32_t delay = next_reconnect_backoff_ms();
+            ESP_LOGW(TAG, "IP not stable yet, retry in %lu ms", (unsigned long)delay);
+            vTaskDelay(pdMS_TO_TICKS(delay));
+            continue;
+        }
+
+        // Check DNS/internet path before opening TLS.
+        log_dns_servers();
+        if (!wait_for_dns_and_internet_ready(AWS_ENDPOINT)) {
+            uint32_t delay = next_reconnect_backoff_ms();
+            ESP_LOGE(TAG, "DNS/internet not ready, retry in %lu ms", (unsigned long)delay);
+            vTaskDelay(pdMS_TO_TICKS(delay));
+            continue;
+        }
+
         //TLS connect 
         s_net_ctx.tls = tlsconnect(AWS_ENDPOINT, AWS_PORT);
         if (s_net_ctx.tls == NULL) {
-            ESP_LOGE(TAG, "TLS connect failed, retry in %d ms", MQTT_RECONNECT_DELAY_MS);
-            vTaskDelay(pdMS_TO_TICKS(MQTT_RECONNECT_DELAY_MS));
+            uint32_t delay = next_reconnect_backoff_ms();
+            ESP_LOGE(TAG, "TLS connect failed, retry in %lu ms", (unsigned long)delay);
+            vTaskDelay(pdMS_TO_TICKS(delay));
             continue;
         }
 
@@ -307,14 +462,16 @@ void mqtt_task(void *pvParameters)
         MQTTStatus_t status = mqtt_connect(&mqtt_ctx, &s_net_ctx,
                                             s_net_buf, sizeof(s_net_buf));
         if (status != MQTTSuccess) {
-            ESP_LOGE(TAG, "MQTT_Connect failed: %d, retry in %d ms",
-                     status, MQTT_RECONNECT_DELAY_MS);
+            uint32_t delay = next_reconnect_backoff_ms();
+            ESP_LOGE(TAG, "MQTT_Connect failed: %d, retry in %lu ms",
+                     status, (unsigned long)delay);
             tlsdisconnect(s_net_ctx.tls);
-            vTaskDelay(pdMS_TO_TICKS(MQTT_RECONNECT_DELAY_MS));
+            vTaskDelay(pdMS_TO_TICKS(delay));
             continue;
         }
 
         ESP_LOGI(TAG, "MQTT connected");
+        reset_reconnect_backoff();
 
         //Subscribe to command topics
         status = mqtt_subscribe_all(&mqtt_ctx);
@@ -341,7 +498,11 @@ void mqtt_task(void *pvParameters)
             // Process incoming MQTT packets (runs mqtt_event_cb)
             status = MQTT_ProcessLoop(&mqtt_ctx);
             if (status != MQTTSuccess) {
-                ESP_LOGE(TAG, "MQTT_ProcessLoop error: %d", status);
+                if (is_wifi_connected()) {
+                    ESP_LOGE(TAG, "MQTT_ProcessLoop error: %d", status);
+                } else {
+                    ESP_LOGW(TAG, "MQTT loop interrupted by WiFi disconnect");
+                }
                 break;
             }
 
@@ -352,8 +513,13 @@ void mqtt_task(void *pvParameters)
         xEventGroupClearBits(g_system_event_group, EVT_MQTT_CONNECTED);
         tlsdisconnect(s_net_ctx.tls);
 
-        ESP_LOGW(TAG, "MQTT disconnected, reconnecting in %d ms", MQTT_RECONNECT_DELAY_MS);
-        vTaskDelay(pdMS_TO_TICKS(MQTT_RECONNECT_DELAY_MS));
+        if (is_wifi_connected()) {
+            uint32_t delay = next_reconnect_backoff_ms();
+            ESP_LOGW(TAG, "MQTT disconnected, reconnecting in %lu ms", (unsigned long)delay);
+            vTaskDelay(pdMS_TO_TICKS(delay));
+        } else {
+            ESP_LOGW(TAG, "MQTT disconnected, waiting for WiFi");
+        }
 
         // Re-wait for WiFi
         xEventGroupWaitBits(g_system_event_group, EVT_WIFI_CONNECTED, pdFALSE, pdTRUE, portMAX_DELAY);

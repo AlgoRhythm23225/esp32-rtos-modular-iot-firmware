@@ -1,0 +1,262 @@
+Command: C:\Espressif\tools\python\v6.0\venv\Scripts\python.exe D:\esp\v6.0\esp-idf\tools/idf_monitor.py -p COM7 -b 115200 --toolchain-prefix xtensa-esp32-elf- --target esp32 --revision 0 C:\Users\Admin\Desktop\esp\FINAL_EXAM\esp32-modular-iot-firmware\Project\build\Project.elf C:\Users\Admin\Desktop\esp\FINAL_EXAM\esp32-modular-iot-firmware\Project\build\bootloader\bootloader.elf --force-color -m 'C:\Espressif\tools\python\v6.0\venv\Scripts\python.exe' 'D:\esp\v6.0\esp-idf\tools\idf.py' '-p' 'COM7'
+ (SPI_FAST_FLASH_BOOT)
+configsip: 0, SPIWP:0xee
+clk_drv:0x00,q_drv:0x00,d_drv:0x00,cs0_drv:0x00,hd_drv:0x00,wp_drv:0x00
+mode:DIO, clock div:2
+load:0x3fff00c0,len:9904
+load:0x40078000,len:25024
+ets Jul 29 2019 12:21:46
+
+rst:0x1 (POWERON_RESET),boot:0x13 (SPI_FAST_FLASH_BOOT)
+configsip: 0, SPIWP:0xee
+clk_drv:0x00,q_drv:0x00,d_drv:0x00,cs0_drv:0x00,hd_drv:0x00,wp_drv:0x00
+mode:DIO, clock div:2
+load:0x3fff00c0,len:9904
+load:0x40078000,len:25024
+load:0x40080400,len:3920
+entry 0x40080644
+[0;32mI (37) boot: ESP-IDF v6.0 2nd stage bootloader[0m
+[0;32mI (37) boot: compile time May 16 2026 21:51:28[0m
+[0;32mI (37) boot: Multicore bootloader[0m
+[0;32mI (38) boot: chip revision: v3.1[0m
+[0;32mI (41) boot.esp32: SPI Speed      : 40MHz[0m
+[0;32mI (45) boot.esp32: SPI Mode       : DIO[0m
+[0;32mI (48) boot.esp32: SPI Flash Size : 4MB[0m
+[0;32mI (52) boot: Enabling RNG early entropy source...[0m
+[0;32mI (56) boot: Partition Table:[0m
+[0;32mI (59) boot: ## Label            Usage          Type ST Offset   Length[0m
+[0;32mI (65) boot:  0 nvs              WiFi data        01 02 0000e000 00005000[0m
+[0;32mI (72) boot:  1 otadata          OTA data         01 00 00013000 00002000[0m
+[0;32mI (78) boot:  2 phy_init         RF data          01 01 00015000 00001000[0m
+[0;32mI (85) boot:  3 ota_0            OTA app          00 10 00020000 001e0000[0m
+[0;32mI (91) boot:  4 ota_1            OTA app          00 11 00200000 001e0000[0m
+[0;32mI (98) boot: End of partition table[0m
+[0;32mI (101) boot: No factory image, trying OTA 0[0m
+[0;32mI (105) esp_image: segment 0: paddr=00020020 vaddr=3f400020 size=1f464h (128100) map[0m
+[0;32mI (159) esp_image: segment 1: paddr=0003f48c vaddr=3ffb0000 size=00b8ch (  2956) load[0m
+[0;32mI (160) esp_image: segment 2: paddr=00040020 vaddr=400d0020 size=9aa20h (633376) map[0m
+[0;32mI (390) esp_image: segment 3: paddr=000daa48 vaddr=3ffb0b8c size=039cch ( 14796) load[0m
+[0;32mI (396) esp_image: segment 4: paddr=000de41c vaddr=40080000 size=155f8h ( 87544) load[0m
+[0;32mI (432) esp_image: segment 5: paddr=000f3a1c vaddr=50000000 size=00028h (    40) load[0m
+[0;32mI (433) esp_image: segment 6: paddr=000f3a4c vaddr=00000000 size=0c534h ( 50484) [0m
+[0;32mI (454) esp_image: Verifying image signature...[0m
+[0;32mI (779) boot: Loaded app from partition at offset 0x20000[0m
+[0;32mI (835) boot: Set actual ota_seq=1 in otadata[0][0m
+[0;32mI (836) secure_boot_v1: bootloader secure boot is already enabled. No need to generate digest. continuing..[0m
+[0;32mI (838) boot: Checking secure boot...[0m
+[0;32mI (841) secure_boot_v1: bootloader secure boot is already enabled, continuing..[0m
+[0;32mI (848) boot: Disabling RNG early entropy source...[0m
+[0;32mI (865) cpu_start: Multicore app[0m
+[0;32mI (873) cpu_start: GPIO 3 and 1 are used as console UART I/O pins[0m
+[0;32mI (874) cpu_start: Pro cpu start user code[0m
+[0;32mI (874) cpu_start: cpu freq: 160000000 Hz[0m
+[0;32mI (876) app_init: Application information:[0m
+[0;32mI (879) app_init: Project name:     Project[0m
+[0;32mI (883) app_init: App version:      af84e01-dirty[0m
+[0;32mI (888) app_init: Compile time:     May 26 2026 21:16:07[0m
+[0;32mI (893) app_init: ELF file SHA256:  ddc924e56...[0m
+[0;32mI (897) app_init: ESP-IDF:          v6.0-dirty[0m
+[0;32mI (901) efuse_init: Min chip rev:     v0.0[0m
+[0;32mI (905) efuse_init: Max chip rev:     v3.99 [0m
+[0;32mI (909) efuse_init: Chip rev:         v3.1[0m
+[0;32mI (913) heap_init: Initializing. RAM available for dynamic allocation:[0m
+[0;32mI (919) heap_init: At 3FFAE6E0 len 00001920 (6 KiB): DRAM[0m
+[0;32mI (924) heap_init: At 3FFB9C08 len 000263F8 (152 KiB): DRAM[0m
+[0;32mI (930) heap_init: At 3FFE0440 len 00003AE0 (14 KiB): D/IRAM[0m
+[0;32mI (935) heap_init: At 3FFE4350 len 0001BCB0 (111 KiB): D/IRAM[0m
+[0;32mI (941) heap_init: At 400955F8 len 0000AA08 (42 KiB): IRAM[0m
+[0;32mI (947) spi_flash: detected chip: generic[0m
+[0;32mI (949) spi_flash: flash io: dio[0m
+[0;32mI (954) main_task: Started on CPU0[0m
+[0;32mI (964) main_task: Calling app_main()[0m
+[0;32mI (964) MAIN: RTOS resources created[0m
+[0;32mI (1004) wifi:wifi driver task: 3ffc329c, prio:23, stack:6656, core=0[0m
+[0;32mI (1014) wifi:wifi firmware version: 44738b4[0m
+[0;32mI (1014) wifi:wifi certification version: v7.0[0m
+[0;32mI (1014) wifi:config NVS flash: enabled[0m
+[0;32mI (1014) wifi:config nano formatting: disabled[0m
+[0;32mI (1024) wifi:Init data frame dynamic rx buffer num: 32[0m
+[0;32mI (1024) wifi:Init static rx mgmt buffer num: 5[0m
+[0;32mI (1034) wifi:Init management short buffer num: 32[0m
+[0;32mI (1034) wifi:Init dynamic tx buffer num: 32[0m
+[0;32mI (1034) wifi:Init static rx buffer size: 1600[0m
+[0;32mI (1044) wifi:Init static rx buffer num: 10[0m
+[0;32mI (1044) wifi:Init dynamic rx buffer num: 32[0m
+[0;32mI (1054) wifi_init: rx ba win: 6[0m
+[0;32mI (1054) wifi_init: accept mbox: 6[0m
+[0;32mI (1054) wifi_init: tcpip mbox: 32[0m
+[0;32mI (1064) wifi_init: udp mbox: 6[0m
+[0;32mI (1064) wifi_init: tcp mbox: 6[0m
+[0;32mI (1064) wifi_init: tcp tx win: 5760[0m
+[0;32mI (1064) wifi_init: tcp rx win: 5760[0m
+[0;32mI (1074) wifi_init: tcp mss: 1440[0m
+[0;32mI (1074) wifi_init: WiFi IRAM OP enabled[0m
+[0;32mI (1074) wifi_init: WiFi RX IRAM OP enabled[0m
+[0;33mW (1084) wifi:Password length matches WPA2 standards, authmode threshold changes from OPEN to WPA2[0m
+[0;32mI (1094) phy_init: phy_version 4863,a3a4459,Oct 28 2025,14:30:06[0m
+[0;32mI (1184) phy_init: Saving new calibration data due to checksum failure or outdated calibration data, mode(0)[0m
+[0;32mI (1204) wifi:mode : sta (d4:e9:f4:68:65:5c)[0m
+[0;32mI (1204) wifi:enable tsf[0m
+[0;32mI (1204) wifi:Set ps type: 0, coexist: 0[0m
+
+[0;32mI (1204) WIFI_TASK: WiFi start requested for SSID: TuanNga[0m
+[0;32mI (1214) MQTT_TASK: Waiting for WiFi...[0m
+[0;32mI (1214) WIFI_TASK: Starting WiFi connect[0m
+[0;32mI (1214) main_task: Returned from app_main()[0m
+[0;32mI (1234) wifi:new:<11,0>, old:<1,0>, ap:<255,255>, sta:<11,0>, prof:1, snd_ch_cfg:0x0[0m
+[0;32mI (1234) wifi:state: init -> auth (0xb0)[0m
+[0;32mI (1334) wifi:state: auth -> assoc (0x0)[0m
+[0;32mI (1354) wifi:state: assoc -> run (0x10)[0m
+[0;32mI (1464) wifi:connected with TuanNga, aid = 3, channel 11, BW20, bssid = 00:c8:96:aa:40:d9[0m
+[0;32mI (1464) wifi:security: WPA2-PSK, phy: bgn, rssi: -56[0m
+[0;32mI (1474) wifi:pm start, type: 0[0m
+
+[0;32mI (1474) wifi:dp: 1, bi: 102400, li: 3, scale listen interval from 307200 us to 307200 us[0m
+[0;32mI (1494) wifi:<ba-add>idx:0 (ifx:0, 00:c8:96:aa:40:d9), tid:7, ssn:0, winSize:64[0m
+[0;32mI (1524) wifi:AP's beacon interval = 102400 us, DTIM period = 1[0m
+[0;32mI (2644) esp_netif_handlers: sta ip: 192.168.100.2, mask: 255.255.255.0, gw: 192.168.100.1[0m
+[0;32mI (2644) WIFI_TASK: Got IP: 192.168.100.2[0m
+[0;32mI (2644) MQTT_TASK: WiFi ready, connecting to AWS IoT Core[0m
+[0;32mI (2644) MQTT_TASK: DNS main: 192.168.100.1[0m
+[0;32mI (2654) MQTT_TASK: DNS backup: 0.0.0.0[0m
+[0;32mI (2654) MQTT_TASK: DNS fallback: 0.0.0.0[0m
+[0;32mI (2664) wifi:<ba-add>idx:1 (ifx:0, 00:c8:96:aa:40:d9), tid:6, ssn:2, winSize:64[0m
+[0;32mI (2674) wifi:<ba-del>idx:1, tid:6[0m
+[0;32mI (2684) wifi:<ba-add>idx:1 (ifx:0, 00:c8:96:aa:40:d9), tid:0, ssn:0, winSize:64[0m
+[1;31mE (14544) MQTT_TASK: MQTT_Connect failed: 7, retry in 5000 ms[0m
+[0;32mI (19544) MQTT_TASK: DNS main: 192.168.100.1[0m
+[0;32mI (19544) MQTT_TASK: DNS backup: 0.0.0.0[0m
+[0;32mI (19544) MQTT_TASK: DNS fallback: 0.0.0.0[0m
+[0;32mI (26554) MQTT_TASK: MQTT connected[0m
+[1;31mE (27264) MQTT_TASK: MQTT_ProcessLoop error: 4[0m
+[0;33mW (27274) MQTT_TASK: MQTT disconnected, reconnecting in 5000 ms[0m
+[0;32mI (32274) MQTT_TASK: DNS main: 192.168.100.1[0m
+[0;32mI (32274) MQTT_TASK: DNS backup: 0.0.0.0[0m
+[0;32mI (32274) MQTT_TASK: DNS fallback: 0.0.0.0[0m
+[0;32mI (34824) MQTT_TASK: MQTT connected[0m
+[0;32mI (144834) wifi:bcn_timeout,ap_probe_send_start[0m
+[0;32mI (147334) wifi:ap_probe_send over, reset wifi status to disassoc[0m
+[0;32mI (147334) wifi:state: run -> init (0xc800)[0m
+[0;32mI (147354) wifi:pm stop, total sleep time: 0 us / 145879951 us[0m
+
+[0;32mI (147354) wifi:<ba-del>idx:1, tid:0[0m
+[0;32mI (147354) wifi:<ba-del>idx:0, tid:7[0m
+[0;32mI (147354) wifi:new:<11,0>, old:<11,0>, ap:<255,255>, sta:<11,0>, prof:1, snd_ch_cfg:0x0[0m
+[1;31mE (147364) esp-tls-mbedtls: read error :-0x004C[0m
+[0;33mW (147364) WIFI_TASK: WiFi retry 1 in 1000 ms[0m
+[1;31mE (147364) MQTT_TASK: TLS recv error -76 (errno=113)[0m
+[0;33mW (147374) MQTT_TASK: MQTT loop interrupted by WiFi disconnect[0m
+[0;33mW (147384) MQTT_TASK: MQTT disconnected, waiting for WiFi[0m
+[0;32mI (148364) WIFI_TASK: Starting WiFi connect[0m
+[0;33mW (150784) WIFI_TASK: WiFi retry 2 in 2000 ms[0m
+[0;32mI (152784) WIFI_TASK: Starting WiFi connect[0m
+[0;33mW (155204) WIFI_TASK: WiFi retry 3 in 4000 ms[0m
+[0;32mI (159204) WIFI_TASK: Starting WiFi connect[0m
+[0;33mW (161624) WIFI_TASK: WiFi retry 4 in 8000 ms[0m
+[0;32mI (169624) WIFI_TASK: Starting WiFi connect[0m
+[0;33mW (172044) WIFI_TASK: WiFi retry 5 in 16000 ms[0m
+[0;32mI (188044) WIFI_TASK: Starting WiFi connect[0m
+[0;32mI (188064) wifi:new:<11,0>, old:<11,0>, ap:<255,255>, sta:<11,0>, prof:1, snd_ch_cfg:0x0[0m
+[0;32mI (188064) wifi:state: init -> auth (0xb0)[0m
+[0;32mI (188084) wifi:state: auth -> assoc (0x0)[0m
+[0;32mI (188114) wifi:state: assoc -> run (0x10)[0m
+[0;32mI (188174) wifi:connected with TuanNga, aid = 3, channel 11, BW20, bssid = 00:c8:96:aa:40:d9[0m
+[0;32mI (188174) wifi:security: WPA2-PSK, phy: bgn, rssi: -56[0m
+[0;32mI (188174) wifi:pm start, type: 0[0m
+
+[0;32mI (188194) wifi:AP's beacon interval = 102400 us, DTIM period = 1[0m
+[0;32mI (188234) wifi:<ba-add>idx:0 (ifx:0, 00:c8:96:aa:40:d9), tid:7, ssn:0, winSize:64[0m
+[0;32mI (189344) esp_netif_handlers: sta ip: 192.168.100.2, mask: 255.255.255.0, gw: 192.168.100.1[0m
+[0;32mI (189344) WIFI_TASK: Got IP: 192.168.100.2[0m
+[0;32mI (189344) MQTT_TASK: DNS main: 192.168.100.1[0m
+[0;32mI (189344) MQTT_TASK: DNS backup: 0.0.0.0[0m
+[0;32mI (189354) MQTT_TASK: DNS fallback: 0.0.0.0[0m
+[0;32mI (189364) wifi:<ba-add>idx:1 (ifx:0, 00:c8:96:aa:40:d9), tid:6, ssn:2, winSize:64[0m
+[0;32mI (189404) wifi:<ba-del>idx:1, tid:6[0m
+[0;32mI (189404) wifi:<ba-add>idx:1 (ifx:0, 00:c8:96:aa:40:d9), tid:0, ssn:0, winSize:64[0m
+[0;32mI (191664) MQTT_TASK: MQTT connected[0m
+[0;32mI (379324) wifi:bcn_timeout,ap_probe_send_start[0m
+[0;32mI (381834) wifi:ap_probe_send over, reset wifi status to disassoc[0m
+[0;32mI (381834) wifi:state: run -> init (0xc800)[0m
+[0;32mI (381844) wifi:pm stop, total sleep time: 0 us / 193663415 us[0m
+
+[0;32mI (381844) wifi:<ba-del>idx:1, tid:0[0m
+[0;32mI (381844) wifi:<ba-del>idx:0, tid:7[0m
+[0;32mI (381844) wifi:new:<11,0>, old:<11,0>, ap:<255,255>, sta:<11,0>, prof:1, snd_ch_cfg:0x0[0m
+[1;31mE (381854) esp-tls-mbedtls: read error :-0x004C[0m
+[0;33mW (381854) WIFI_TASK: WiFi retry 1 in 1000 ms[0m
+[1;31mE (381854) MQTT_TASK: TLS recv error -76 (errno=113)[0m
+[0;33mW (381864) MQTT_TASK: MQTT loop interrupted by WiFi disconnect[0m
+[0;33mW (381874) MQTT_TASK: MQTT disconnected, waiting for WiFi[0m
+[0;32mI (382864) WIFI_TASK: Starting WiFi connect[0m
+[0;33mW (385274) WIFI_TASK: WiFi retry 2 in 2000 ms[0m
+[0;32mI (387284) WIFI_TASK: Starting WiFi connect[0m
+[0;33mW (389694) WIFI_TASK: WiFi retry 3 in 4000 ms[0m
+[0;32mI (393694) WIFI_TASK: Starting WiFi connect[0m
+[0;33mW (396114) WIFI_TASK: WiFi retry 4 in 8000 ms[0m
+[0;32mI (404114) WIFI_TASK: Starting WiFi connect[0m
+[0;32mI (404134) wifi:new:<11,0>, old:<11,0>, ap:<255,255>, sta:<11,0>, prof:1, snd_ch_cfg:0x0[0m
+[0;32mI (404134) wifi:state: init -> auth (0xb0)[0m
+[0;32mI (404154) wifi:state: auth -> assoc (0x0)[0m
+[0;32mI (404174) wifi:state: assoc -> run (0x10)[0m
+[0;32mI (404234) wifi:connected with TuanNga, aid = 3, channel 11, BW20, bssid = 00:c8:96:aa:40:d9[0m
+[0;32mI (404234) wifi:security: WPA2-PSK, phy: bgn, rssi: -56[0m
+[0;32mI (404244) wifi:pm start, type: 0[0m
+
+[0;32mI (404254) wifi:AP's beacon interval = 102400 us, DTIM period = 1[0m
+[0;32mI (404274) wifi:<ba-add>idx:0 (ifx:0, 00:c8:96:aa:40:d9), tid:7, ssn:0, winSize:64[0m
+[0;32mI (405314) esp_netif_handlers: sta ip: 192.168.100.2, mask: 255.255.255.0, gw: 192.168.100.1[0m
+[0;32mI (405314) WIFI_TASK: Got IP: 192.168.100.2[0m
+[0;32mI (405314) MQTT_TASK: DNS main: 192.168.100.1[0m
+[0;32mI (405314) MQTT_TASK: DNS backup: 0.0.0.0[0m
+[0;32mI (405324) MQTT_TASK: DNS fallback: 0.0.0.0[0m
+[0;32mI (406014) wifi:<ba-add>idx:1 (ifx:0, 00:c8:96:aa:40:d9), tid:6, ssn:3, winSize:64[0m
+[0;32mI (406044) wifi:<ba-del>idx:1, tid:6[0m
+[0;32mI (406054) wifi:<ba-add>idx:1 (ifx:0, 00:c8:96:aa:40:d9), tid:0, ssn:0, winSize:64[0m
+[0;32mI (417554) wifi:bcn_timeout,ap_probe_send_start[0m
+[0;32mI (418444) MQTT_TASK: MQTT connected[0m
+[0;32mI (462614) wifi:bcn_timeout,ap_probe_send_start[0m
+[0;32mI (465114) wifi:ap_probe_send over, reset wifi status to disassoc[0m
+[0;32mI (465114) wifi:state: run -> init (0xc800)[0m
+[0;32mI (465124) wifi:pm stop, total sleep time: 0 us / 60877792 us[0m
+
+[0;32mI (465124) wifi:<ba-del>idx:1, tid:0[0m
+[0;32mI (465124) wifi:<ba-del>idx:0, tid:7[0m
+[0;32mI (465124) wifi:new:<11,0>, old:<11,0>, ap:<255,255>, sta:<11,0>, prof:1, snd_ch_cfg:0x0[0m
+[1;31mE (465134) esp-tls-mbedtls: read error :-0x004C[0m
+[0;33mW (465134) WIFI_TASK: WiFi retry 1 in 1000 ms[0m
+[1;31mE (465134) MQTT_TASK: TLS recv error -76 (errno=113)[0m
+[0;33mW (465144) MQTT_TASK: MQTT loop interrupted by WiFi disconnect[0m
+[0;33mW (465154) MQTT_TASK: MQTT disconnected, waiting for WiFi[0m
+[0;32mI (466144) WIFI_TASK: Starting WiFi connect[0m
+[0;33mW (468554) WIFI_TASK: WiFi retry 2 in 2000 ms[0m
+[0;32mI (470554) WIFI_TASK: Starting WiFi connect[0m
+[0;33mW (472974) WIFI_TASK: WiFi retry 3 in 4000 ms[0m
+[0;32mI (476974) WIFI_TASK: Starting WiFi connect[0m
+[0;33mW (479394) WIFI_TASK: WiFi retry 4 in 8000 ms[0m
+[0;32mI (487394) WIFI_TASK: Starting WiFi connect[0m
+[0;33mW (489814) WIFI_TASK: WiFi retry 5 in 16000 ms[0m
+[0;32mI (505814) WIFI_TASK: Starting WiFi connect[0m
+[0;33mW (508234) WIFI_TASK: WiFi retry 6 in 30000 ms[0m
+[0;32mI (538234) WIFI_TASK: Starting WiFi connect[0m
+[0;33mW (540644) WIFI_TASK: WiFi retry 7 in 30000 ms[0m
+[0;32mI (570644) WIFI_TASK: Starting WiFi connect[0m
+[0;33mW (573064) WIFI_TASK: WiFi retry 8 in 30000 ms[0m
+[0;32mI (603064) WIFI_TASK: Starting WiFi connect[0m
+[0;33mW (605484) WIFI_TASK: WiFi retry 9 in 30000 ms[0m
+[0;32mI (635484) WIFI_TASK: Starting WiFi connect[0m
+[0;33mW (637904) WIFI_TASK: WiFi retry 10 in 30000 ms[0m
+[0;32mI (667904) WIFI_TASK: Starting WiFi connect[0m
+[0;33mW (670314) WIFI_TASK: WiFi retry 11 in 30000 ms[0m
+[0;32mI (700314) WIFI_TASK: Starting WiFi connect[0m
+[0;33mW (702734) WIFI_TASK: WiFi retry 12 in 30000 ms[0m
+[0;32mI (732734) WIFI_TASK: Starting WiFi connect[0m
+[0;33mW (735154) WIFI_TASK: WiFi retry 13 in 30000 ms[0m
+[0;32mI (765154) WIFI_TASK: Starting WiFi connect[0m
+[0;33mW (767574) WIFI_TASK: WiFi retry 14 in 30000 ms[0m
+[0;32mI (797574) WIFI_TASK: Starting WiFi connect[0m
+[0;33mW (799984) WIFI_TASK: WiFi retry 15 in 30000 ms[0m
+[0;32mI (829984) WIFI_TASK: Starting WiFi connect[0m
+[0;33mW (832404) WIFI_TASK: WiFi retry 16 in 30000 ms[0m
+[0;32mI (862404) WIFI_TASK: Starting WiFi connect[0m
+[0;32mI (862424) wifi:new:<11,0>, 
