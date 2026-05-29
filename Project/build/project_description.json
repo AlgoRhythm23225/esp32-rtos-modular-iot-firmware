@@ -1,7 +1,7 @@
 {
     "version":            "1.3",
     "project_name":       "Project",
-    "project_version":    "894b20a",
+    "project_version":    "af84e01-dirty",
     "project_path":       "C:/Users/Admin/Desktop/esp/FINAL_EXAM/esp32-modular-iot-firmware/Project",
     "idf_path":           "D:/esp/v6.0/esp-idf",
     "build_dir":          "C:/Users/Admin/Desktop/esp/FINAL_EXAM/esp32-modular-iot-firmware/Project/build",
@@ -85,7 +85,7 @@
             "managed_reqs": [],
             "managed_priv_reqs": [],
             "file": "C:/Users/Admin/Desktop/esp/FINAL_EXAM/esp32-modular-iot-firmware/Project/build/esp-idf/bootloader_support/libbootloader_support.a",
-            "sources": [ "D:/esp/v6.0/esp-idf/components/bootloader_support/src/bootloader_common.c", "D:/esp/v6.0/esp-idf/components/bootloader_support/src/bootloader_common_loader.c", "D:/esp/v6.0/esp-idf/components/bootloader_support/src/bootloader_clock_init.c", "D:/esp/v6.0/esp-idf/components/bootloader_support/src/bootloader_mem.c", "D:/esp/v6.0/esp-idf/components/bootloader_support/src/bootloader_random.c", "D:/esp/v6.0/esp-idf/components/bootloader_support/src/bootloader_efuse.c", "D:/esp/v6.0/esp-idf/components/bootloader_support/src/flash_encrypt.c", "D:/esp/v6.0/esp-idf/components/bootloader_support/src/secure_boot.c", "D:/esp/v6.0/esp-idf/components/bootloader_support/src/bootloader_random_esp32.c", "D:/esp/v6.0/esp-idf/components/bootloader_support/bootloader_flash/src/bootloader_flash.c", "D:/esp/v6.0/esp-idf/components/bootloader_support/bootloader_flash/src/flash_qio_mode.c", "D:/esp/v6.0/esp-idf/components/bootloader_support/bootloader_flash/src/bootloader_flash_config_esp32.c", "D:/esp/v6.0/esp-idf/components/bootloader_support/src/bootloader_utility.c", "D:/esp/v6.0/esp-idf/components/bootloader_support/src/flash_partitions.c", "D:/esp/v6.0/esp-idf/components/bootloader_support/src/esp_image_format.c", "D:/esp/v6.0/esp-idf/components/bootloader_support/src/bootloader_sha.c", "D:/esp/v6.0/esp-idf/components/bootloader_support/src/esp32/secure_boot_secure_features.c" ],
+            "sources": [ "D:/esp/v6.0/esp-idf/components/bootloader_support/src/bootloader_common.c", "D:/esp/v6.0/esp-idf/components/bootloader_support/src/bootloader_common_loader.c", "D:/esp/v6.0/esp-idf/components/bootloader_support/src/bootloader_clock_init.c", "D:/esp/v6.0/esp-idf/components/bootloader_support/src/bootloader_mem.c", "D:/esp/v6.0/esp-idf/components/bootloader_support/src/bootloader_random.c", "D:/esp/v6.0/esp-idf/components/bootloader_support/src/bootloader_efuse.c", "D:/esp/v6.0/esp-idf/components/bootloader_support/src/flash_encrypt.c", "D:/esp/v6.0/esp-idf/components/bootloader_support/src/secure_boot.c", "D:/esp/v6.0/esp-idf/components/bootloader_support/src/bootloader_random_esp32.c", "D:/esp/v6.0/esp-idf/components/bootloader_support/bootloader_flash/src/bootloader_flash.c", "D:/esp/v6.0/esp-idf/components/bootloader_support/bootloader_flash/src/flash_qio_mode.c", "D:/esp/v6.0/esp-idf/components/bootloader_support/bootloader_flash/src/bootloader_flash_config_esp32.c", "D:/esp/v6.0/esp-idf/components/bootloader_support/src/bootloader_utility.c", "D:/esp/v6.0/esp-idf/components/bootloader_support/src/flash_partitions.c", "D:/esp/v6.0/esp-idf/components/bootloader_support/src/esp_image_format.c", "D:/esp/v6.0/esp-idf/components/bootloader_support/src/bootloader_sha.c", "D:/esp/v6.0/esp-idf/components/bootloader_support/src/esp32/secure_boot_secure_features.c", "D:/esp/v6.0/esp-idf/components/bootloader_support/src/secure_boot_v1/secure_boot_signatures_app.c", "C:/Users/Admin/Desktop/esp/FINAL_EXAM/esp32-modular-iot-firmware/Project/build/signature_verification_key.bin.S" ],
             "include_dirs": [ "include", "bootloader_flash/include" ]
         },
         "bt": {
@@ -1730,12 +1730,12 @@
             "dir": "C:/Users/Admin/Desktop/esp/FINAL_EXAM/esp32-modular-iot-firmware/Project/main",
             "type": "LIBRARY",
             "lib": "__idf_main",
-            "reqs": [],
+            "reqs": [ "esp_wifi", "esp_event", "esp_netif", "nvs_flash", "esp_timer", "esp-tls", "esp_driver_gpio" ],
             "priv_reqs": [],
             "managed_reqs": [],
             "managed_priv_reqs": [],
             "file": "C:/Users/Admin/Desktop/esp/FINAL_EXAM/esp32-modular-iot-firmware/Project/build/esp-idf/main/libmain.a",
-            "sources": [ "C:/Users/Admin/Desktop/esp/FINAL_EXAM/esp32-modular-iot-firmware/Project/main/Project.c", "C:/Users/Admin/Desktop/esp/FINAL_EXAM/esp32-modular-iot-firmware/Project/modules/mqtt_task.c", "C:/Users/Admin/Desktop/esp/IOT_PROJECT_GROUP2/aws-iot-device-sdk-embedded-C/libraries/standard/coreMQTT/source/core_mqtt.c", "C:/Users/Admin/Desktop/esp/IOT_PROJECT_GROUP2/aws-iot-device-sdk-embedded-C/libraries/standard/coreMQTT/source/core_mqtt_serializer.c", "C:/Users/Admin/Desktop/esp/IOT_PROJECT_GROUP2/aws-iot-device-sdk-embedded-C/libraries/standard/coreMQTT/source/core_mqtt_state.c", "C:/Users/Admin/Desktop/esp/FINAL_EXAM/esp32-modular-iot-firmware/Project/build/AmazonRootCA1.pem.S", "C:/Users/Admin/Desktop/esp/FINAL_EXAM/esp32-modular-iot-firmware/Project/build/device.crt.S", "C:/Users/Admin/Desktop/esp/FINAL_EXAM/esp32-modular-iot-firmware/Project/build/device.key.S" ],
+            "sources": [ "C:/Users/Admin/Desktop/esp/FINAL_EXAM/esp32-modular-iot-firmware/Project/main/Project.c", "C:/Users/Admin/Desktop/esp/FINAL_EXAM/esp32-modular-iot-firmware/Project/modules/wifi_task.c", "C:/Users/Admin/Desktop/esp/FINAL_EXAM/esp32-modular-iot-firmware/Project/modules/mqtt_task.c", "C:/Users/Admin/Desktop/esp/IOT_PROJECT_GROUP2/aws-iot-device-sdk-embedded-C/libraries/standard/coreMQTT/source/core_mqtt.c", "C:/Users/Admin/Desktop/esp/IOT_PROJECT_GROUP2/aws-iot-device-sdk-embedded-C/libraries/standard/coreMQTT/source/core_mqtt_serializer.c", "C:/Users/Admin/Desktop/esp/IOT_PROJECT_GROUP2/aws-iot-device-sdk-embedded-C/libraries/standard/coreMQTT/source/core_mqtt_state.c", "C:/Users/Admin/Desktop/esp/FINAL_EXAM/esp32-modular-iot-firmware/Project/build/AmazonRootCA1.pem.S", "C:/Users/Admin/Desktop/esp/FINAL_EXAM/esp32-modular-iot-firmware/Project/build/device.crt.S", "C:/Users/Admin/Desktop/esp/FINAL_EXAM/esp32-modular-iot-firmware/Project/build/device.key.S" ],
             "include_dirs": [ ".", "../include", "../config", "C:/Users/Admin/Desktop/esp/FINAL_EXAM/esp32-modular-iot-firmware/Project/main/../../../../IOT_PROJECT_GROUP2/aws-iot-device-sdk-embedded-C/libraries/standard/coreMQTT/source/include", "C:/Users/Admin/Desktop/esp/FINAL_EXAM/esp32-modular-iot-firmware/Project/main/../../../../IOT_PROJECT_GROUP2/aws-iot-device-sdk-embedded-C/libraries/standard/coreMQTT/source/interface" ]
         },
         "mbedtls": {
@@ -3843,7 +3843,7 @@
             "dir": "C:/Users/Admin/Desktop/esp/FINAL_EXAM/esp32-modular-iot-firmware/Project/main",
             "source": "project_components",
             "lib": "__idf_main",
-            "reqs": [],
+            "reqs": [ "esp_wifi", "esp_event", "esp_netif", "nvs_flash", "esp_timer", "esp-tls", "esp_driver_gpio" ],
             "priv_reqs": [],
             "managed_reqs": [],
             "managed_priv_reqs": [],

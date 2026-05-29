@@ -10,6 +10,7 @@ set(COREMQTT_INCLUDES
 )
 idf_component_register(
     SRCS "Project.c"
+        "../modules/wifi_task.c"
         "../modules/mqtt_task.c"
         ${COREMQTT_SRCS}
     INCLUDE_DIRS 
@@ -17,6 +18,7 @@ idf_component_register(
         "../include"
         "../config"
         ${COREMQTT_INCLUDES}
+    REQUIRES esp_wifi esp_event esp_netif nvs_flash esp_timer esp-tls esp_driver_gpio
      EMBED_TXTFILES
         "${CMAKE_CURRENT_SOURCE_DIR}/../certs/AmazonRootCA1.pem"
         "${CMAKE_CURRENT_SOURCE_DIR}/../certs/device.crt"

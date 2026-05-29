@@ -3,6 +3,8 @@ C:/Users/Admin/Desktop/esp/FINAL_EXAM/esp32-modular-iot-firmware/Project/build/C
 C:/Users/Admin/Desktop/esp/FINAL_EXAM/esp32-modular-iot-firmware/Project/build/CMakeFiles/confserver.dir
 C:/Users/Admin/Desktop/esp/FINAL_EXAM/esp32-modular-iot-firmware/Project/build/CMakeFiles/save-defconfig.dir
 C:/Users/Admin/Desktop/esp/FINAL_EXAM/esp32-modular-iot-firmware/Project/build/CMakeFiles/flash.dir
+C:/Users/Admin/Desktop/esp/FINAL_EXAM/esp32-modular-iot-firmware/Project/build/CMakeFiles/gen_secure_boot_keys.dir
+C:/Users/Admin/Desktop/esp/FINAL_EXAM/esp32-modular-iot-firmware/Project/build/CMakeFiles/gen_secure_boot_signing_key.dir
 C:/Users/Admin/Desktop/esp/FINAL_EXAM/esp32-modular-iot-firmware/Project/build/CMakeFiles/bootloader.dir
 C:/Users/Admin/Desktop/esp/FINAL_EXAM/esp32-modular-iot-firmware/Project/build/CMakeFiles/_project_elf_src.dir
 C:/Users/Admin/Desktop/esp/FINAL_EXAM/esp32-modular-iot-firmware/Project/build/CMakeFiles/Project.elf.dir
@@ -15,6 +17,7 @@ C:/Users/Admin/Desktop/esp/FINAL_EXAM/esp32-modular-iot-firmware/Project/build/C
 C:/Users/Admin/Desktop/esp/FINAL_EXAM/esp32-modular-iot-firmware/Project/build/CMakeFiles/gen_Project_binary.dir
 C:/Users/Admin/Desktop/esp/FINAL_EXAM/esp32-modular-iot-firmware/Project/build/CMakeFiles/gen_project_binary.dir
 C:/Users/Admin/Desktop/esp/FINAL_EXAM/esp32-modular-iot-firmware/Project/build/CMakeFiles/app.dir
+C:/Users/Admin/Desktop/esp/FINAL_EXAM/esp32-modular-iot-firmware/Project/build/CMakeFiles/gen_signed_Project_binary.dir
 C:/Users/Admin/Desktop/esp/FINAL_EXAM/esp32-modular-iot-firmware/Project/build/CMakeFiles/app-flash.dir
 C:/Users/Admin/Desktop/esp/FINAL_EXAM/esp32-modular-iot-firmware/Project/build/CMakeFiles/encrypted-app-flash.dir
 C:/Users/Admin/Desktop/esp/FINAL_EXAM/esp32-modular-iot-firmware/Project/build/CMakeFiles/encrypted-flash.dir
@@ -105,6 +108,7 @@ C:/Users/Admin/Desktop/esp/FINAL_EXAM/esp32-modular-iot-firmware/Project/build/e
 C:/Users/Admin/Desktop/esp/FINAL_EXAM/esp32-modular-iot-firmware/Project/build/esp-idf/partition_table/CMakeFiles/partition_table_bin.dir
 C:/Users/Admin/Desktop/esp/FINAL_EXAM/esp32-modular-iot-firmware/Project/build/esp-idf/partition_table/CMakeFiles/partition-table.dir
 C:/Users/Admin/Desktop/esp/FINAL_EXAM/esp32-modular-iot-firmware/Project/build/esp-idf/partition_table/CMakeFiles/partition_table.dir
+C:/Users/Admin/Desktop/esp/FINAL_EXAM/esp32-modular-iot-firmware/Project/build/esp-idf/partition_table/CMakeFiles/gen_unsigned_partition_bin.dir
 C:/Users/Admin/Desktop/esp/FINAL_EXAM/esp32-modular-iot-firmware/Project/build/esp-idf/partition_table/CMakeFiles/partition-table-flash.dir
 C:/Users/Admin/Desktop/esp/FINAL_EXAM/esp32-modular-iot-firmware/Project/build/esp-idf/partition_table/CMakeFiles/encrypted-partition-table-flash.dir
 C:/Users/Admin/Desktop/esp/FINAL_EXAM/esp32-modular-iot-firmware/Project/build/esp-idf/partition_table/CMakeFiles/partition_table-flash.dir
@@ -129,6 +133,13 @@ C:/Users/Admin/Desktop/esp/FINAL_EXAM/esp32-modular-iot-firmware/Project/build/e
 C:/Users/Admin/Desktop/esp/FINAL_EXAM/esp32-modular-iot-firmware/Project/build/esp-idf/esp_bootloader_format/CMakeFiles/install/local.dir
 C:/Users/Admin/Desktop/esp/FINAL_EXAM/esp32-modular-iot-firmware/Project/build/esp-idf/esp_bootloader_format/CMakeFiles/install/strip.dir
 C:/Users/Admin/Desktop/esp/FINAL_EXAM/esp32-modular-iot-firmware/Project/build/esp-idf/app_update/CMakeFiles/__idf_app_update.dir
+C:/Users/Admin/Desktop/esp/FINAL_EXAM/esp32-modular-iot-firmware/Project/build/esp-idf/app_update/CMakeFiles/blank_ota_data.dir
+C:/Users/Admin/Desktop/esp/FINAL_EXAM/esp32-modular-iot-firmware/Project/build/esp-idf/app_update/CMakeFiles/read-otadata.dir
+C:/Users/Admin/Desktop/esp/FINAL_EXAM/esp32-modular-iot-firmware/Project/build/esp-idf/app_update/CMakeFiles/read_otadata.dir
+C:/Users/Admin/Desktop/esp/FINAL_EXAM/esp32-modular-iot-firmware/Project/build/esp-idf/app_update/CMakeFiles/erase-otadata.dir
+C:/Users/Admin/Desktop/esp/FINAL_EXAM/esp32-modular-iot-firmware/Project/build/esp-idf/app_update/CMakeFiles/erase_otadata.dir
+C:/Users/Admin/Desktop/esp/FINAL_EXAM/esp32-modular-iot-firmware/Project/build/esp-idf/app_update/CMakeFiles/otadata-flash.dir
+C:/Users/Admin/Desktop/esp/FINAL_EXAM/esp32-modular-iot-firmware/Project/build/esp-idf/app_update/CMakeFiles/encrypted-otadata-flash.dir
 C:/Users/Admin/Desktop/esp/FINAL_EXAM/esp32-modular-iot-firmware/Project/build/esp-idf/app_update/CMakeFiles/edit_cache.dir
 C:/Users/Admin/Desktop/esp/FINAL_EXAM/esp32-modular-iot-firmware/Project/build/esp-idf/app_update/CMakeFiles/rebuild_cache.dir
 C:/Users/Admin/Desktop/esp/FINAL_EXAM/esp32-modular-iot-firmware/Project/build/esp-idf/app_update/CMakeFiles/list_install_components.dir

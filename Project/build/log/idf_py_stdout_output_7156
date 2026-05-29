@@ -1,0 +1,74 @@
+Command: C:\Espressif\tools\python\v6.0\venv\Scripts\python.exe D:\esp\v6.0\esp-idf\tools/idf_monitor.py -p COM7 -b 115200 --toolchain-prefix xtensa-esp32-elf- --target esp32 --revision 0 C:\Users\Admin\Desktop\esp\FINAL_EXAM\esp32-modular-iot-firmware\Project\build\Project.elf C:\Users\Admin\Desktop\esp\FINAL_EXAM\esp32-modular-iot-firmware\Project\build\bootloader\bootloader.elf --force-color -m 'C:\Espressif\tools\python\v6.0\venv\Scripts\python.exe' 'D:\esp\v6.0\esp-idf\tools\idf.py' '-p' 'COM7'
+PI_FAST_FLASH_BOOT)
+configsip: 0, SPIWP:0xee
+clk_drv:0x00,q_drv:0x00,d_drv:0x00,cs0_drv:0x00,hd_drv:0x00,wp_drv:0x00
+mode:DIO, clock div:2
+load:0x3fff00c0,len:9904
+load:0x40078000,len:25024
+ets Jul 29 2019 12:21:46
+
+rst:0x1 (POWERON_RESET),boot:0x13 (SPI_FAST_FLASH_BOOT)
+configsip: 0, SPIWP:0xee
+clk_drv:0x00,q_drv:0x00,d_drv:0x00,cs0_drv:0x00,hd_drv:0x00,wp_drv:0x00
+mode:DIO, clock div:2
+load:0x3fff00c0,len:9904
+load:0x40078000,len:25024
+load:0x40080400,len:3920
+entry 0x40080644
+[0;32mI (37) boot: ESP-IDF v6.0 2nd stage bootloader[0m
+[0;32mI (37) boot: compile time May 16 2026 21:51:28[0m
+[0;32mI (37) boot: Multicore bootloader[0m
+[0;32mI (38) boot: chip revision: v3.1[0m
+[0;32mI (41) boot.esp32: SPI Speed      : 40MHz[0m
+[0;32mI (45) boot.esp32: SPI Mode       : DIO[0m
+[0;32mI (48) boot.esp32: SPI Flash Size : 4MB[0m
+[0;32mI (52) boot: Enabling RNG early entropy source...[0m
+[0;32mI (56) boot: Partition Table:[0m
+[0;32mI (59) boot: ## Label            Usage          Type ST Offset   Length[0m
+[0;32mI (65) boot:  0 nvs              WiFi data        01 02 0000e000 00005000[0m
+[0;32mI (72) boot:  1 otadata          OTA data         01 00 00013000 00002000[0m
+[0;32mI (78) boot:  2 phy_init         RF data          01 01 00015000 00001000[0m
+[0;32mI (85) boot:  3 ota_0            OTA app          00 10 00020000 001e0000[0m
+[0;32mI (91) boot:  4 ota_1            OTA app          00 11 00200000 001e0000[0m
+[0;32mI (98) boot: End of partition table[0m
+[0;32mI (101) boot: No factory image, trying OTA 0[0m
+[0;32mI (105) esp_image: segment 0: paddr=00020020 vaddr=3f400020 size=15e28h ( 89640) map[0m
+[0;32mI (145) esp_image: segment 1: paddr=00035e50 vaddr=3ffb0000 size=02a5ch ( 10844) load[0m
+[0;32mI (149) esp_image: segment 2: paddr=000388b4 vaddr=40080000 size=07764h ( 30564) load[0m
+[0;32mI (162) esp_image: segment 3: paddr=00040020 vaddr=400d0020 size=499ech (301548) map[0m
+[0;32mI (271) esp_image: segment 4: paddr=00089a14 vaddr=40087764 size=0361ch ( 13852) load[0m
+[0;32mI (277) esp_image: segment 5: paddr=0008d038 vaddr=50000000 size=00028h (    40) load[0m
+[0;32mI (277) esp_image: segment 6: paddr=0008d068 vaddr=00000000 size=02f18h ( 12056) [0m
+[0;32mI (286) esp_image: Verifying image signature...[0m
+[0;32mI (607) boot: Loaded app from partition at offset 0x20000[0m
+[0;32mI (664) boot: Set actual ota_seq=1 in otadata[0][0m
+[0;32mI (664) secure_boot_v1: bootloader secure boot is already enabled. No need to generate digest. continuing..[0m
+[0;32mI (667) boot: Checking secure boot...[0m
+[0;32mI (670) secure_boot_v1: bootloader secure boot is already enabled, continuing..[0m
+[0;32mI (677) boot: Disabling RNG early entropy source...[0m
+[0;32mI (694) cpu_start: Multicore app[0m
+[0;32mI (702) cpu_start: GPIO 3 and 1 are used as console UART I/O pins[0m
+[0;32mI (703) cpu_start: Pro cpu start user code[0m
+[0;32mI (703) cpu_start: cpu freq: 160000000 Hz[0m
+[0;32mI (704) app_init: Application information:[0m
+[0;32mI (708) app_init: Project name:     Project[0m
+[0;32mI (712) app_init: App version:      af84e01-dirty[0m
+[0;32mI (717) app_init: Compile time:     May 26 2026 21:16:07[0m
+[0;32mI (722) app_init: ELF file SHA256:  2579b2b28...[0m
+[0;32mI (726) app_init: ESP-IDF:          v6.0-dirty[0m
+[0;32mI (730) efuse_init: Min chip rev:     v0.0[0m
+[0;32mI (734) efuse_init: Max chip rev:     v3.99 [0m
+[0;32mI (738) efuse_init: Chip rev:         v3.1[0m
+[0;32mI (742) heap_init: Initializing. RAM available for dynamic allocation:[0m
+[0;32mI (748) heap_init: At 3FFAE6E0 len 00001920 (6 KiB): DRAM[0m
+[0;32mI (753) heap_init: At 3FFB4E48 len 0002B1B8 (172 KiB): DRAM[0m
+[0;32mI (758) heap_init: At 3FFE0440 len 00003AE0 (14 KiB): D/IRAM[0m
+[0;32mI (764) heap_init: At 3FFE4350 len 0001BCB0 (111 KiB): D/IRAM[0m
+[0;32mI (769) heap_init: At 4008AD80 len 00015280 (84 KiB): IRAM[0m
+[0;32mI (776) spi_flash: detected chip: generic[0m
+[0;32mI (778) spi_flash: flash io: dio[0m
+[0;32mI (783) main_task: Started on CPU0[0m
+[0;32mI (793) main_task: Calling app_main()[0m
+[0;32mI (793) MAIN: RTOS resources created[0m
+[0;32mI (793) MQTT_TASK: Waiting for WiFi...[0m
+[0;32mI (793) main_task: Returned from app_main()[0m

@@ -7,6 +7,7 @@
 #include "freertos/task.h"
 #include "rtos_config.h"
 #include "mqtt_task.h"
+#include "wifi_task.h"
 
 static const char *TAG = "MAIN";
 
@@ -39,6 +40,13 @@ void app_main(void)
         ESP_LOGE(TAG, "Failed to create RTOS resources: %d", ret);
         return;
     }
+
+    ret = wifi_start();
+    if (ret != ESP_OK) {
+        ESP_LOGE(TAG, "Failed to start WiFi: %d", ret);
+        return;
+    }
+
     xTaskCreate(mqtt_task,
                 "mqtt",
                 TASK_STACK_MQTT,

@@ -646,8 +646,10 @@ _Python3_Compiler_REASON_FAILURE:INTERNAL=
 _Python3_Development_REASON_FAILURE:INTERNAL=
 _Python3_EXECUTABLE:INTERNAL=C:/Espressif/tools/python/v6.0/venv/Scripts/python.exe
 //Python3 Properties
-_Python3_INTERPRETER_PROPERTIES:INTERNAL=Python;3;11;9;32;64;;;abi3;C:\Users\Admin\scoop\apps\python\current\Lib;C:\Espressif\tools\python\v6.0\venv\Lib;C:\Espressif\tools\python\v6.0\venv\Lib\site-packages;C:\Espressif\tools\python\v6.0\venv\Lib\site-packages
+_Python3_INTERPRETER_PROPERTIES:INTERNAL=Python;3;11;9;64;;;abi3;C:\Users\Admin\scoop\apps\python\current\Lib;C:\Espressif\tools\python\v6.0\venv\Lib;C:\Espressif\tools\python\v6.0\venv\Lib\site-packages;C:\Espressif\tools\python\v6.0\venv\Lib\site-packages
 _Python3_INTERPRETER_SIGNATURE:INTERNAL=1a80b43be9505f03a5985fe5109cf175
+//Interpreter reason failure
+_Python3_Interpreter_REASON_FAILURE:INTERNAL=
 //NumPy reason failure
 _Python3_NumPy_REASON_FAILURE:INTERNAL=
 
