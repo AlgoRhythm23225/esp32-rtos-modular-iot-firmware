@@ -10,4 +10,8 @@ void nvs_manager_save_wifi(const char *ssid, const char *password);
 
 bool nvs_manager_read_wifi(char *ssid, size_t max_ssid_len, char *password, size_t max_pw_len);
 
+void nvs_manager_save_ssid(const char *ssid);
+
+void nvs_manager_save_password(const char *password);
+
 #endif

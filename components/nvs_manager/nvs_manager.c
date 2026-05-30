@@ -83,3 +83,21 @@ bool nvs_manager_read_wifi(char *ssid, size_t max_ssid_len, char *password, size
     nvs_close(handle);
     return true;
 }
+
+void nvs_manager_save_ssid(const char *ssid)
+{
+    nvs_handle_t handle;
+    nvs_open("wifi_store", NVS_READWRITE, &handle);
+    nvs_set_str(handle, "ssid", ssid);
+    nvs_commit(handle);
+    nvs_close(handle);
+}
+
+void nvs_manager_save_password(const char *password)
+{
+    nvs_handle_t handle;
+    nvs_open("wifi_store", NVS_READWRITE, &handle);
+    nvs_set_str(handle, "password", password);
+    nvs_commit(handle);
+    nvs_close(handle);
+}

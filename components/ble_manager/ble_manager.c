@@ -4,15 +4,19 @@
 #include <assert.h>
 
 #include "esp_log.h"
+
 #include "nimble/nimble_port.h"
 #include "nimble/nimble_port_freertos.h"
+
 #include "host/ble_hs.h"
 #include "host/util/util.h"
 #include "host/ble_gatt.h"
+
 #include "services/gap/ble_svc_gap.h"
 #include "services/gatt/ble_svc_gatt.h"
 
 #define BLE_DEVICE_NAME "ESP32-IoT"
+
 static int ble_manager_gap_event(struct ble_gap_event *event, void *arg);
 static uint8_t own_addr_type;
 static const char *TAG = "BLE_MANAGER";
@@ -37,13 +41,15 @@ static void ble_app_advertise(void)
     fields.tx_pwr_lvl = BLE_HS_ADV_TX_PWR_LVL_AUTO;
 
     rc = ble_gap_adv_set_fields(&fields);
-    rc = ble_gap_adv_start(own_addr_type, NULL, BLE_HS_FOREVER,
-                           &adv_params, ble_manager_gap_event, NULL);
     if (rc != 0)
     {
         ESP_LOGE(TAG, "error enabling advertisement; rc=%d\n", rc);
         return;
     }
+
+    rc = ble_gap_adv_start(own_addr_type, NULL, BLE_HS_FOREVER,
+                           &adv_params, ble_manager_gap_event, NULL);
+
     ESP_LOGI(TAG, "Advertising");
 }
 
@@ -69,7 +75,7 @@ static int ble_manager_gap_event(struct ble_gap_event *event, void *arg)
         }
         else
         {
-            ESP_LOGE(TAG, "failed to find connection by handle, error code: %d. Advertising again...", rc);
+            ESP_LOGE(TAG, "failed to find connection by handle, error code: %d. Advertising again...", event->connect.status);
             ble_app_advertise();
         }
         break;
@@ -95,11 +101,6 @@ static int ble_manager_gap_event(struct ble_gap_event *event, void *arg)
 }
 
 // NimBLE host task, callbacks
-static void ble_on_reset(int reason)
-{
-    ESP_LOGI(TAG, "BLE Reset, reason: %d", reason);
-}
-
 static void ble_on_sync(void)
 {
     int rc = ble_hs_util_ensure_addr(0);
@@ -120,6 +121,11 @@ static void ble_on_sync(void)
     ble_app_advertise();
 }
 
+static void ble_on_reset(int reason)
+{
+    ESP_LOGI(TAG, "BLE Reset, reason: %d", reason);
+}
+
 static void ble_host_task(void *param)
 {
     ESP_LOGI(TAG, "BLE host Task started");
@@ -135,7 +141,7 @@ void ble_manager_init(void)
         ESP_LOGW(TAG, "BLE already initialized");
         return;
     }
-    ESP_LOGI(TAG, "Creating BimBLE ...");
+    ESP_LOGI(TAG, "Creating NimBLE ...");
 
     nimble_port_init();
     // Initialize NimBLE host configuration
@@ -144,12 +150,31 @@ void ble_manager_init(void)
     ble_hs_cfg.gatts_register_cb = NULL;
     ble_hs_cfg.store_status_cb = NULL;
 
-    ble_svc_gap_init();
-    ble_svc_gatt_init();
-
     ble_svc_gap_device_name_set(BLE_DEVICE_NAME);
 
     is_ble_initialized = true;
-    nimble_port_freertos_init(ble_host_task);
+    // nimble_port_freertos_init(ble_host_task);
     ESP_LOGI(TAG, "BLE initialized");
+}
+
+void ble_manager_start(void)
+{
+
+    nimble_port_freertos_init(ble_host_task);
+    ESP_LOGI(TAG, "BLE manager started");
+}
+
+void ble_manager_stop(void)
+{
+    ble_gap_adv_stop();
+    nimble_port_stop();
+    nimble_port_deinit();
+    is_ble_initialized = false;
+}
+
+int get_ble_status(void)
+{
+    if (is_ble_initialized)
+        ESP_LOGI(TAG, "ble has been initialized");
+    return 0;
 }
