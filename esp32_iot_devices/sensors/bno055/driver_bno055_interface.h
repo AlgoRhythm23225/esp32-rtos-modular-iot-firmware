@@ -40,7 +40,6 @@
 #include "freertos/FreeRTOS.h"
 #include "freertos/task.h"
 #include "esp_log.h"
-#include "driver_bno055.h"
 
 #ifdef __cplusplus
 extern "C"{
@@ -81,7 +80,7 @@ uint8_t bno055_interface_iic_deinit(void);
  *            - 1 write failed
  * @note      none
  */
-uint8_t bno055_interface_iic_write_cmd(uint8_t addr, uint8_t *buf, uint16_t len);
+esp_err_t bno055_interface_iic_write(uint8_t addr, uint8_t reg, uint8_t *buf, uint16_t len);
 
 /**
  * @brief      interface iic bus read command
@@ -93,7 +92,7 @@ uint8_t bno055_interface_iic_write_cmd(uint8_t addr, uint8_t *buf, uint16_t len)
  *             - 1 read failed
  * @note       none
  */
-uint8_t bno055_interface_iic_read_cmd(uint8_t addr, uint8_t *buf, uint16_t len);
+esp_err_t bno055_interface_iic_read(uint8_t addr, uint8_t reg, uint8_t *buf, uint16_t len);
 
 /**
  * @brief     interface delay ms
