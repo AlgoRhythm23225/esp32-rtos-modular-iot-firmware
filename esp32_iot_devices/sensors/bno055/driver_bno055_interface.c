@@ -21,37 +21,25 @@
  * OUT OF OR IN CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN THE
  * SOFTWARE. 
  *
- * @file      driver_aht20_interface.h
- * @brief     driver aht20 interface header file
+ * @file      driver_bno055_interface.c
+ * @brief     driver bno055 interface source file
  * @version   1.0.0
- * @author    Shifeng Li
- * @date      2022-10-31
+ * @author    Le Hoan
+ * @date      2022-11-30
  *
  * <h3>history</h3>
  * <table>
  * <tr><th>Date        <th>Version  <th>Author      <th>Description
- * <tr><td>2022/10/31  <td>1.0      <td>Shifeng Li  <td>first upload
+ * <tr><td>2022/11/30  <td>1.0      <td>Le Hoan     <td>first upload
  * </table>
  */
 
-#ifndef DRIVER_AHT20_INTERFACE_H
-#define DRIVER_AHT20_INTERFACE_H
+#include "driver_bno055_interface.h"
+#include "i2c_manager.h"
 
-#include "freertos/FreeRTOS.h"
-#include "freertos/task.h"
-#include "esp_log.h"
-#include "driver_aht20.h"
+#define bno055_ADDRESS  BNO055_ADDRESS_A
 
-#ifdef __cplusplus
-extern "C"{
-#endif
-
-/**
- * @defgroup aht20_interface_driver aht20 interface driver function
- * @brief    aht20 interface driver modules
- * @ingroup  aht20_driver
- * @{
- */
+static i2c_master_dev_handle_t bno055_handle = NULL;
 
 /**
  * @brief  interface iic bus init
@@ -60,7 +48,13 @@ extern "C"{
  *         - 1 iic init failed
  * @note   none
  */
-uint8_t aht20_interface_iic_init(void);
+uint8_t bno055_interface_iic_init(void)
+{
+    i2c_add_device(bno055_ADDRESS, &bno055_handle);
+    ESP_LOGI(TAG_I2C, "BNO055 sensor added to I2C bus!");
+    
+    return 0;
+}
 
 /**
  * @brief  interface iic bus deinit
@@ -69,52 +63,67 @@ uint8_t aht20_interface_iic_init(void);
  *         - 1 iic deinit failed
  * @note   none
  */
-uint8_t aht20_interface_iic_deinit(void);
+uint8_t bno055_interface_iic_deinit(void)
+{
+    return 0;
+}
 
 /**
- * @brief      interface iic bus read
- * @param[in]  addr iic device write address
- * @param[out] *buf pointer to a data buffer
- * @param[in]  len length of the data buffer
- * @return     status code
- *             - 0 success
- *             - 1 read failed
- * @note       none
- */
-uint8_t aht20_interface_iic_read_cmd(uint8_t addr, uint8_t *buf, uint16_t len);
-
-/**
- * @brief     interface iic bus write
+ * @brief     interface iic bus write command
  * @param[in] addr iic device write address
  * @param[in] *buf pointer to a data buffer
- * @param[in] len length of the data buffer
+ * @param[in] len length of data buffer
  * @return    status code
  *            - 0 success
  *            - 1 write failed
  * @note      none
  */
-uint8_t aht20_interface_iic_write_cmd(uint8_t addr, uint8_t *buf, uint16_t len);
+uint8_t bno055_interface_iic_write_cmd(uint8_t addr, uint8_t *buf, uint16_t len)
+{
+    esp_err_t err = i2c_write_sensor(bno055_handle, buf, len);
+
+    return (err == ESP_OK) ? 0 : 1;
+}
+
+/**
+ * @brief      interface iic bus read command
+ * @param[in]  addr iic device write address
+ * @param[out] *buf pointer to a data buffer
+ * @param[in]  len length of data buffer
+ * @return     status code
+ *             - 0 success
+ *             - 1 read failed
+ * @note       none
+ */
+uint8_t bno055_interface_iic_read(uint8_t addr, uint8_t reg, uint8_t *buf, uint16_t len)
+{
+    uint8_t reg_addr = reg;
+    esp_err_t err = i2c_write_read_sensor(bno055_handle, &reg_addr, 1, buf, len);
+
+    return (err == ESP_OK) ? 0 : 1;
+}
 
 /**
  * @brief     interface delay ms
  * @param[in] ms time
  * @note      none
  */
-void aht20_interface_delay_ms(uint32_t ms);
+void bno055_interface_delay_ms(uint32_t ms)
+{
+    vTaskDelay(pdMS_TO_TICKS(ms));
+}
 
 /**
  * @brief     interface print format data
  * @param[in] fmt format data
  * @note      none
  */
-void aht20_interface_debug_print(const char *const fmt, ...);
+void bno055_interface_debug_print(const char *const fmt, ...)
+{
+    va_list args;
+    va_start(args, fmt);
 
-/**
- * @}
- */
+    esp_log_writev(ESP_LOG_INFO, "bno055", fmt, args);
 
-#ifdef __cplusplus
+    va_end(args);
 }
-#endif
-
-#endif

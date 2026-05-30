@@ -21,35 +21,35 @@
  * OUT OF OR IN CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN THE
  * SOFTWARE. 
  *
- * @file      driver_aht20_interface.h
- * @brief     driver aht20 interface header file
+ * @file      driver_bno055_interface.h
+ * @brief     driver bno055 interface header file
  * @version   1.0.0
- * @author    Shifeng Li
- * @date      2022-10-31
+ * @author    Le Hoan
+ * @date      2026-05-30
  *
  * <h3>history</h3>
  * <table>
  * <tr><th>Date        <th>Version  <th>Author      <th>Description
- * <tr><td>2022/10/31  <td>1.0      <td>Shifeng Li  <td>first upload
+ * <tr><td>2026/05/30  <td>1.0      <td>Le Hoan     <td>first upload
  * </table>
  */
 
-#ifndef DRIVER_AHT20_INTERFACE_H
-#define DRIVER_AHT20_INTERFACE_H
+#ifndef DRIVER_BNO055_INTERFACE_H
+#define DRIVER_BNO055_INTERFACE_H
 
 #include "freertos/FreeRTOS.h"
 #include "freertos/task.h"
 #include "esp_log.h"
-#include "driver_aht20.h"
+#include "driver_bno055.h"
 
 #ifdef __cplusplus
 extern "C"{
 #endif
 
 /**
- * @defgroup aht20_interface_driver aht20 interface driver function
- * @brief    aht20 interface driver modules
- * @ingroup  aht20_driver
+ * @defgroup bno055_interface_driver bno055 interface driver function
+ * @brief    bno055 interface driver modules
+ * @ingroup  bno055_driver
  * @{
  */
 
@@ -60,7 +60,7 @@ extern "C"{
  *         - 1 iic init failed
  * @note   none
  */
-uint8_t aht20_interface_iic_init(void);
+uint8_t bno055_interface_iic_init(void);
 
 /**
  * @brief  interface iic bus deinit
@@ -69,45 +69,45 @@ uint8_t aht20_interface_iic_init(void);
  *         - 1 iic deinit failed
  * @note   none
  */
-uint8_t aht20_interface_iic_deinit(void);
+uint8_t bno055_interface_iic_deinit(void);
 
 /**
- * @brief      interface iic bus read
- * @param[in]  addr iic device write address
- * @param[out] *buf pointer to a data buffer
- * @param[in]  len length of the data buffer
- * @return     status code
- *             - 0 success
- *             - 1 read failed
- * @note       none
- */
-uint8_t aht20_interface_iic_read_cmd(uint8_t addr, uint8_t *buf, uint16_t len);
-
-/**
- * @brief     interface iic bus write
+ * @brief     interface iic bus write command
  * @param[in] addr iic device write address
  * @param[in] *buf pointer to a data buffer
- * @param[in] len length of the data buffer
+ * @param[in] len length of data buffer
  * @return    status code
  *            - 0 success
  *            - 1 write failed
  * @note      none
  */
-uint8_t aht20_interface_iic_write_cmd(uint8_t addr, uint8_t *buf, uint16_t len);
+uint8_t bno055_interface_iic_write_cmd(uint8_t addr, uint8_t *buf, uint16_t len);
+
+/**
+ * @brief      interface iic bus read command
+ * @param[in]  addr iic device write address
+ * @param[out] *buf pointer to a data buffer
+ * @param[in]  len length of data buffer
+ * @return     status code
+ *             - 0 success
+ *             - 1 read failed
+ * @note       none
+ */
+uint8_t bno055_interface_iic_read_cmd(uint8_t addr, uint8_t *buf, uint16_t len);
 
 /**
  * @brief     interface delay ms
  * @param[in] ms time
  * @note      none
  */
-void aht20_interface_delay_ms(uint32_t ms);
+void bno055_interface_delay_ms(uint32_t ms);
 
 /**
  * @brief     interface print format data
  * @param[in] fmt format data
  * @note      none
  */
-void aht20_interface_debug_print(const char *const fmt, ...);
+void bno055_interface_debug_print(const char *const fmt, ...);
 
 /**
  * @}

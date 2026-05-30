@@ -35,6 +35,11 @@
  */
 
 #include "driver_aht20_interface.h"
+#include "i2c_manager.h"
+
+#define AHT20_ADDRESS      0x76
+
+static i2c_master_dev_handle_t aht20_handle = NULL;
 
 /**
  * @brief  interface iic bus init
@@ -45,6 +50,9 @@
  */
 uint8_t aht20_interface_iic_init(void)
 {
+    i2c_add_device(AHT20_ADDRESS, &aht20_handle);
+    ESP_LOGI(TAG_I2C, "AHT20 sensor added to I2C bus!");
+
     return 0;
 }
 
@@ -72,7 +80,9 @@ uint8_t aht20_interface_iic_deinit(void)
  */
 uint8_t aht20_interface_iic_read_cmd(uint8_t addr, uint8_t *buf, uint16_t len)
 {
-    return 0;
+    esp_err_t err = i2c_read_sensor(aht20_handle, buf, len);
+
+    return (err == ESP_OK) ? 0 : 1;
 }
 
 /**
@@ -87,7 +97,9 @@ uint8_t aht20_interface_iic_read_cmd(uint8_t addr, uint8_t *buf, uint16_t len)
  */
 uint8_t aht20_interface_iic_write_cmd(uint8_t addr, uint8_t *buf, uint16_t len)
 {
-    return 0;
+    esp_err_t err = i2c_write_sensor(aht20_handle, buf, len);
+
+    return (err == ESP_OK) ? 0 : 1;
 }
 
 /**
@@ -97,7 +109,7 @@ uint8_t aht20_interface_iic_write_cmd(uint8_t addr, uint8_t *buf, uint16_t len)
  */
 void aht20_interface_delay_ms(uint32_t ms)
 {
-
+    vTaskDelay(pdMS_TO_TICKS(ms));
 }
 
 /**
@@ -107,5 +119,10 @@ void aht20_interface_delay_ms(uint32_t ms)
  */
 void aht20_interface_debug_print(const char *const fmt, ...)
 {
-    
+    va_list args;
+    va_start(args, fmt);
+
+    esp_log_writev(ESP_LOG_INFO, "BME280", fmt, args);
+
+    va_end(args);
 }
