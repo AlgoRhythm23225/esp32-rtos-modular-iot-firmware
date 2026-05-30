@@ -283,3 +283,6 @@
 41	177	8018519647084188	CMakeFiles/bootloader_check_size	9aec7ef6c990865b
 41	177	8018519647084188	C:/Users/Admin/Desktop/esp/FINAL_EXAM/esp32-modular-iot-firmware/Project/build/bootloader/CMakeFiles/bootloader_check_size	9aec7ef6c990865b
 30	372	8018519646983939	CMakeFiles/gen_bootloader_digest_bin.util	79d446719cfc6dc2
+38	160	8018523491328831	CMakeFiles/bootloader_check_size	9aec7ef6c990865b
+38	160	8018523491328831	C:/Users/Admin/Desktop/esp/FINAL_EXAM/esp32-modular-iot-firmware/Project/build/bootloader/CMakeFiles/bootloader_check_size	9aec7ef6c990865b
+28	362	8018523491226012	CMakeFiles/gen_bootloader_digest_bin.util	79d446719cfc6dc2

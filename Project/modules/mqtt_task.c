@@ -285,6 +285,27 @@ static void mqtt_event_cb(MQTTContext_t          *ctx,
     ESP_LOGI(TAG, "RX topic=%.*s len=%u",
              (int)pub->topicNameLength, pub->pTopicName, (unsigned)pub->payloadLength);
 
+    // Push raw received message into subscribe queue for other tasks to consume.
+    if (g_mqtt_subscribe_queue != NULL) {
+        mqtt_subscribe_msg_t sub_msg;
+        memset(&sub_msg, 0, sizeof(sub_msg));
+
+        size_t top_copy = pub->topicNameLength < sizeof(sub_msg.topic) - 1
+                          ? pub->topicNameLength : sizeof(sub_msg.topic) - 1;
+        memcpy(sub_msg.topic, pub->pTopicName, top_copy);
+        sub_msg.topic[top_copy] = '\0';
+
+        size_t pay_copy = pub->payloadLength < sizeof(sub_msg.payload) - 1
+                          ? pub->payloadLength : sizeof(sub_msg.payload) - 1;
+        memcpy(sub_msg.payload, pub->pPayload, pay_copy);
+        sub_msg.payload[pay_copy] = '\0';
+        sub_msg.payload_len = pay_copy;
+
+        if (xQueueSend(g_mqtt_subscribe_queue, &sub_msg, 0) != pdTRUE) {
+            ESP_LOGW(TAG, "Subscribe queue full - message dropped");
+        }
+    }
+
     const char *payload  = (const char *)pub->pPayload;
     size_t      pay_len  = pub->payloadLength;
     uint16_t    top_len  = pub->topicNameLength;
@@ -388,16 +409,15 @@ static MQTTStatus_t mqtt_subscribe_all(MQTTContext_t *mqtt_ctx)
 {
     MQTTSubscribeInfo_t subs[2];
     memset(subs, 0, sizeof(subs));
-    while(xQueueReceive(g_mqtt_subscribe_queue, &subs, 0) == pdTRUE)
-    {
-        subs[0].qos                 = MQTTQoS0;
-        subs[0].pTopicFilter        = TOPIC_CMD;
-        subs[0].topicFilterLength   = (uint16_t)strlen(TOPIC_CMD);
 
-        subs[1].qos                 = MQTTQoS0;
-        subs[1].pTopicFilter        = TOPIC_OTA_CMD;
-        subs[1].topicFilterLength   = (uint16_t)strlen(TOPIC_OTA_CMD);
-    }
+    subs[0].qos               = MQTTQoS0;
+    subs[0].pTopicFilter      = TOPIC_CMD;
+    subs[0].topicFilterLength = (uint16_t)strlen(TOPIC_CMD);
+
+    subs[1].qos               = MQTTQoS0;
+    subs[1].pTopicFilter      = TOPIC_OTA_CMD;
+    subs[1].topicFilterLength = (uint16_t)strlen(TOPIC_OTA_CMD);
+
     return MQTT_Subscribe(mqtt_ctx, subs, 2, MQTT_GetPacketId(mqtt_ctx));
 }
 
