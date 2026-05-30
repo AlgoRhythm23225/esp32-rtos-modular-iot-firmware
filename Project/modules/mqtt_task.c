@@ -388,15 +388,16 @@ static MQTTStatus_t mqtt_subscribe_all(MQTTContext_t *mqtt_ctx)
 {
     MQTTSubscribeInfo_t subs[2];
     memset(subs, 0, sizeof(subs));
+    while(xQueueReceive(g_mqtt_subscribe_queue, &subs, 0) == pdTRUE)
+    {
+        subs[0].qos                 = MQTTQoS0;
+        subs[0].pTopicFilter        = TOPIC_CMD;
+        subs[0].topicFilterLength   = (uint16_t)strlen(TOPIC_CMD);
 
-    subs[0].qos                 = MQTTQoS0;
-    subs[0].pTopicFilter        = TOPIC_CMD;
-    subs[0].topicFilterLength   = (uint16_t)strlen(TOPIC_CMD);
-
-    subs[1].qos                 = MQTTQoS0;
-    subs[1].pTopicFilter        = TOPIC_OTA_CMD;
-    subs[1].topicFilterLength   = (uint16_t)strlen(TOPIC_OTA_CMD);
-
+        subs[1].qos                 = MQTTQoS0;
+        subs[1].pTopicFilter        = TOPIC_OTA_CMD;
+        subs[1].topicFilterLength   = (uint16_t)strlen(TOPIC_OTA_CMD);
+    }
     return MQTT_Subscribe(mqtt_ctx, subs, 2, MQTT_GetPacketId(mqtt_ctx));
 }
 

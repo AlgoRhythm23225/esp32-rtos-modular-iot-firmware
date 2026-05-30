@@ -19,6 +19,7 @@
 #define MQTT_RECONNECT_DELAY_MS 5000
 #define MQTT_PROCESS_LOOP_MS    100
 #define MQTT_PUBLISH_QUEUE_SIZE 10
+#define MQTT_SUBSCRIBE_QUEUE_SIZE 10
 
 #define AWS_ENDPOINT  "adiub9wc49ljw-ats.iot.ap-southeast-1.amazonaws.com"
 #define AWS_PORT      "8883"
@@ -53,8 +54,15 @@ typedef struct {
     size_t payload_len;
 } mqtt_publish_msg_t;
 
+typedef struct {
+    char   topic[128];
+    char   payload[512];
+    size_t payload_len;
+} mqtt_subscribe_msg_t;
+
 extern EventGroupHandle_t g_system_event_group;
 extern QueueHandle_t      g_mqtt_publish_queue;
+extern QueueHandle_t      g_mqtt_subscribe_queue;
 extern QueueHandle_t      g_control_queue;
 extern SemaphoreHandle_t  g_mqtt_ready_sem;
 

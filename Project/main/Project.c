@@ -15,6 +15,7 @@ EventGroupHandle_t g_system_event_group = NULL;
 QueueHandle_t      g_mqtt_publish_queue = NULL;
 QueueHandle_t      g_control_queue      = NULL;
 SemaphoreHandle_t  g_mqtt_ready_sem     = NULL;
+QueueHandle_t      g_mqtt_subscribe_queue = NULL;
 
 static esp_err_t rtos_resources_create(void)
 {
@@ -30,6 +31,9 @@ static esp_err_t rtos_resources_create(void)
     g_mqtt_ready_sem = xSemaphoreCreateBinary();
     if (g_mqtt_ready_sem == NULL) return ESP_ERR_NO_MEM;
 
+    g_mqtt_subscribe_queue = xQueueCreate(MQTT_SUBSCRIBE_QUEUE_SIZE, sizeof(mqtt_subscribe_msg_t));
+    if (g_mqtt_subscribe_queue == NULL) return ESP_ERR_NO_MEM;
+    
     ESP_LOGI(TAG, "RTOS resources created");
     return ESP_OK;
 }
