@@ -1,0 +1,12 @@
+idf_component_register(SRCS "wifi_manager.c"
+                    INCLUDE_DIRS "."
+                    REQUIRES
+                        esp_wifi  
+                        esp_http_client
+                        nvs_flash
+                    PRIV_REQUIRES
+                        i2c
+                        bh1750
+                        bme280
+                        bmp280                  
+)

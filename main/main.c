@@ -1,15 +1,11 @@
 #include <stdio.h>
 #include "esp_log.h"
-#include "i2c_manager.h"
-#include "bh1750.h"
-#include "bme280.h"
-#include "bmp280.h"
+#include "wifi_manager.h"
 
 void app_main(void)
 {
-    i2c_init();
+    wifi_init_sta();
 
-    xTaskCreate(bmp280_app_test, "bmp280_task", 2048, NULL, 5, NULL);
-    xTaskCreate(bh1750_app_test, "bh1750_task", 2048, NULL, 5, NULL);
+    xTaskCreate(http_get_task, "http_get_task", 8192, NULL, 5, NULL);
 }
 
