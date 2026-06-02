@@ -37,7 +37,7 @@
 #include "driver_aht20_interface.h"
 #include "i2c_manager.h"
 
-#define AHT20_ADDRESS      0x76
+#define AHT20_ADDRESS      0x38
 
 static i2c_master_dev_handle_t aht20_handle = NULL;
 

@@ -18,7 +18,7 @@
  *            - 1 init failed
  * @note      none
  */
-uint8_t bmp280_full_init(bmp280_interface_t interface, bmp280_address_t addr_pin);
+uint8_t bmp280_app_init(bmp280_interface_t interface, bmp280_address_t addr_pin);
 
 /**
  * @brief      basic example read

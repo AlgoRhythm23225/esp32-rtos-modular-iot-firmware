@@ -6,5 +6,9 @@ idf_component_register(SRCS "main.c"
                         i2c
                         bh1750
                         bme280
-                        bmp280                  
+                        bmp280 
+                        aht20   
+                        ina226
+                        bno055
+                        sensors_manager              
 )

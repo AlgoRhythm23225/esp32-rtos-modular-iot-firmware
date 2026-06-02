@@ -191,8 +191,8 @@ void bmp280_app_test(void *pvParameter) {
     while (1) {     
         bmp280_app_read(&temperature, &pressure);
         
-        printf("Temperature: %.2f\n", temperature);
-        printf("Pressure: %.2f\n", pressure);
+        printf("bmp280: Temperature: %.2f\n", temperature);
+        printf("bmp280: Pressure: %.2f\n", pressure);
         vTaskDelay(pdMS_TO_TICKS(1000));
     }
 }

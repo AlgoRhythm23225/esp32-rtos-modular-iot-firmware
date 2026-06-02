@@ -25,7 +25,7 @@ void i2c_scan()
     for (int i = 0; i < 127; i++) {
         esp_err_t ret = i2c_master_probe(bus_handle, i, -1);
         if (ret == ESP_OK) {
-            ESP_LOGI(TAG, "Found at %d", i);
+            ESP_LOGI(TAG, "Found at 0x%02X", i);
         } else {
             ESP_LOGW(TAG, "Not found at %d", i);
         }

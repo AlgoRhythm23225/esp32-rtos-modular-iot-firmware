@@ -111,7 +111,7 @@ uint8_t bme280_interface_iic_write(uint8_t addr, uint8_t reg, uint8_t *buf, uint
         write_buf[i + 1] = buf[i];
     }
 
-    esp_err_t err = i2c_read_sensor(bme280_handle, write_buf, len + 1);
+    esp_err_t err = i2c_write_sensor(bme280_handle, write_buf, len + 1);
 
     return (err == ESP_OK) ? 0 : 1;
 }

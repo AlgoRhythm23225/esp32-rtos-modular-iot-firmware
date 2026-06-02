@@ -93,8 +93,8 @@ void aht20_app_test(void *pvParameter) {
 
     while(1) {
         if (aht20_app_read(&temperature, &humidity) == 0) {
-            printf("Temperature: %.2f\n", temperature);
-            printf("Humidity: %d %%\n", humidity);
+            // printf("aht20: Temperature: %.2f\n", temperature);
+            printf("aht20: Humidity: %d %%\n", humidity);
         } else {
             printf("Read data from AHT20 failed!\n");
         }

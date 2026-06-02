@@ -51,7 +51,7 @@
 /**
  * @brief chip address definition
  */
-#define AHT20_ADDRESS             0x70        /**< iic device address */
+#define AHT20_ADDRESS             0x38        /**< iic device address */
 
 /**
  * @brief      read bytes

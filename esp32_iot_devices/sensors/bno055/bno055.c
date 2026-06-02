@@ -45,7 +45,7 @@ void bno055_print_app_id() {
 
 void bno055_ndof_task(void *pvParameters) {
     bno055_I2C_init();
-
+    
     esp_err_t err;
     bno055_quaternion_t quat;
     bno055_vec3_t lin_accel;
