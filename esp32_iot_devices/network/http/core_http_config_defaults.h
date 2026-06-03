@@ -54,7 +54,7 @@
  * <b>Default value:</b> `my-platform-name`
  */
 #ifndef HTTP_USER_AGENT_VALUE
-    #define HTTP_USER_AGENT_VALUE    "my-platform-name"
+    #define HTTP_USER_AGENT_VALUE    "ESP32-CoreHTTP/v3.1.3"
 #endif
 
 /**
@@ -120,8 +120,9 @@
  * <b>Default value</b>: Error logging is turned off, and no code is generated for calls
  * to the macro in the HTTP Client library on compilation.
  */
+
 #ifndef LogError
-    #define LogError( message )
+    #define LogError( message )   
 #endif
 
 /**

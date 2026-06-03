@@ -7,5 +7,6 @@ idf_component_register(SRCS "main.c"
                         bh1750
                         bme280
                         bmp280
-                        wifi                  
+                        wifi
+                        http                  
 )

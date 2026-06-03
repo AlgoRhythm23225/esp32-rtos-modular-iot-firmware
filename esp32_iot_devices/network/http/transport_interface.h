@@ -81,7 +81,7 @@
  * @code{c}
  * struct NetworkContext
  * {
- *     struct MyTCPSocketContext tcpSocketContext;
+ *     struct D tcpSocketContext;
  *     struct MyTLSContext tlsContext;
  * };
  * @endcode
@@ -188,8 +188,10 @@
  * This context is passed into the network interface functions.
  */
 /* @[define_networkcontext] */
-struct NetworkContext;
-typedef struct NetworkContext NetworkContext_t;
+
+typedef struct NetworkContext {
+    int socket;
+} NetworkContext_t;
 /* @[define_networkcontext] */
 
 /**
