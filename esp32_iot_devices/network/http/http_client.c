@@ -1,18 +1,18 @@
 #include "http_client.h"
 #include "esp_log.h"
 
-int32_t myPlatformTransportReceive(NetworkContext_t *pNetworkContext,
-                                       void *pBuffer,
-                                       size_t bytesToRecv) 
-{
-    return recv(pNetworkContext->socket, pBuffer, bytesToRecv, 0);
-}
-
 int32_t myPlatformTransportSend(NetworkContext_t *pNetworkContext,
-                                       const void *pBuffer,
-                                       size_t bytesToSend) 
+                                            const void *pBuffer,
+                                            size_t bytesToSend) 
 {
-    return send(pNetworkContext->socket, pBuffer, bytesToSend, 0);
+    return socket_send(pNetworkContext->socket, pBuffer, bytesToSend);
+}
+    
+int32_t myPlatformTransportReceive(NetworkContext_t *pNetworkContext,
+                                           void *pBuffer,
+                                           size_t bytesToRecv) 
+{
+    return socket_recv(pNetworkContext->socket, pBuffer, bytesToRecv);
 }
 
 // Declare an HTTPRequestHeaders_t and HTTPRequestInfo_t.
@@ -47,40 +47,10 @@ void http_req_headers_init() {
 
 }
 
-int socket_create() {
-    // create socket object
-    int sock = socket(AF_INET, SOCK_STREAM, IPPROTO_IP);
-    if (sock >= 0) {
-        ESP_LOGI("SOCKET", "Socket created successfully, ID=%d", sock);
-    }
-    else {
-        ESP_LOGE("SOCKET", "Socket creation failed! errno=%d (%s)", errno, strerror(errno));
-    }
-
-    return sock;    
-}
-
-void socket_connect(int sock) {
-    struct sockaddr_in dest_addr;
-    dest_addr.sin_addr.s_addr = inet_addr("146.190.62.39");
-    dest_addr.sin_family = AF_INET;
-    dest_addr.sin_port = htons(80);
-
-    printf("Connecting...\n");
-    int err = connect(sock, (struct sockaddr*)&dest_addr, sizeof(dest_addr));
-    if(err == 0) {
-        ESP_LOGI("[Socket]", "Socket connect succesfully to %s:%d", inet_ntoa(dest_addr.sin_addr), ntohs(dest_addr.sin_port));
-    } 
-    else {
-        ESP_LOGE("[Socket]", "Socket connect failed, errno=%d (%s)", errno, strerror(errno));
-    }
-}
-
 void http_send(int sock) {
     HTTPStatus_t httpLibraryStatus = HTTPSuccess;
     TransportInterface_t pTransport = { 0 };
     HTTPResponse_t pResponse = { 0 };
-    
     NetworkContext_t ctx;
     ctx.socket = sock;
     
@@ -126,17 +96,18 @@ void http_send(int sock) {
                                                 &dateLen);
 
     
+    printf("\033[36m===REQUEST HEADERS===\033[0m\n");
     printf("%.*s\n", (int)pResponse.headersLen, pResponse.pHeaders);
+    printf("\033[36m===BODY===\033[0m\n");
     printf("%.*s\n", (int)pResponse.bodyLen, pResponse.pBody);
     
+    free(pResponse.pBuffer);
     close(sock);
 }
 
 void http_test_task() {
-    int sock;
-
     http_req_headers_init();
-    sock = socket_create();
-    socket_connect(sock);
+
+    int sock = socket_create_connect();
     http_send(sock);
 }

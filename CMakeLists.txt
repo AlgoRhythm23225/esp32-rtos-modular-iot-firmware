@@ -11,6 +11,7 @@ set(EXTRA_COMPONENT_DIRS
     esp32_iot_devices/sensors/aht20
     esp32_iot_devices/network/wifi
     esp32_iot_devices/network/http
+    esp32_iot_devices/network/socket
 )
 
 include($ENV{IDF_PATH}/tools/cmake/project.cmake)

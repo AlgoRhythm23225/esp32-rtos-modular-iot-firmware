@@ -4,8 +4,7 @@
 
 void app_main(void)
 {
-    wifi_init_sta();
-    
+    wifi_init_sta();    
     http_test_task();
 }
 
