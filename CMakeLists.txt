@@ -9,9 +9,8 @@ set(EXTRA_COMPONENT_DIRS
     esp32_iot_devices/sensors/bh1750
     esp32_iot_devices/sensors/ina226
     esp32_iot_devices/sensors/aht20
-    esp32_iot_devices/network/wifi
-    esp32_iot_devices/network/http
-    esp32_iot_devices/network/socket
+    esp32_iot_devices/sensors/bno055
+    esp32_iot_devices/sensors/sensors_manager
 )
 
 include($ENV{IDF_PATH}/tools/cmake/project.cmake)
