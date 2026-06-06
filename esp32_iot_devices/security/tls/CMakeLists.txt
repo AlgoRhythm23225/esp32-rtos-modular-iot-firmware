@@ -1,6 +1,6 @@
-idf_component_register(SRCS "nvs_manager.c"
+idf_component_register(SRCS "tls_manager.c"
                     INCLUDE_DIRS "."
                     REQUIRES
-                        nvs_flash
+                        esp-tls
                     PRIV_REQUIRES
 )

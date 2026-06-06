@@ -32,6 +32,7 @@
 
 #include <stdint.h>
 #include <stddef.h>
+#include "esp_tls.h"
 
 /* *INDENT-OFF* */
 #ifdef __cplusplus
@@ -188,9 +189,10 @@
  * This context is passed into the network interface functions.
  */
 /* @[define_networkcontext] */
-
+typedef int core_http_lwip_socket_t;
 typedef struct NetworkContext {
-    int socket;
+    core_http_lwip_socket_t socket;
+    esp_tls_t *tls_handle;
 } NetworkContext_t;
 /* @[define_networkcontext] */
 
@@ -316,4 +318,5 @@ typedef struct TransportInterface
 #endif
 /* *INDENT-ON* */
 
-#endif /* ifndef TRANSPORT_INTERFACE_H_ */
+#endif 
+/* ifndef TRANSPORT_INTERFACE_H_ */

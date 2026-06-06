@@ -1,5 +1,7 @@
 #include "wifi_manager.h"
+#include "esp_wifi.h"
 #include "esp_log.h"
+#include "nvs_manager.h"
 
 #define WIFI_SSID   "Quang Trung"
 #define WIFI_PASS   "0913048530"
@@ -34,6 +36,8 @@ static void wifi_event_handler(void *arg, esp_event_base_t event_base, int32_t e
  * @brief WIFI init
  */
 void wifi_init_sta() {
+    nvs_init();
+
     wifi_event_group = xEventGroupCreate();
 
     ESP_ERROR_CHECK(esp_netif_init());
@@ -79,4 +83,3 @@ void wifi_init_sta() {
 
     ESP_LOGI(TAG, "WIFI STA Init finished");
 }
-

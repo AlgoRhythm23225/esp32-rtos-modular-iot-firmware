@@ -10,5 +10,6 @@ idf_component_register(SRCS "main.c"
                         aht20   
                         ina226
                         bno055
-                        sensors_manager              
+                        wifi
+                        http
 )

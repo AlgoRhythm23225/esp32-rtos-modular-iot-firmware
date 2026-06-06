@@ -65,5 +65,12 @@
  */
 #define HTTP_SEND_RETRY_TIMEOUT_MS    ( 1U )
 
+/**
+ * @brief Choose whether TCP or TLS for http transfer
+ */
+typedef enum {
+    TRANSPORT_TCP,
+    TRANSPORT_TLS
+} transport_type_t;
 
 #endif /* ifndef CORE_HTTP_CONFIG_H */
