@@ -1,0 +1,18 @@
+#include <stdio.h>
+
+#include "esp_log.h"
+#include "nvs_manager.h"
+#include "ble_manager.h"
+#include "ble_gatts_svc.h"
+
+static const char *TAG = "APP_MAIN";
+
+void app_main(void)
+{
+    ESP_LOGI(TAG, "System init");
+    nvs_manager_init();
+
+    ble_manager_init();
+    gatt_svc_init();
+    ble_manager_start();
+}
