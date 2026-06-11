@@ -191,7 +191,6 @@
 /* @[define_networkcontext] */
 typedef int core_http_lwip_socket_t;
 typedef struct NetworkContext {
-    core_http_lwip_socket_t socket;
     esp_tls_t *tls_handle;
 } NetworkContext_t;
 /* @[define_networkcontext] */

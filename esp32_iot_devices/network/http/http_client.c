@@ -181,19 +181,7 @@ void http_test_task() {
     }
     // TLS
     else {
-        esp_tls_cfg_t cfg = {
-            .use_global_ca_store = false,
-            .crt_bundle_attach = esp_crt_bundle_attach,
-        };
-
-        ctx.tls_handle = esp_tls_init();
-        if (ctx.tls_handle == NULL) {
-            ESP_LOGE(TAG_TLS, "Failed to initialize ESP_TLS structure");
-            return;
-        }
-
-        HTTP_LOGI("Connecting to %s:%s via TLS...", host, port);
-        int ret = esp_tls_conn_new_sync(host, strlen(host), atoi(port), &cfg, ctx.tls_handle);
+        tls_err_t ret = tls_init_connect(&ctx.tls_handle, host, port);
 
         if (ret > 0) {
             ESP_LOGI(TAG_TLS, "TLS Connected Successfully!");
