@@ -55,6 +55,9 @@ C:/Users/Admin/Desktop/esp/FINAL_EXAM/esp32-modular-iot-firmware/Project/build/e
 C:/Users/Admin/Desktop/esp/FINAL_EXAM/esp32-modular-iot-firmware/Project/build/esp-idf/esp_psram/libesp_psram.a
 C:/Users/Admin/Desktop/esp/FINAL_EXAM/esp32-modular-iot-firmware/Project/build/esp-idf/vfs/libvfs.a
 C:/Users/Admin/Desktop/esp/FINAL_EXAM/esp32-modular-iot-firmware/Project/build/esp-idf/esp_gdbstub/libesp_gdbstub.a
+C:/Users/Admin/Desktop/esp/FINAL_EXAM/esp32-modular-iot-firmware/Project/build/esp-idf/esp_coex/libesp_coex.a
+D:/esp/v6.0/esp-idf/components/esp_coex/lib/esp32/libcoexist.a
+D:/esp/v6.0/esp-idf/components/bt/controller/lib_esp32/esp32/libbtdm_app.a
 C:/Users/Admin/Desktop/esp/FINAL_EXAM/esp32-modular-iot-firmware/Project/build/esp-idf/esp_adc/libesp_adc.a
 C:/Users/Admin/Desktop/esp/FINAL_EXAM/esp32-modular-iot-firmware/Project/build/esp-idf/esp_driver_i2s/libesp_driver_i2s.a
 C:/Users/Admin/Desktop/esp/FINAL_EXAM/esp32-modular-iot-firmware/Project/build/esp-idf/esp_hal_i2c/libesp_hal_i2c.a
@@ -69,7 +72,6 @@ C:/Users/Admin/Desktop/esp/FINAL_EXAM/esp32-modular-iot-firmware/Project/build/e
 C:/Users/Admin/Desktop/esp/FINAL_EXAM/esp32-modular-iot-firmware/Project/build/esp-idf/esp_phy/libesp_phy.a
 C:/Users/Admin/Desktop/esp/FINAL_EXAM/esp32-modular-iot-firmware/Project/build/esp-idf/esp_netif/libesp_netif.a
 C:/Users/Admin/Desktop/esp/FINAL_EXAM/esp32-modular-iot-firmware/Project/build/esp-idf/wpa_supplicant/libwpa_supplicant.a
-C:/Users/Admin/Desktop/esp/FINAL_EXAM/esp32-modular-iot-firmware/Project/build/esp-idf/esp_coex/libesp_coex.a
 D:/esp/v6.0/esp-idf/components/esp_wifi/lib/esp32/libcore.a
 D:/esp/v6.0/esp-idf/components/esp_wifi/lib/esp32/libespnow.a
 D:/esp/v6.0/esp-idf/components/esp_wifi/lib/esp32/libmesh.a
@@ -129,6 +131,8 @@ C:/Users/Admin/Desktop/esp/FINAL_EXAM/esp32-modular-iot-firmware/Project/build/e
 C:/Users/Admin/Desktop/esp/FINAL_EXAM/esp32-modular-iot-firmware/Project/build/esp-idf/esp_wifi/libesp_wifi.a
 C:/Users/Admin/Desktop/esp/FINAL_EXAM/esp32-modular-iot-firmware/Project/build/esp-idf/esp_driver_spi/libesp_driver_spi.a
 C:/Users/Admin/Desktop/esp/FINAL_EXAM/esp32-modular-iot-firmware/Project/build/esp-idf/esp_gdbstub/libesp_gdbstub.a
+C:/Users/Admin/Desktop/esp/FINAL_EXAM/esp32-modular-iot-firmware/Project/build/esp-idf/bt/libbt.a
+C:/Users/Admin/Desktop/esp/FINAL_EXAM/esp32-modular-iot-firmware/Project/build/esp-idf/esp_driver_spi/libesp_driver_spi.a
 C:/Users/Admin/Desktop/esp/FINAL_EXAM/esp32-modular-iot-firmware/Project/build/esp-idf/unity/libunity.a
 C:/Users/Admin/Desktop/esp/FINAL_EXAM/esp32-modular-iot-firmware/Project/build/esp-idf/cmock/libcmock.a
 C:/Users/Admin/Desktop/esp/FINAL_EXAM/esp32-modular-iot-firmware/Project/build/esp-idf/unity/libunity.a
@@ -164,12 +168,12 @@ C:/Users/Admin/Desktop/esp/FINAL_EXAM/esp32-modular-iot-firmware/Project/build/e
 C:/Users/Admin/Desktop/esp/FINAL_EXAM/esp32-modular-iot-firmware/Project/build/esp-idf/esp_driver_sdmmc/libesp_driver_sdmmc.a
 C:/Users/Admin/Desktop/esp/FINAL_EXAM/esp32-modular-iot-firmware/Project/build/esp-idf/esp_driver_sd_intf/libesp_driver_sd_intf.a
 C:/Users/Admin/Desktop/esp/FINAL_EXAM/esp32-modular-iot-firmware/Project/build/esp-idf/esp_driver_sdspi/libesp_driver_sdspi.a
-C:/Users/Admin/Desktop/esp/FINAL_EXAM/esp32-modular-iot-firmware/Project/build/esp-idf/esp_driver_spi/libesp_driver_spi.a
 C:/Users/Admin/Desktop/esp/FINAL_EXAM/esp32-modular-iot-firmware/Project/build/esp-idf/esp_driver_touch_sens/libesp_driver_touch_sens.a
 C:/Users/Admin/Desktop/esp/FINAL_EXAM/esp32-modular-iot-firmware/Project/build/esp-idf/esp_driver_twai/libesp_driver_twai.a
 C:/Users/Admin/Desktop/esp/FINAL_EXAM/esp32-modular-iot-firmware/Project/build/esp-idf/esp_eth/libesp_eth.a
 C:/Users/Admin/Desktop/esp/FINAL_EXAM/esp32-modular-iot-firmware/Project/build/esp-idf/esp_hal_lcd/libesp_hal_lcd.a
 C:/Users/Admin/Desktop/esp/FINAL_EXAM/esp32-modular-iot-firmware/Project/build/esp-idf/esp_hid/libesp_hid.a
+C:/Users/Admin/Desktop/esp/FINAL_EXAM/esp32-modular-iot-firmware/Project/build/esp-idf/bt/libbt.a
 C:/Users/Admin/Desktop/esp/FINAL_EXAM/esp32-modular-iot-firmware/Project/build/esp-idf/tcp_transport/libtcp_transport.a
 C:/Users/Admin/Desktop/esp/FINAL_EXAM/esp32-modular-iot-firmware/Project/build/esp-idf/esp_http_client/libesp_http_client.a
 C:/Users/Admin/Desktop/esp/FINAL_EXAM/esp32-modular-iot-firmware/Project/build/esp-idf/esp_http_server/libesp_http_server.a

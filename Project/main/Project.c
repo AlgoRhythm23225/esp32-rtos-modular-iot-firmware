@@ -8,6 +8,10 @@
 #include "rtos_config.h"
 #include "mqtt_task.h"
 #include "wifi_task.h"
+#include "esp_log.h"
+#include "nvs_manager.h"
+#include "ble_manager.h"
+#include "ble_gatts_svc.h"
 
 static const char *TAG = "MAIN";
 
@@ -57,4 +61,9 @@ void app_main(void)
                 NULL,
                 TASK_PRIO_MQTT,
                 NULL);
+    
+    nvs_manager_init();
+    ble_manager_init();
+    gatt_svc_init();
+    ble_manager_start();
 }

@@ -10,15 +10,22 @@ set(COREMQTT_INCLUDES
 )
 idf_component_register(
     SRCS "Project.c"
-        "../modules/wifi_task.c"
-        "../modules/mqtt_task.c"
+        "../modules/Wifi/wifi_task.c"
+        "../modules/MQTT/mqtt_task.c"
+        "../modules/BLE/ble_manager.c"
+        "../modules/BLE/ble_gatts_svc.c"
+        "../modules/BLE/gatt_svc_wifi.c"
+        "../modules/BLE/nvs_manager.c"
         ${COREMQTT_SRCS}
     INCLUDE_DIRS 
         "."
         "../include"
         "../config"
+        "../modules/BLE/include"
+        "../modules/MQTT/include"
+        "../modules/Wifi/include"
         ${COREMQTT_INCLUDES}
-    REQUIRES esp_wifi esp_event esp_netif nvs_flash esp_timer esp-tls esp_driver_gpio
+    REQUIRES esp_wifi esp_event esp_netif nvs_flash esp_timer esp-tls esp_driver_gpio bt
      EMBED_TXTFILES
         "${CMAKE_CURRENT_SOURCE_DIR}/../certs/AmazonRootCA1.pem"
         "${CMAKE_CURRENT_SOURCE_DIR}/../certs/device.crt"
