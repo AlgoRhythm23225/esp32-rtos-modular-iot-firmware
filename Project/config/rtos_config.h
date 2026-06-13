@@ -26,6 +26,7 @@
 #define AWS_DEVICE_ID "esp32-001"
 #define TOPIC_CMD     "devices/" AWS_DEVICE_ID "/ota/command"
 #define TOPIC_OTA_CMD "devices/" AWS_DEVICE_ID "/ota/status"
+#define TOPIC_SENSOR  "devices/" AWS_DEVICE_ID "/sensor/bno055"
 
 #define OTA_URL_MAX_LEN     1024
 #define OTA_VERSION_MAX_LEN 48

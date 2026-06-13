@@ -25,7 +25,7 @@ idf_component_register(
         "../modules/MQTT/include"
         "../modules/Wifi/include"
         ${COREMQTT_INCLUDES}
-    REQUIRES esp_wifi esp_event esp_netif nvs_flash esp_timer esp-tls esp_driver_gpio bt
+    REQUIRES esp_wifi esp_event esp_netif nvs_flash esp_timer esp-tls esp_driver_gpio bt i2c_bus bno055
      EMBED_TXTFILES
         "${CMAKE_CURRENT_SOURCE_DIR}/../certs/AmazonRootCA1.pem"
         "${CMAKE_CURRENT_SOURCE_DIR}/../certs/device.crt"

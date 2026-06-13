@@ -12,6 +12,8 @@
 #include "nvs_manager.h"
 #include "ble_manager.h"
 #include "ble_gatts_svc.h"
+#include "i2c_manager.h"
+#include "bno055.h"
 
 static const char *TAG = "MAIN";
 
@@ -48,6 +50,10 @@ void app_main(void)
         ESP_LOGE(TAG, "Failed to create RTOS resources: %d", ret);
         return;
     }
+
+    i2c_init();
+
+    xTaskCreate(bno055_ndof_task, "bno055", 6144, NULL, 5, NULL);
 
     ret = wifi_start();
     if (ret != ESP_OK) {
