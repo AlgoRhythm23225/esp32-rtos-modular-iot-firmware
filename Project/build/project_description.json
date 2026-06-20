@@ -1,7 +1,7 @@
 {
     "version":            "1.3",
     "project_name":       "Project",
-    "project_version":    "5145335-dirty",
+    "project_version":    "73b197c-dirty",
     "project_path":       "C:/Users/Admin/Desktop/esp/FINAL_EXAM/esp32-modular-iot-firmware/Project",
     "idf_path":           "D:/esp/v6.0/esp-idf",
     "build_dir":          "C:/Users/Admin/Desktop/esp/FINAL_EXAM/esp32-modular-iot-firmware/Project/build",
@@ -126,7 +126,7 @@
             "type": "LIBRARY",
             "lib": "__idf_bno055",
             "reqs": [],
-            "priv_reqs": [ "i2c_bus" ],
+            "priv_reqs": [ "i2c_bus", "main" ],
             "managed_reqs": [],
             "managed_priv_reqs": [],
             "file": "C:/Users/Admin/Desktop/esp/FINAL_EXAM/esp32-modular-iot-firmware/Project/build/esp-idf/bno055/libbno055.a",
@@ -4042,7 +4042,7 @@
             "source": "project_extra_components",
             "lib": "__idf_bno055",
             "reqs": [],
-            "priv_reqs": [ "i2c_bus" ],
+            "priv_reqs": [ "i2c_bus", "main" ],
             "managed_reqs": [],
             "managed_priv_reqs": [],
             "include_dirs": [ "." ]
