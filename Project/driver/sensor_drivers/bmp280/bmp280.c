@@ -11,7 +11,7 @@ static bmp280_handle_t gs_handle;        //bmp280 handle
  *            - 1 init failed
  * @note      none
  */
-uint8_t bmp280_app_init(bmp280_interface_t interface, bmp280_address_t addr_pin)
+esp_err_t bmp280_app_init(bmp280_interface_t interface, bmp280_address_t addr_pin)
 {
     uint8_t res;
     
@@ -34,7 +34,7 @@ uint8_t bmp280_app_init(bmp280_interface_t interface, bmp280_address_t addr_pin)
     {
         bmp280_interface_debug_print("bmp280: set interface failed.\n");
        
-        return 1;
+        return SENSOR_SET_FAIL;
     }
     
     /* set addr pin */
@@ -43,7 +43,7 @@ uint8_t bmp280_app_init(bmp280_interface_t interface, bmp280_address_t addr_pin)
     {
         bmp280_interface_debug_print("bmp280: set addr pin failed.\n");
        
-        return 1;
+        return SENSOR_SET_FAIL;
     }
     
     /* bmp280 init */
@@ -52,7 +52,7 @@ uint8_t bmp280_app_init(bmp280_interface_t interface, bmp280_address_t addr_pin)
     {
         bmp280_interface_debug_print("bmp280: init failed.\n");
         
-        return 1;
+        return SENSOR_HARDWARE_ERR;
     }
     
     /* set default temperatue oversampling */
@@ -62,7 +62,7 @@ uint8_t bmp280_app_init(bmp280_interface_t interface, bmp280_address_t addr_pin)
         bmp280_interface_debug_print("bmp280: set temperatue oversampling failed.\n");
         (void)bmp280_deinit(&gs_handle);
         
-        return 1;
+        return SENSOR_SET_FAIL;
     }
     
     /* set default pressure oversampling */
@@ -72,7 +72,7 @@ uint8_t bmp280_app_init(bmp280_interface_t interface, bmp280_address_t addr_pin)
         bmp280_interface_debug_print("bmp280: set pressure oversampling failed.\n");
         (void)bmp280_deinit(&gs_handle);
         
-        return 1;
+        return SENSOR_SET_FAIL;
     }
     
     /* set default standby time */
@@ -82,7 +82,7 @@ uint8_t bmp280_app_init(bmp280_interface_t interface, bmp280_address_t addr_pin)
         bmp280_interface_debug_print("bmp280: set standby time failed.\n");
         (void)bmp280_deinit(&gs_handle);
         
-        return 1;
+        return SENSOR_SET_FAIL;
     }
     
     /* set default filter */
@@ -92,7 +92,7 @@ uint8_t bmp280_app_init(bmp280_interface_t interface, bmp280_address_t addr_pin)
         bmp280_interface_debug_print("bmp280: set filter failed.\n");
         (void)bmp280_deinit(&gs_handle);
         
-        return 1;
+        return SENSOR_SET_FAIL;
     }
     
     /* set default spi wire */
@@ -102,7 +102,7 @@ uint8_t bmp280_app_init(bmp280_interface_t interface, bmp280_address_t addr_pin)
         bmp280_interface_debug_print("bmp280: set spi wire failed.\n");
         (void)bmp280_deinit(&gs_handle);
         
-        return 1;
+        return SENSOR_SET_FAIL;
     }
     
     /* set normal mode */
@@ -112,10 +112,10 @@ uint8_t bmp280_app_init(bmp280_interface_t interface, bmp280_address_t addr_pin)
         bmp280_interface_debug_print("bmp280: set mode failed.\n");
         (void)bmp280_deinit(&gs_handle);
         
-        return 1;
+        return SENSOR_SET_FAIL;
     }
     
-    return 0;
+    return SENSOR_OK;
 }
 
 /**
@@ -136,10 +136,10 @@ uint8_t bmp280_app_read(float *temperature, float *pressure)
     if (bmp280_read_temperature_pressure(&gs_handle, (uint32_t *)&temperature_yaw, 
                                          temperature, (uint32_t *)&pressure_yaw, pressure) != 0)
     {
-        return 1;
+        return SENSOR_READ_FAIL;
     }
     
-    return 0;
+    return SENSOR_OK;
 }
 
 /**
@@ -154,10 +154,10 @@ uint8_t bmp280_app_deinit(void)
     /* close bmp280 */
     if (bmp280_deinit(&gs_handle) != 0)
     {
-        return 1;
+        return SENSOR_DEINIT_FAIL;
     }
     
-    return 0;
+    return SENSOR_OK;
 }
 
 /**         
@@ -167,14 +167,14 @@ uint8_t bmp280_app_deinit(void)
  *         - 1 deinit failed
  * @note   none
  */
-uint8_t bmp280_I2C_init(void) {
+esp_err_t bmp280_full_init(void) {
     uint8_t res;
     res = bmp280_app_init(BMP280_INTERFACE_IIC, 0x76);
     if (res != 0) {
-        return 1;
+        return SENSOR_HARDWARE_ERR;
     }
     
-    return 0;
+    return SENSOR_OK;
 }
 
 /**         
@@ -183,7 +183,7 @@ uint8_t bmp280_I2C_init(void) {
  * @note   none
  */
 void bmp280_app_test(void *pvParameter) {
-    bmp280_I2C_init();
+    bmp280_full_init();
 
     float temperature;
     float pressure;

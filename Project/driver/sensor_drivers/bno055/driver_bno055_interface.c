@@ -35,7 +35,6 @@
  */
 
 #include "driver_bno055_interface.h"
-#include "i2c_manager.h"
 
 #define BNO055_ADDRESS  0x29
 
@@ -50,10 +49,7 @@ static i2c_master_dev_handle_t bno055_handle = NULL;
  */
 uint8_t bno055_interface_iic_init(void)
 {
-    i2c_add_device(BNO055_ADDRESS, &bno055_handle);
-    ESP_LOGI(TAG_I2C, "BNO055 sensor added to I2C bus!");
-    
-    return 0;
+    return sensor_driver_interface_init(&bno055_handle, SENSOR_BNO055);
 }
 
 /**
@@ -65,7 +61,7 @@ uint8_t bno055_interface_iic_init(void)
  */
 uint8_t bno055_interface_iic_deinit(void)
 {
-    return 0;
+    return sensor_driver_interface_deinit(&bno055_handle, SENSOR_BNO055);
 }
 
 /**
@@ -87,9 +83,7 @@ esp_err_t bno055_interface_iic_write(uint8_t addr, uint8_t reg, uint8_t *buf, ui
         write_buf[i + 1] = buf[i];
     }
 
-    esp_err_t err = i2c_write_sensor(bno055_handle, write_buf, len + 1);
-
-    return err;
+    return (i2c_write_sensor(bno055_handle, write_buf, len + 1) == ESP_OK) ? SENSOR_OK : SENSOR_WRITE_FAIL;
 }
 
 /**
@@ -105,9 +99,7 @@ esp_err_t bno055_interface_iic_write(uint8_t addr, uint8_t reg, uint8_t *buf, ui
 esp_err_t bno055_interface_iic_read(uint8_t addr, uint8_t reg, uint8_t *buf, uint16_t len)
 {
     uint8_t reg_addr = reg;
-    esp_err_t err = i2c_write_read_sensor(bno055_handle, &reg_addr, 1, buf, len);
-
-    return err;
+    return (i2c_write_read_sensor(bno055_handle, &reg_addr, 1, buf, len) == ESP_OK) ? SENSOR_OK : SENSOR_READ_FAIL;
 }
 
 /**

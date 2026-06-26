@@ -27,7 +27,7 @@ KEY_PATH     = os.path.join(CERTS_DIR, "device.key")
 #   IoT Core Console → Security → Policies → <tên policy> → Edit
 #   Đổi resource "arn:...:client/esp32-001" thành "arn:...:client/*"
 #   Sau đó đổi DASHBOARD_CLIENT_ID = f"dashboard-{DEVICE_ID}"
-DASHBOARD_CLIENT_ID  = f"esp32-dashboard"  # Khớp wildcard esp32-* trong AWS IoT Policy
+DASHBOARD_CLIENT_ID  = "esp32-dashboard"  # Khớp wildcard esp32-* trong AWS IoT Policy
 # DASHBOARD_CLIENT_ID = DEVICE_ID  # Chỉ dùng khi ESP32 offline
 
 MAX_HISTORY          = 150   # Số điểm dữ liệu tối đa giữ trong bộ nhớ

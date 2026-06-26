@@ -64,3 +64,5 @@ build/
 .vscode/
 *.pem
 partitions.csv
+Project/build/
+Project/secure_boot_signing_key.pem

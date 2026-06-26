@@ -1,3 +1,0 @@
-Command: ninja app
-[1/1] C:\WINDOWS\system32\cmd.exe /C "cd /D C:\Users\Admin\Desktop\esp\FINAL_EXAM\esp32-modular-iot-firmware\Project\build && C:\Espressif\tools\python\v6.0\venv\Scripts\python.exe D:/esp/v6.0/esp-idf/components/partition_table/check_sizes.py --offset 0xd000 partition --type app C:/Users/Admin/Desktop/esp/FINAL_EXAM/esp32-modular-iot-firmware/Project/build/partition_table/partition-table.bin C:/Users/Admin/Desktop/esp/FINAL_EXAM/esp32-modular-iot-firmware/Project/build/Project.bin"
-Project.bin binary size 0x6fff4 bytes. Smallest app partition is 0x1e0000 bytes. 0x17000c bytes (77%) free.

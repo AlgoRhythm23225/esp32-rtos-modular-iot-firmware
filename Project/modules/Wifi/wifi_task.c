@@ -10,7 +10,6 @@
 #include "esp_netif.h"
 #include "esp_timer.h"
 #include "esp_wifi.h"
-#include "nvs_flash.h"
 
 static const char *TAG = "WIFI_TASK";
 
@@ -126,28 +125,55 @@ static void wifi_event_handler(void *arg,
     }
 }
 
-static esp_err_t wifi_init_nvs(void)
+esp_err_t wifi_service_sta_connect(const char *ssid, const char *password)
 {
-    esp_err_t ret = nvs_flash_init();
-    if (ret == ESP_ERR_NVS_NO_FREE_PAGES || ret == ESP_ERR_NVS_NEW_VERSION_FOUND) {
-        ESP_ERROR_CHECK(nvs_flash_erase());
-        ret = nvs_flash_init();
+    if (ssid == NULL || strlen(ssid) == 0)
+    {
+        ESP_LOGE(TAG, "SSID cannot be empty");
+        return ESP_ERR_INVALID_ARG;
     }
-    return ret;
+
+    wifi_config_t wifi_config = {
+        .sta = {
+            .threshold = {
+                .authmode = WIFI_AUTH_WPA2_PSK,
+            },
+            .pmf_cfg = {
+                .capable = true,
+                .required = false,
+            },
+        },
+    };
+
+    strncpy((char *)wifi_config.sta.ssid, ssid, sizeof(wifi_config.sta.ssid) - 1);
+    if (password != NULL)
+    {
+        strncpy((char *)wifi_config.sta.password, password, sizeof(wifi_config.sta.password) - 1);
+    }
+
+    if (password == NULL || strlen(password) == 0)
+    {
+        wifi_config.sta.threshold.authmode = WIFI_AUTH_OPEN;
+    }
+
+    esp_wifi_set_mode(WIFI_MODE_STA);
+    esp_wifi_set_config(WIFI_IF_STA, &wifi_config);
+    esp_wifi_start();
+
+    esp_wifi_connect();
+
+    ESP_LOGI(TAG, "Connecting to AP: %s", ssid);
+    return ESP_OK;
 }
 
-esp_err_t wifi_start(void)
+esp_err_t wifi_start()
 {
     if (strcmp(WIFI_SSID, "YOUR_WIFI_SSID") == 0) {
         ESP_LOGE(TAG, "Please update wifi_config.h");
         return ESP_ERR_INVALID_STATE;
     }
-
-    esp_err_t ret = wifi_init_nvs();
-    if (ret != ESP_OK) {
-        ESP_LOGE(TAG, "NVS init failed: %s", esp_err_to_name(ret));
-        return ret;
-    }
+    
+    esp_err_t ret;
 
     ret = esp_netif_init();
     if (ret != ESP_OK && ret != ESP_ERR_INVALID_STATE) {
@@ -193,35 +219,6 @@ esp_err_t wifi_start(void)
         return ret;
     }
 
-    wifi_config_t wifi_config = {0};
-    strncpy((char *)wifi_config.sta.ssid, WIFI_SSID, sizeof(wifi_config.sta.ssid) - 1);
-    strncpy((char *)wifi_config.sta.password, WIFI_PASSWORD, sizeof(wifi_config.sta.password) - 1);
-
-    ret = esp_wifi_set_mode(WIFI_MODE_STA);
-    if (ret != ESP_OK) {
-        ESP_LOGE(TAG, "Set WiFi mode failed: %s", esp_err_to_name(ret));
-        return ret;
-    }
-
-    ret = esp_wifi_set_config(WIFI_IF_STA, &wifi_config);
-    if (ret != ESP_OK) {
-        ESP_LOGE(TAG, "Set WiFi config failed: %s", esp_err_to_name(ret));
-        return ret;
-    }
-
-    ret = esp_wifi_start();
-    if (ret != ESP_OK) {
-        ESP_LOGE(TAG, "WiFi start failed: %s", esp_err_to_name(ret));
-        return ret;
-    }
-
-    // Disable Wi-Fi power save to improve link stability.
-    ret = esp_wifi_set_ps(WIFI_PS_NONE);
-    if (ret != ESP_OK) {
-        ESP_LOGE(TAG, "Set WiFi power save failed: %s", esp_err_to_name(ret));
-        return ret;
-    }
-
-    ESP_LOGI(TAG, "WiFi start requested for SSID: %s", WIFI_SSID);
     return ESP_OK;
 }
+

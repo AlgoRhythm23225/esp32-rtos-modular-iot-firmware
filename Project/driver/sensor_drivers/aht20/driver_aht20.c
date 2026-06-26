@@ -35,6 +35,7 @@
  */
 
 #include "driver_aht20.h"
+#include "sensor_error.h"
 
 /**
  * @brief chip information definition
@@ -51,7 +52,7 @@
 /**
  * @brief chip address definition
  */
-#define AHT20_ADDRESS             0x38        /**< iic device address */
+#define AHT20_ADDRESS             0x38                 /**< iic device address */
 
 /**
  * @brief      read bytes
@@ -67,11 +68,11 @@ static uint8_t a_aht20_iic_read(aht20_handle_t *handle, uint8_t *data, uint16_t 
 {
     if (handle->iic_read_cmd(AHT20_ADDRESS, data, len) != 0)        /* read the register */
     {
-        return 1;                                                   /* return error */
+        return SENSOR_READ_FAIL;                                    /* return error */
     }
     else
     {
-        return 0;                                                   /* success return 0 */
+        return SENSOR_OK;                                           /* success return 0 */
     }
 }
 
@@ -82,24 +83,24 @@ static uint8_t a_aht20_iic_read(aht20_handle_t *handle, uint8_t *data, uint16_t 
  * @param[in] len length of data
  * @return    status code
  *            - 0 success
- *            - 1 write failed
+ *            - SENSOR_WRITE_FAIL
  * @note      none
  */
 static uint8_t a_aht20_iic_write(aht20_handle_t *handle, uint8_t *data, uint16_t len)
 {
     if (handle->iic_write_cmd(AHT20_ADDRESS, data, len) != 0)        /* write the register */
     {
-        return 1;                                                    /* return error */
+        return SENSOR_WRITE_FAIL;                                    /* return error */
     }
     else
     {
-        return 0;                                                    /* success return 0 */
+        return SENSOR_OK;                                            /* success return 0 */
     }
 }
 
 /**
  * @brief     calculate the crc
- * @param[in] *data pointer to a data buffer
+ * @param[in] data pointer to a data buffer
  * @param[in] len length of data
  * @return    crc
  * @note      none
@@ -135,10 +136,10 @@ static uint8_t a_aht20_calc_crc(uint8_t *data, uint8_t len)
  * @param[in] addr reset register
  * @return    status code
  *            - 0 success
- *            - 1 reset failed
+ *            - SENSOR_RESET_FAIL
  * @note      none
  */
-static uint8_t a_aht20_jh_reset_reg(aht20_handle_t *handle, uint8_t addr)
+static sensor_error_t a_aht20_jh_reset_reg(aht20_handle_t *handle, uint8_t addr)
 {
     uint8_t buf[3];
     uint8_t regs[3];
@@ -148,12 +149,12 @@ static uint8_t a_aht20_jh_reset_reg(aht20_handle_t *handle, uint8_t addr)
     buf[2] = 0x00;                                     /* set 0x00 */
     if (a_aht20_iic_write(handle, buf, 3) != 0)        /* write the command */
     {
-        return 1;                                      /* return error */
+        return SENSOR_RESET_FAIL;                      /* return error */
     }
     handle->delay_ms(5);                               /* delay 5ms */
     if (a_aht20_iic_read(handle, regs, 3) != 0)        /* read regs */
     {
-        return 1;                                      /* return error */
+        return SENSOR_RESET_FAIL;                      /* return error */
     }
     handle->delay_ms(10);                              /* delay 10ms */
     buf[0] = 0xB0 | addr;                              /* set addr */
@@ -161,10 +162,10 @@ static uint8_t a_aht20_jh_reset_reg(aht20_handle_t *handle, uint8_t addr)
     buf[2] = regs[2];                                  /* set regs[2] */
     if (a_aht20_iic_write(handle, buf, 3) != 0)        /* write the data */
     {
-        return 1;                                      /* return error */
+        return SENSOR_RESET_FAIL;                      /* return error */
     }
     
-    return 0;                                          /* success return 0 */
+    return SENSOR_OK;                                  /* success return 0 */
 }
 
 /**
@@ -185,48 +186,48 @@ uint8_t aht20_init(aht20_handle_t *handle)
     
     if (handle == NULL)                                                /* check handle */
     {
-        return 2;                                                      /* return error */
+        return SENSOR_HANDLE_NULL;                                     /* return error */
     }
     if (handle->debug_print == NULL)                                   /* check debug_print */
     {
-        return 3;                                                      /* return error */
+        return SENSOR_LINKED_FUNC_NULL;                                /* return error */
     }
     if (handle->iic_init == NULL)                                      /* check iic_init */
     {
         handle->debug_print("aht20: iic_init is null.\n");             /* iic_init is null */
         
-        return 3;                                                      /* return error */
+        return SENSOR_LINKED_FUNC_NULL;                                /* return error */
     }
     if (handle->iic_deinit == NULL)                                    /* check iic_deinit */
     {
         handle->debug_print("aht20: iic_deinit is null.\n");           /* iic_deinit is null */
         
-        return 3;                                                      /* return error */
+        return SENSOR_LINKED_FUNC_NULL;                                /* return error */
     }
     if (handle->iic_read_cmd == NULL)                                  /* check iic_read_cmd */
     {
         handle->debug_print("aht20: iic_read_cmd is null.\n");         /* iic_read_cmd is null */
         
-        return 3;                                                      /* return error */
+        return SENSOR_LINKED_FUNC_NULL;                                /* return error */
     }
     if (handle->iic_write_cmd == NULL)                                 /* check iic_write_cmd */
     {
         handle->debug_print("aht20: iic_write_cmd is null.\n");        /* iic_write_cmd is null */
         
-        return 3;                                                      /* return error */
+        return SENSOR_LINKED_FUNC_NULL;                                /* return error */
     }
     if (handle->delay_ms == NULL)                                      /* check delay_ms */
     {
         handle->debug_print("aht20: delay_ms is null.\n");             /* delay_ms is null */
         
-        return 3;                                                      /* return error */
+        return SENSOR_LINKED_FUNC_NULL;                                /* return error */
     }
     
     if (handle->iic_init() != 0)                                       /* iic init */
     {
         handle->debug_print("aht20: iic init failed.\n");              /* iic init failed */
         
-        return 1;                                                      /* return error */
+        return SENSOR_BUS_ERR;                                         /* return error */
     }
     handle->delay_ms(500);                                             /* wait for 500 ms */
     if (a_aht20_iic_read(handle, &status, 1) != 0)                     /* read the status */
@@ -234,7 +235,7 @@ uint8_t aht20_init(aht20_handle_t *handle)
         handle->debug_print("aht20: read status failed.\n");           /* read status failed */
         (void)handle->iic_deinit();                                    /* close the iic */
         
-        return 4;                                                      /* return error */
+        return SENSOR_READ_FAIL;                                       /* return error */
     }
     if ((status & 0x18) != 0x18)                                       /* check the status */
     {
@@ -243,27 +244,27 @@ uint8_t aht20_init(aht20_handle_t *handle)
             handle->debug_print("aht20: reset reg failed.\n");         /* reset reg failed */
             (void)handle->iic_deinit();                                /* close the iic */
             
-            return 5;                                                  /* return error */
+            return SENSOR_RESET_FAIL;                                   /* return error */
         }
         if (a_aht20_jh_reset_reg(handle, 0x1C) != 0)                   /* reset the 0x1C */
         {
             handle->debug_print("aht20: reset reg failed.\n");         /* reset reg failed */
             (void)handle->iic_deinit();                                /* close the iic */
             
-            return 5;                                                  /* return error */
+            return SENSOR_RESET_FAIL;                                   /* return error */
         }
         if (a_aht20_jh_reset_reg(handle, 0x1E) != 0)                   /* reset the 0x1E */
         {
             handle->debug_print("aht20: reset reg failed.\n");         /* reset reg failed */
             (void)handle->iic_deinit();                                /* close the iic */
             
-            return 5;                                                  /* return error */
+            return SENSOR_RESET_FAIL;                                  /* return error */
         }
     }
     handle->delay_ms(10);                                              /* delay 10ms */
     handle->inited = 1;                                                /* flag finish initialization */
     
-    return 0;                                                          /* success return 0 */
+    return SENSOR_OK;                                                  /* success return 0 */
 }
 
 /**
@@ -280,22 +281,22 @@ uint8_t aht20_deinit(aht20_handle_t *handle)
 {
     if (handle == NULL)                                            /* check handle */
     {
-        return 2;                                                  /* return error */
+        return SENSOR_HANDLE_NULL;                                 /* return error */
     }
     if (handle->inited != 1)                                       /* check handle initialization */
     {
-        return 3;                                                  /* return error */
+        return SENSOR_HANDLE_NOT_INIT;                             /* return error */
     }
     
     if (handle->iic_deinit() != 0)                                 /* iic deinit */
     {
         handle->debug_print("aht20: iic deinit failed.\n");        /* iic deinit failed */
         
-        return 1;                                                  /* return error */
+        return SENSOR_DEINIT_FAIL;                                 /* return error */
     }
     handle->inited = 0;                                            /* set closed flag */
     
-    return 0;                                                      /* success return 0 */
+    return SENSOR_OK;                                              /* success return 0 */
 }
 
 /**
@@ -322,11 +323,11 @@ uint8_t aht20_read_temperature_humidity(aht20_handle_t *handle, uint32_t *temper
     
     if (handle == NULL)                                               /* check handle */
     {
-        return 2;                                                     /* return error */
+        return SENSOR_HANDLE_NULL;                                    /* return error */
     }
     if (handle->inited != 1)                                          /* check handle initialization */
     {
-        return 3;                                                     /* return error */
+        return SENSOR_HANDLE_NOT_INIT;                                /* return error */
     }
     
     buf[0] = 0xAC;                                                    /* set the addr */
@@ -336,14 +337,14 @@ uint8_t aht20_read_temperature_humidity(aht20_handle_t *handle, uint32_t *temper
     {
         handle->debug_print("aht20: sent command failed.\n");         /* sent command failed */
         
-        return 1;                                                     /* return error */
+        return SENSOR_READ_FAIL;                                      /* return error */
     }
     handle->delay_ms(85);                                             /* delay 85ms */
     if (a_aht20_iic_read(handle, &status, 1) != 0)                    /* read the status */
     {
         handle->debug_print("aht20: read status failed.\n");          /* read status failed */
         
-        return 1;                                                     /* return error */
+        return SENSOR_READ_FAIL;                                      /* return error */
     }
     if ((status & 0x80) == 0)                                         /* check the status */
     {
@@ -351,13 +352,13 @@ uint8_t aht20_read_temperature_humidity(aht20_handle_t *handle, uint32_t *temper
         {
             handle->debug_print("aht20: read data failed.\n");        /* read data failed */
             
-            return 1;                                                 /* return error */
+            return SENSOR_READ_FAIL;                                  /* return error */
         }
         if (a_aht20_calc_crc(buf, 6) != buf[6])                       /* check the crc */
         {
             handle->debug_print("aht20: crc is error.\n");            /* crc is error */
             
-            return 5;                                                 /* return error */
+            return 5;                                  /* return error */
         }
         
         *humidity_raw = (((uint32_t)buf[1]) << 16) |
@@ -374,13 +375,13 @@ uint8_t aht20_read_temperature_humidity(aht20_handle_t *handle, uint32_t *temper
                                  / 1048576.0f * 200.0f
                                  - 50.0f;                             /* right shift 4 */
         
-        return 0;                                                     /* success return 0 */
+        return SENSOR_OK;                                             /* success return 0 */
     }
     else
     {
         handle->debug_print("aht20: data is not ready.\n");           /* data is not ready */
         
-        return 4;                                                     /* return error */
+        return 4;                                      /* return error */
     }
 }
 
@@ -405,11 +406,11 @@ uint8_t aht20_read_temperature(aht20_handle_t *handle, uint32_t *temperature_raw
     
     if (handle == NULL)                                               /* check handle */
     {
-        return 2;                                                     /* return error */
+        return 2;                                      /* return error */
     }
     if (handle->inited != 1)                                          /* check handle initialization */
     {
-        return 3;                                                     /* return error */
+        return 3;                                      /* return error */
     }
     
     buf[0] = 0xAC;                                                    /* set the addr */
@@ -419,14 +420,14 @@ uint8_t aht20_read_temperature(aht20_handle_t *handle, uint32_t *temperature_raw
     {
         handle->debug_print("aht20: sent command failed.\n");         /* sent command failed */
         
-        return 1;                                                     /* return error */
+        return SENSOR_READ_FAIL;                                      /* return error */
     }
     handle->delay_ms(85);                                             /* delay 85ms */
     if (a_aht20_iic_read(handle, &status, 1) != 0)                    /* read the status */
     {
         handle->debug_print("aht20: read status failed.\n");          /* read status failed */
         
-        return 1;                                                     /* return error */
+        return SENSOR_READ_FAIL;                                      /* return error */
     }
     if ((status & 0x80) == 0)                                         /* check the status */
     {
@@ -434,13 +435,13 @@ uint8_t aht20_read_temperature(aht20_handle_t *handle, uint32_t *temperature_raw
         {
             handle->debug_print("aht20: read data failed.\n");        /* read data failed */
             
-            return 1;                                                 /* return error */
+            return SENSOR_READ_FAIL;                                  /* return error */
         }
         if (a_aht20_calc_crc(buf, 6) != buf[6])                       /* check the crc */
         {
             handle->debug_print("aht20: crc is error.\n");            /* crc is error */
             
-            return 5;                                                 /* return error */
+            return SENSOR_CRC_FAIL;                                   /* return error */
         }
         
         *temperature_raw = (((uint32_t)buf[3]) << 16) |
@@ -451,13 +452,13 @@ uint8_t aht20_read_temperature(aht20_handle_t *handle, uint32_t *temperature_raw
                                  / 1048576.0f * 200.0f
                                  - 50.0f;                             /* right shift 4 */
         
-        return 0;                                                     /* success return 0 */
+        return SENSOR_OK;                                             /* success return 0 */
     }
     else
     {
         handle->debug_print("aht20: data is not ready.\n");           /* data is not ready */
         
-        return 4;                                                     /* return error */
+        return SENSOR_READ_NO_DATA;                                   /* return error */
     }
 }
 
@@ -482,11 +483,11 @@ uint8_t aht20_read_humidity(aht20_handle_t *handle, uint32_t *humidity_raw, uint
     
     if (handle == NULL)                                               /* check handle */
     {
-        return 2;                                                     /* return error */
+        return SENSOR_HANDLE_NULL;                                    /* return error */
     }
     if (handle->inited != 1)                                          /* check handle initialization */
     {
-        return 3;                                                     /* return error */
+        return SENSOR_HANDLE_NOT_INIT;                                /* return error */
     }
     
     buf[0] = 0xAC;                                                    /* set the addr */
@@ -496,14 +497,14 @@ uint8_t aht20_read_humidity(aht20_handle_t *handle, uint32_t *humidity_raw, uint
     {
         handle->debug_print("aht20: sent command failed.\n");         /* sent command failed */
         
-        return 1;                                                     /* return error */
+        return SENSOR_WRITE_FAIL;                                     /* return error */
     }
     handle->delay_ms(85);                                             /* delay 85ms */
     if (a_aht20_iic_read(handle, &status, 1) != 0)                    /* read the status */
     {
         handle->debug_print("aht20: read status failed.\n");          /* read status failed */
         
-        return 1;                                                     /* return error */
+        return SENSOR_READ_FAIL;                                      /* return error */
     }
     if ((status & 0x80) == 0)                                         /* check the status */
     {
@@ -511,13 +512,13 @@ uint8_t aht20_read_humidity(aht20_handle_t *handle, uint32_t *humidity_raw, uint
         {
             handle->debug_print("aht20: read data failed.\n");        /* read data failed */
             
-            return 1;                                                 /* return error */
+            return SENSOR_READ_FAIL;                                  /* return error */
         }
         if (a_aht20_calc_crc(buf, 6) != buf[6])                       /* check the crc */
         {
             handle->debug_print("aht20: crc is error.\n");            /* crc is error */
             
-            return 5;                                                 /* return error */
+            return SENSOR_CRC_FAIL;                                   /* return error */
         }
         
         *humidity_raw = (((uint32_t)buf[1]) << 16) |
@@ -527,13 +528,13 @@ uint8_t aht20_read_humidity(aht20_handle_t *handle, uint32_t *humidity_raw, uint
         *humidity_s = (uint8_t)((float)(*humidity_raw)
                                 / 1048576.0f * 100.0f);               /* convert the humidity */
         
-        return 0;                                                     /* success return 0 */
+        return SENSOR_OK;                                             /* success return 0 */
     }
     else
     {
         handle->debug_print("aht20: data is not ready.\n");           /* data is not ready */
         
-        return 4;                                                     /* return error */
+        return SENSOR_READ_NO_DATA;                                   /* return error */
     }
 }
 
@@ -544,7 +545,7 @@ uint8_t aht20_read_humidity(aht20_handle_t *handle, uint32_t *humidity_raw, uint
  * @param[in] len length of data buffer
  * @return    status code
  *            - 0 success
- *            - 1 write failed
+ *            - SENSOR_WRITE_FAIL
  *            - 2 handle is NULL
  *            - 3 handle is not initialized
  * @note      none
@@ -553,20 +554,20 @@ uint8_t aht20_set_reg(aht20_handle_t *handle, uint8_t *buf, uint16_t len)
 {
     if (handle == NULL)                                  /* check handle */
     {
-        return 2;                                        /* return error */
+        return SENSOR_HANDLE_NULL;                       /* return error */
     }
     if (handle->inited != 1)                             /* check handle initialization */
     {
-        return 3;                                        /* return error */
+        return SENSOR_HANDLE_NOT_INIT;                   /* return error */
     } 
     
     if (a_aht20_iic_write(handle, buf, len) != 0)        /* write data */
     {
-        return 1;                                        /* return error */
+        return SENSOR_WRITE_FAIL;                        /* return error */
     }
     else
     {
-        return 0;                                        /* success return 0 */
+        return SENSOR_OK;                                /* success return 0 */
     }
 }
 
@@ -577,29 +578,29 @@ uint8_t aht20_set_reg(aht20_handle_t *handle, uint8_t *buf, uint16_t len)
  * @param[in]  len length of data buffer
  * @return     status code
  *             - 0 success
- *             - 1 read failed
- *             - 2 handle is NULL
- *             - 3 handle is not initialized
+ *             - SENSOR_READ_FAIL
+ *             - SENSOR_HANDLE_NULL
+ *             - SENSOR_HANDLE_NOT_INIT
  * @note       none
  */
 uint8_t aht20_get_reg(aht20_handle_t *handle, uint8_t *buf, uint16_t len)
 {
     if (handle == NULL)                                 /* check handle */
     {
-        return 2;                                       /* return error */
+        return SENSOR_HANDLE_NULL;                      /* return error */
     }
     if (handle->inited != 1)                            /* check handle initialization */
     {
-        return 3;                                       /* return error */
+        return SENSOR_HANDLE_NOT_INIT;                  /* return error */
     } 
     
     if (a_aht20_iic_read(handle, buf, len) != 0)        /* read data */
     {
-        return 1;                                       /* return error */
+        return SENSOR_READ_FAIL;                        /* return error */
     }
     else
     {
-        return 0;                                       /* success return 0 */
+        return SENSOR_OK;                               /* success return 0 */
     }
 }
 
@@ -608,14 +609,14 @@ uint8_t aht20_get_reg(aht20_handle_t *handle, uint8_t *buf, uint16_t len)
  * @param[out] *info pointer to an aht20 info structure
  * @return     status code
  *             - 0 success
- *             - 2 handle is NULL
+ *             - SENSOR_HANDLE_NULL
  * @note       none
  */
 uint8_t aht20_info(aht20_info_t *info)
 {
     if (info == NULL)                                               /* check handle */
     {
-        return 2;                                                   /* return error */
+        return SENSOR_HANDLE_NULL;                                  /* return error */
     }
     
     memset(info, 0, sizeof(aht20_info_t));                          /* initialize aht20 info structure */
@@ -629,5 +630,5 @@ uint8_t aht20_info(aht20_info_t *info)
     info->temperature_min = TEMPERATURE_MIN;                        /* set maximum temperature */
     info->driver_version = DRIVER_VERSION;                          /* set driver version */
     
-    return 0;                                                       /* success return 0 */
+    return SENSOR_OK;                                               /* success return 0 */
 }

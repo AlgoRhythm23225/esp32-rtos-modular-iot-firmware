@@ -17,7 +17,7 @@
  *            - 1 init failed
  * @note      none
  */
-uint8_t bh1750fvi_basic_init(bh1750fvi_address_t addr_pin);
+esp_err_t bh1750fvi_full_init();
 
 /**
  * @brief      basic example read

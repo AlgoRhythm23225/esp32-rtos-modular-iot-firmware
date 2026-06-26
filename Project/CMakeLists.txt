@@ -6,9 +6,23 @@ if(POLICY CMP0175)
 endif()
 
 set(EXTRA_COMPONENT_DIRS
-    "${CMAKE_CURRENT_SOURCE_DIR}/driver"
-    "${CMAKE_CURRENT_SOURCE_DIR}/driver/sensor_drivers"
+    common/app_errors
+    common/app_types
+    config
+    driver/i2c_bus
+    driver/sensor_drivers/aht20
+    driver/sensor_drivers/bh1750
+    driver/sensor_drivers/bme280
+    driver/sensor_drivers/bmp280
+    driver/sensor_drivers/bno055
+    driver/sensor_drivers/ina226
+    driver/sensor_drivers/sensor_driver_interface_manager
+    driver/sensor_drivers/sensors_manager
+    modules/BLE
+    modules/ota
+    modules/storage
+    modules/Wifi
 )
 
 include($ENV{IDF_PATH}/tools/cmake/project.cmake)
-project(Project)
+project(iot_firmware)

@@ -35,12 +35,10 @@
  */
 
 #include "driver_ina226_interface.h"
-#include "i2c_manager.h"
 
 #define INA226_ADDRESS  0x40
 
 static i2c_master_dev_handle_t ina226_handle = NULL;
-
 
 /**
  * @brief  interface iic bus init
@@ -51,10 +49,7 @@ static i2c_master_dev_handle_t ina226_handle = NULL;
  */
 uint8_t ina226_interface_iic_init(void)
 {
-    i2c_add_device(INA226_ADDRESS, &ina226_handle);
-    ESP_LOGI(TAG_I2C, "INA226 sensor added to I2C bus!");
-
-    return 0;
+    return sensor_driver_interface_init(&ina226_handle, SENSOR_INA226);
 }
 
 /**
@@ -66,7 +61,7 @@ uint8_t ina226_interface_iic_init(void)
  */
 uint8_t ina226_interface_iic_deinit(void)
 {
-    return 0;
+    return sensor_driver_interface_deinit(&ina226_handle, SENSOR_INA226);
 }
 
 /**
@@ -83,9 +78,7 @@ uint8_t ina226_interface_iic_deinit(void)
 uint8_t ina226_interface_iic_read(uint8_t addr, uint8_t reg, uint8_t *buf, uint16_t len)
 {
     uint8_t reg_addr = reg;
-    esp_err_t err = i2c_write_read_sensor(ina226_handle, &reg_addr, 1, buf, len);
-
-    return (err == ESP_OK) ? 0 : 1;
+    return (i2c_write_read_sensor(ina226_handle, &reg_addr, 1, buf, len) == ESP_OK) ? 0 : 1;
 }
 
 /**
@@ -108,9 +101,7 @@ uint8_t ina226_interface_iic_write(uint8_t addr, uint8_t reg, uint8_t *buf, uint
         write_buf[i + 1] = buf[i];
     }
 
-    esp_err_t err = i2c_write_sensor(ina226_handle, write_buf, len + 1);
-
-    return (err == ESP_OK) ? 0 : 1;
+    return (i2c_write_sensor(ina226_handle, write_buf, len + 1) == ESP_OK) ? 0 : 1;
 }
 
 /**

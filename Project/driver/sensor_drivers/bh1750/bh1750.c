@@ -10,7 +10,7 @@ static bh1750fvi_handle_t gs_handle;
  *            - 1 init failed
  * @note      none
  */
-uint8_t bh1750fvi_basic_init(bh1750fvi_address_t addr_pin) {
+esp_err_t bh1750fvi_full_init() {
     uint8_t res;
     
     /* link interface function */
@@ -23,12 +23,12 @@ uint8_t bh1750fvi_basic_init(bh1750fvi_address_t addr_pin) {
     DRIVER_BH1750FVI_LINK_DEBUG_PRINT(&gs_handle, bh1750fvi_interface_debug_print);
 
     /* set the addr pin */
-    res = bh1750fvi_set_addr_pin(&gs_handle, addr_pin);
+    res = bh1750fvi_set_addr_pin(&gs_handle, BH1750FVI_ADDRESS_LOW);
     if (res != 0)
     {
         bh1750fvi_interface_debug_print("bh1750fvi: set addr pin failed.\n");
        
-        return 1;
+        return SENSOR_WRITE_FAIL;
     }
 
     /* init */
@@ -37,7 +37,7 @@ uint8_t bh1750fvi_basic_init(bh1750fvi_address_t addr_pin) {
     {
         bh1750fvi_interface_debug_print("bh1750fvi: init failed.\n");
        
-        return 1;
+        return SENSOR_HARDWARE_ERR;
     }
 
     /* power on */
@@ -47,7 +47,7 @@ uint8_t bh1750fvi_basic_init(bh1750fvi_address_t addr_pin) {
         bh1750fvi_interface_debug_print("bh1750fvi: power on failed.\n");
         (void)bh1750fvi_deinit(&gs_handle);
        
-        return 1;
+        return SENSOR_POWER_CONFIG_FAIL;
     }
     
     /* set mode */
@@ -57,7 +57,7 @@ uint8_t bh1750fvi_basic_init(bh1750fvi_address_t addr_pin) {
         bh1750fvi_interface_debug_print("bh1750fvi: set mode failed.\n");
         (void)bh1750fvi_deinit(&gs_handle);
        
-        return 1;
+        return SENSOR_SET_FAIL;
     }
 
     /* set measurement time */
@@ -67,7 +67,7 @@ uint8_t bh1750fvi_basic_init(bh1750fvi_address_t addr_pin) {
         bh1750fvi_interface_debug_print("bh1750fvi: set measurement time failed.\n");
         (void)bh1750fvi_deinit(&gs_handle);
        
-        return 1;
+        return SENSOR_SET_FAIL;
     }
     
     /* start continuous read */
@@ -77,15 +77,15 @@ uint8_t bh1750fvi_basic_init(bh1750fvi_address_t addr_pin) {
         bh1750fvi_interface_debug_print("bh1750fvi: start continuous read failed.\n");
         (void)bh1750fvi_deinit(&gs_handle);
        
-        return 1;
+        return SENSOR_SET_FAIL;
     }
     
-    return 0;
+    return SENSOR_OK;
 }
 
 /**
  * @brief      basic example read
- * @param[out] *lux pointer to a converted lux buffer
+ * @param[out] lux pointer to a converted lux buffer
  * @return     status code
  *             - 0 success
  *             - 1 read failed
@@ -100,11 +100,11 @@ uint8_t bh1750fvi_basic_read(float *lux)
     res = bh1750fvi_continuous_read(&gs_handle, &raw, lux);
     if (res != 0)
     {
-        return 1;
+        return SENSOR_READ_FAIL;
     }
     else
     {
-        return 0;
+        return SENSOR_OK;
     }
 }
 
@@ -123,17 +123,17 @@ uint8_t bh1750fvi_basic_deinit(void)
     res = bh1750fvi_stop_continuous_read(&gs_handle);
     if (res != 0)
     {
-        return 1;
+        return SENSOR_SHUT_FAIL;
     }
     
     /* deinit */
     res = bh1750fvi_deinit(&gs_handle);
     if (res != 0)
     {
-        return 1;
+        return SENSOR_DEINIT_FAIL;
     }
     
-    return 0;
+    return SENSOR_OK;
 }
 
 /**         
@@ -142,13 +142,13 @@ uint8_t bh1750fvi_basic_deinit(void)
  * @note   none
  */
 void bh1750_app_test(void *pvParameter) {
-    bh1750fvi_basic_init(BH1750FVI_ADDRESS_LOW);
+    bh1750fvi_full_init();
 
     float lux = 0.0f;
 
     while(1) {
         if (bh1750fvi_basic_read(&lux) == 0) {
-            printf("Anh sang hien tai: %.2f Lux\n", lux);
+            printf("Lightness: %.2f Lux\n", lux);
         } else {
             printf("Doc du lieu BH1750 that bai!\n");
         }

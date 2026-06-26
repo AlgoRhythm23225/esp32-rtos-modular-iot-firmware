@@ -504,7 +504,6 @@ void mqtt_task(void *pvParameters)
         xEventGroupSetBits(g_system_event_group, EVT_MQTT_CONNECTED);
         xSemaphoreGive(g_mqtt_ready_sem);
 
-
         while (1) {
             // Check if WiFi is still up
             EventBits_t bits = xEventGroupGetBits(g_system_event_group);

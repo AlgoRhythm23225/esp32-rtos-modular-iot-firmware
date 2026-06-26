@@ -38,6 +38,7 @@
 #define DRIVER_BH1750FVI_INTERFACE_H
 
 #include "driver_bh1750fvi.h"
+#include "sensor_driver_interface_manager.h"
 
 #ifdef __cplusplus
 extern "C"{

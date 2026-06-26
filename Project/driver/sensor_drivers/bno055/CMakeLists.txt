@@ -4,5 +4,6 @@ idf_component_register(SRCS "bno055.c" "driver_bno055_interface.c" "driver_bno05
                     PRIV_REQUIRES
                         i2c_bus
                         main
+                        sensor_driver_interface_manager
 )
 

@@ -714,7 +714,7 @@ uint8_t ina226_read_bus_voltage(ina226_handle_t *handle, uint16_t *raw, float *m
         return 3;                                                                       /* return error */
     }
     
-    res = a_ina226_iic_read(handle, INA226_REG_MASK, (uint16_t *)&prev);                /* read mask */
+    res = a_ina226_iic_read(handle, INA226_REG_MASK, &prev);                            /* read mask */
     if (res != 0)                                                                       /* check result */
     {
         handle->debug_print("ina226: read mask register failed.\n");                    /* read mask register failed */
@@ -737,7 +737,7 @@ uint8_t ina226_read_bus_voltage(ina226_handle_t *handle, uint16_t *raw, float *m
             timeout = INA226_READ_TIMEOUT;                                              /* set timeout */
             for (i = 0; i< timeout; i++)                                                /* loop all */
             {
-                res = a_ina226_iic_read(handle, INA226_REG_MASK, (uint16_t *)&prev);    /* read mask */
+                res = a_ina226_iic_read(handle, INA226_REG_MASK, &prev);                /* read mask */
                 if (res != 0)                                                           /* check result */
                 {
                     handle->debug_print("ina226: read mask register failed.\n");        /* read mask register failed */

@@ -104,20 +104,20 @@ static uint8_t a_bmp280_iic_spi_read(bmp280_handle_t *handle, uint8_t reg, uint8
     {
         if (handle->iic_read(handle->iic_addr, reg, buf, len) != 0)        /* iic read */
         {
-            return 1;                                                      /* return error */
+            return SENSOR_READ_OR_WRITE_FAIL;                                                      /* return error */
         }
 
-        return 0;                                                          /* success return 0 */
+        return SENSOR_OK;                                                          /* success return SENSOR_OK */
     }
     else                                                                   /* spi interface */
     {
         reg |= 1 << 7;                                                     /* set read mode */
         if (handle->spi_read(reg, buf, len) != 0)                          /* spi read */
         {
-            return 1;                                                      /* return error */
+            return SENSOR_READ_OR_WRITE_FAIL;                                                      /* return error */
         }
 
-        return 0;                                                          /* success return 0 */
+        return SENSOR_OK;                                                          /* success return SENSOR_OK */
     }
 }
 
@@ -138,20 +138,20 @@ static uint8_t a_bmp280_iic_spi_write(bmp280_handle_t *handle, uint8_t reg, uint
     {
         if (handle->iic_write(handle->iic_addr, reg, buf, len) != 0)       /* iic write */
         {
-            return 1;                                                      /* return error */
+            return SENSOR_READ_OR_WRITE_FAIL;                                                      /* return error */
         }
 
-        return 0;                                                          /* success return 0 */
+        return SENSOR_OK;                                                          /* success return SENSOR_OK */
     }
     else                                                                   /* spi interface */
     {
         reg &= ~(1 << 7);                                                  /* write mode */
         if (handle->spi_write(reg, buf, len) != 0)                         /* spi write */
         {
-            return 1;                                                      /* return error */
+            return SENSOR_READ_OR_WRITE_FAIL;                                                      /* return error */
         }
 
-        return 0;                                                          /* success return 0 */
+        return SENSOR_OK;                                                          /* success return SENSOR_OK */
     }
 }
 
@@ -171,89 +171,89 @@ static uint8_t a_bmp280_get_nvm_calibration(bmp280_handle_t *handle)
     {
         handle->debug_print("bmp280: get calibration data failed.\n");                         /* get calibration data failed */
 
-        return 1;                                                                              /* return error */
+        return SENSOR_READ_OR_WRITE_FAIL;                                                                              /* return error */
     }
     handle->t1 = (uint16_t)buf[1] << 8 | buf[0];                                               /* set t1 */
     if (a_bmp280_iic_spi_read(handle, BMP280_REG_NVM_PAR_T2_L, (uint8_t *)buf, 2) != 0)        /* read t2 */
     {
         handle->debug_print("bmp280: get calibration data failed.\n");                         /* get calibration data failed */
 
-        return 1;                                                                              /* return error */
+        return SENSOR_READ_OR_WRITE_FAIL;                                                                              /* return error */
     }
     handle->t2 = (int16_t)((uint16_t)buf[1] << 8 | buf[0]);                                    /* set t2 */
     if (a_bmp280_iic_spi_read(handle, BMP280_REG_NVM_PAR_T3_L, (uint8_t *)buf, 2) != 0)        /* read t3 */
     {
         handle->debug_print("bmp280: get calibration data failed.\n");                         /* get calibration data failed */
 
-        return 1;                                                                              /* return error */
+        return SENSOR_READ_OR_WRITE_FAIL;                                                                              /* return error */
     }
     handle->t3 = (int16_t)((uint16_t)buf[1] << 8 | buf[0]);                                    /* set t3 */
     if (a_bmp280_iic_spi_read(handle, BMP280_REG_NVM_PAR_P1_L, (uint8_t *)buf, 2) != 0)        /* read p1 */
     {
         handle->debug_print("bmp280: get calibration data failed.\n");                         /* get calibration data failed */
 
-        return 1;                                                                              /* return error */
+        return SENSOR_READ_OR_WRITE_FAIL;                                                                              /* return error */
     }
     handle->p1 = (uint16_t)buf[1] << 8 | buf[0];                                               /* set p1 */
     if (a_bmp280_iic_spi_read(handle, BMP280_REG_NVM_PAR_P2_L, (uint8_t *)buf, 2) != 0)        /* read p2 */
     {
         handle->debug_print("bmp280: get calibration data failed.\n");                         /* get calibration data failed */
 
-        return 1;                                                                              /* return error */
+        return SENSOR_READ_OR_WRITE_FAIL;                                                                              /* return error */
     }
     handle->p2 = (int16_t)((uint16_t)buf[1] << 8 | buf[0]);                                    /* set p2 */
     if (a_bmp280_iic_spi_read(handle, BMP280_REG_NVM_PAR_P3_L, (uint8_t *)buf, 2) != 0)        /* read p3 */
     {
         handle->debug_print("bmp280: get calibration data failed.\n");                         /* get calibration data failed */
 
-        return 1;                                                                              /* return error */
+        return SENSOR_READ_OR_WRITE_FAIL;                                                                              /* return error */
     }
     handle->p3 = (int16_t)((uint16_t)buf[1] << 8 | buf[0]);                                    /* set p3 */
     if (a_bmp280_iic_spi_read(handle, BMP280_REG_NVM_PAR_P4_L, (uint8_t *)buf, 2) != 0)        /* read p4 */
     {
         handle->debug_print("bmp280: get calibration data failed.\n");                         /* get calibration data failed */
 
-        return 1;                                                                              /* return error */
+        return SENSOR_READ_OR_WRITE_FAIL;                                                                              /* return error */
     }
     handle->p4 = (int16_t)((uint16_t)buf[1] << 8 | buf[0]);                                    /* set p4 */
     if (a_bmp280_iic_spi_read(handle, BMP280_REG_NVM_PAR_P5_L, (uint8_t *)buf, 2) != 0)        /* read p5 */
     {
         handle->debug_print("bmp280: get calibration data failed.\n");                         /* get calibration data failed */
 
-        return 1;                                                                              /* return error */
+        return SENSOR_READ_OR_WRITE_FAIL;                                                                              /* return error */
     }
     handle->p5 = (int16_t)((uint16_t)buf[1] << 8 | buf[0]);                                    /* set p5 */
     if (a_bmp280_iic_spi_read(handle, BMP280_REG_NVM_PAR_P6_L, (uint8_t *)buf, 2) != 0)        /* read p6 */
     {
         handle->debug_print("bmp280: get calibration data failed.\n");                         /* get calibration data failed */
 
-        return 1;                                                                              /* return error */
+        return SENSOR_READ_OR_WRITE_FAIL;                                                                              /* return error */
     }
     handle->p6 = (int16_t)((uint16_t)buf[1] << 8 | buf[0]);                                    /* set p6 */
     if (a_bmp280_iic_spi_read(handle, BMP280_REG_NVM_PAR_P7_L, (uint8_t *)buf, 2) != 0)        /* read p7 */
     {
         handle->debug_print("bmp280: get calibration data failed.\n");                         /* get calibration data failed */
 
-        return 1;                                                                              /* return error */
+        return SENSOR_READ_OR_WRITE_FAIL;                                                                              /* return error */
     }
     handle->p7 = (int16_t)((uint16_t)buf[1] << 8 | buf[0]);                                    /* set p7 */
     if (a_bmp280_iic_spi_read(handle, BMP280_REG_NVM_PAR_P8_L, (uint8_t *)buf, 2) != 0)        /* read p8 */
     {
         handle->debug_print("bmp280: get calibration data failed.\n");                         /* get calibration data failed */
 
-        return 1;                                                                              /* return error */
+        return SENSOR_READ_OR_WRITE_FAIL;                                                                              /* return error */
     }
     handle->p8 = (int16_t)((uint16_t)buf[1] << 8 | buf[0]);                                    /* set p8 */
     if (a_bmp280_iic_spi_read(handle, BMP280_REG_NVM_PAR_P9_L, (uint8_t *)buf, 2) != 0)        /* read p9 */
     {
         handle->debug_print("bmp280: get calibration data failed.\n");                         /* get calibration data failed */
 
-        return 1;                                                                              /* return error */
+        return SENSOR_READ_OR_WRITE_FAIL;                                                                              /* return error */
     }
     handle->p9 = (int16_t)((uint16_t)buf[1] << 8 | buf[0]);                                    /* set p9 */
     handle->t_fine = 0;                                                                        /* init 0 */
 
-    return 0;                                                                                  /* success return 0 */
+    return SENSOR_OK;                                                                                  /* success return SENSOR_OK */
 }
 
 /**
@@ -377,12 +377,12 @@ uint8_t bmp280_set_addr_pin(bmp280_handle_t *handle, bmp280_address_t addr_pin)
 {
     if (handle == NULL)                          /* check handle */
     {
-        return 2;                                /* return error */
+        return SENSOR_HANDLE_NULL;                                /* return error */
     }
 
     handle->iic_addr = (uint8_t)addr_pin;        /* set iic address */
 
-    return 0;                                    /* success return 0 */
+    return SENSOR_OK;                                    /* success return SENSOR_OK */
 }
 
 /**
@@ -398,12 +398,12 @@ uint8_t bmp280_get_addr_pin(bmp280_handle_t *handle, bmp280_address_t *addr_pin)
 {
     if (handle == NULL)                                    /* check handle */
     {
-        return 2;                                          /* return error */
+        return SENSOR_HANDLE_NULL;                                          /* return error */
     }
 
     *addr_pin = (bmp280_address_t)handle->iic_addr;        /* get iic address */
 
-    return 0;                                              /* success return 0 */
+    return SENSOR_OK;                                              /* success return SENSOR_OK */
 }
 
 /**
@@ -419,12 +419,12 @@ uint8_t bmp280_set_interface(bmp280_handle_t *handle, bmp280_interface_t interfa
 {
     if (handle == NULL)                        /* check handle */
     {
-        return 2;                              /* return error */
+        return SENSOR_HANDLE_NULL;                              /* return error */
     }
 
     handle->iic_spi = (uint8_t)interface;      /* set interface */
 
-    return 0;                                  /* success return 0 */
+    return SENSOR_OK;                                  /* success return SENSOR_OK */
 }
 
 /**
@@ -440,12 +440,12 @@ uint8_t bmp280_get_interface(bmp280_handle_t *handle, bmp280_interface_t *interf
 {
     if (handle == NULL)                                        /* check handle */
     {
-        return 2;                                              /* return error */
+        return SENSOR_HANDLE_NULL;                                              /* return error */
     }
 
     *interface = (bmp280_interface_t)(handle->iic_spi);        /* get interface */
 
-    return 0;                                                  /* success return 0 */
+    return SENSOR_OK;                                                  /* success return SENSOR_OK */
 }
 
 /**
@@ -468,65 +468,65 @@ uint8_t bmp280_init(bmp280_handle_t *handle)
 
     if (handle == NULL)                                                              /* check handle */
     {
-        return 2;                                                                    /* return error */
+        return SENSOR_HANDLE_NULL;                                                                    /* return error */
     }
     if (handle->debug_print == NULL)                                                 /* check debug_print */
     {
-        return 3;                                                                    /* return error */
+        return SENSOR_LINKED_FUNC_NULL;                                                                    /* return error */
     }
     if (handle->iic_init == NULL)                                                    /* check iic_init */
     {
         handle->debug_print("bmp280: iic_init is null.\n");                          /* iic_init is nul */
 
-        return 3;                                                                    /* return error */
+        return SENSOR_LINKED_FUNC_NULL;                                                                    /* return error */
     }
     if (handle->iic_deinit == NULL)                                                  /* check iic_deinit */
     {
         handle->debug_print("bmp280: iic_deinit is null.\n");                        /* iic_deinit is null */
 
-        return 3;                                                                    /* return error */
+        return SENSOR_LINKED_FUNC_NULL;                                                                    /* return error */
     }
     if (handle->iic_read == NULL)                                                    /* check iic_read */
     {
         handle->debug_print("bmp280: iic_read is null.\n");                          /* iic_read is null */
 
-        return 3;                                                                    /* return error */
+        return SENSOR_LINKED_FUNC_NULL;                                                                    /* return error */
     }
     if (handle->iic_write == NULL)                                                   /* check iic_write */
     {
         handle->debug_print("bmp280: iic_write is null.\n");                         /* iic_write is null */
 
-        return 3;                                                                    /* return error */
+        return SENSOR_LINKED_FUNC_NULL;                                                                    /* return error */
     }
     if (handle->spi_init == NULL)                                                    /* check spi_init */
     {
         handle->debug_print("bmp280: spi_init is null.\n");                          /* spi_init is nul */
 
-        return 3;                                                                    /* return error */
+        return SENSOR_LINKED_FUNC_NULL;                                                                    /* return error */
     }
     if (handle->spi_deinit == NULL)                                                  /* check spi_deinit */
     {
         handle->debug_print("bmp280: spi_deinit is null.\n");                        /* spi_deinit is nul */
 
-        return 3;                                                                    /* return error */
+        return SENSOR_LINKED_FUNC_NULL;                                                                    /* return error */
     }
     if (handle->spi_read == NULL)                                                    /* check spi_read */
     {
         handle->debug_print("bmp280: spi_read is null.\n");                          /* spi_read is nul */
 
-        return 3;                                                                    /* return error */
+        return SENSOR_LINKED_FUNC_NULL;                                                                    /* return error */
     }
     if (handle->spi_write == NULL)                                                   /* check spi_write */
     {
         handle->debug_print("bmp280: spi_write is null.\n");                         /* spi_write is nul */
 
-        return 3;                                                                    /* return error */
+        return SENSOR_LINKED_FUNC_NULL;                                                                    /* return error */
     }
     if (handle->delay_ms == NULL)                                                    /* check delay_ms */
     {
         handle->debug_print("bmp280: delay_ms is null.\n");                          /* delay_ms is null */
 
-        return 3;                                                                    /* return error */
+        return SENSOR_LINKED_FUNC_NULL;                                                                    /* return error */
     }
 
     if (handle->iic_spi == BMP280_INTERFACE_IIC)                                     /* iic interface */
@@ -535,7 +535,7 @@ uint8_t bmp280_init(bmp280_handle_t *handle)
         {
             handle->debug_print("bmp280: iic init failed.\n");                       /* iic init failed */
 
-            return 1;                                                                /* return error */
+            return SENSOR_READ_OR_WRITE_FAIL;                                                                /* return error */
         }
     }
     else                                                                             /* spi interface */
@@ -544,7 +544,7 @@ uint8_t bmp280_init(bmp280_handle_t *handle)
         {
             handle->debug_print("bmp280: spi init failed.\n");                       /* spi init failed */
 
-            return 1;                                                                /* return error */
+            return SENSOR_READ_OR_WRITE_FAIL;                                                                /* return error */
         }
     }
 
@@ -553,14 +553,14 @@ uint8_t bmp280_init(bmp280_handle_t *handle)
         handle->debug_print("bmp280: read id failed.\n");                            /* read id failed */
         (void)handle->iic_deinit();                                                  /* iic deinit */
 
-        return 4;                                                                    /* return error */
+        return SENSOR_ID_ERR;                                                                    /* return error */
     }
     if (id != 0x58)                                                                  /* check id */
     {
         handle->debug_print("bmp280: id is error.\n");                               /* id is error */
         (void)handle->iic_deinit();                                                  /* iic deinit */
 
-        return 4;                                                                    /* return error */
+        return SENSOR_ID_ERR;                                                                    /* return error */
     }
     reg = 0xB6;                                                                      /* set the reset value */
     if (a_bmp280_iic_spi_write(handle, BMP280_REG_RESET, &reg, 1) != 0)              /* reset the chip */
@@ -568,18 +568,18 @@ uint8_t bmp280_init(bmp280_handle_t *handle)
         handle->debug_print("bmp280: reset failed.\n");                              /* reset failed */
         (void)handle->iic_deinit();                                                  /* iic deinit */
 
-        return 5;                                                                    /* return error */
+        return SENSOR_RESET_FAIL;                                                                    /* return error */
     }
     handle->delay_ms(10);                                                             /* delay 5ms */
     if (a_bmp280_get_nvm_calibration(handle) != 0)                                   /* get nvm calibration */
     {
         (void)handle->iic_deinit();                                                  /* iic deinit */
 
-        return 6;                                                                    /* return error */
+        return SENSOR_GET_NVM_CALI_FAIL;                                                                    /* return error */
     }
     handle->inited = 1;                                                              /* flag finish initialization */
 
-    return 0;                                                                        /* success return 0 */
+    return SENSOR_OK;                                                                        /* success return SENSOR_OK */
 }
 
 /**
@@ -599,18 +599,18 @@ uint8_t bmp280_deinit(bmp280_handle_t *handle)
 
     if (handle == NULL)                                                             /* check handle */
     {
-        return 2;                                                                   /* return error */
+        return SENSOR_HANDLE_NULL;                                                                   /* return error */
     }
     if (handle->inited != 1)                                                        /* check handle initialization */
     {
-        return 3;                                                                   /* return error */
+        return SENSOR_HANDLE_NOT_INIT;                                                                   /* return error */
     }
 
     if (a_bmp280_iic_spi_read(handle, BMP280_REG_CTRL_MEAS, &prev, 1) != 0)         /* read ctrl meas */
     {
         handle->debug_print("bmp280: read ctrl meas failed.\n");                    /* read ctrl meas failed */
 
-        return 4;                                                                   /* return error */
+        return SENSOR_READ_FAIL;                                                                   /* return error */
     }
     prev &= ~(3 << 0);                                                              /* clear settings */
     prev |= 0 << 0;                                                                 /* set sleep mode */
@@ -618,7 +618,7 @@ uint8_t bmp280_deinit(bmp280_handle_t *handle)
     {
         handle->debug_print("bmp280: write ctrl meas failed.\n");                   /* write ctrl meas failed */
 
-        return 4;                                                                   /* return error */
+        return SENSOR_WRITE_FAIL;                                                                   /* return error */
     }
     if (handle->iic_spi == BMP280_INTERFACE_IIC)                                    /* iic interface */
     {
@@ -626,7 +626,7 @@ uint8_t bmp280_deinit(bmp280_handle_t *handle)
         {
             handle->debug_print("bmp280: iic deinit failed.\n");                    /* iic deinit failed */
 
-            return 1;                                                               /* return error */
+            return SENSOR_READ_OR_WRITE_FAIL;                                                               /* return error */
         }
     }
     else                                                                            /* spi interface */
@@ -635,12 +635,12 @@ uint8_t bmp280_deinit(bmp280_handle_t *handle)
         {
             handle->debug_print("bmp280: spi deinit failed.\n");                    /* spi deinit failed */
 
-            return 1;                                                               /* return error */
+            return SENSOR_READ_OR_WRITE_FAIL;                                                               /* return error */
         }
     }
     handle->inited = 0;                                                             /* flag close */
 
-    return 0;                                                                       /* success return 0 */
+    return SENSOR_OK;                                                                       /* success return SENSOR_OK */
 }
 
 /**
@@ -659,11 +659,11 @@ uint8_t bmp280_soft_reset(bmp280_handle_t *handle)
 
     if (handle == NULL)                                                        /* check handle */
     {
-        return 2;                                                              /* return error */
+        return SENSOR_HANDLE_NULL;                                                              /* return error */
     }
     if (handle->inited != 1)                                                   /* check handle initialization */
     {
-        return 3;                                                              /* return error */
+        return SENSOR_HANDLE_NOT_INIT;                                                              /* return error */
     }
 
     reg = 0xB6;                                                                /* set the reset value */
@@ -671,11 +671,11 @@ uint8_t bmp280_soft_reset(bmp280_handle_t *handle)
     {
         handle->debug_print("bmp280: reset failed.\n");                        /* reset failed */
 
-        return 1;                                                              /* return error */
+        return SENSOR_READ_OR_WRITE_FAIL;                                                              /* return error */
     }
     handle->delay_ms(5);                                                       /* delay 5ms */
 
-    return 0;                                                                  /* success return 0 */
+    return SENSOR_OK;                                                                  /* success return SENSOR_OK */
 }
 
 /**
@@ -693,21 +693,21 @@ uint8_t bmp280_get_status(bmp280_handle_t *handle, uint8_t *status)
 {
     if (handle == NULL)                                                        /* check handle */
     {
-        return 2;                                                              /* return error */
+        return SENSOR_HANDLE_NULL;                                                              /* return error */
     }
     if (handle->inited != 1)                                                   /* check handle initialization */
     {
-        return 3;                                                              /* return error */
+        return SENSOR_HANDLE_NOT_INIT;                                                              /* return error */
     }
 
     if (a_bmp280_iic_spi_read(handle, BMP280_REG_STATUS, status, 1) != 0)      /* read status */
     {
         handle->debug_print("bmp280: read status failed.\n");                  /* read status failed */
 
-        return 1;                                                              /* return error */
+        return SENSOR_READ_OR_WRITE_FAIL;                                                              /* return error */
     }
 
-    return 0;                                                                  /* success return 0 */
+    return SENSOR_OK;                                                                  /* success return SENSOR_OK */
 }
 
 /**
@@ -727,18 +727,18 @@ uint8_t bmp280_set_temperatue_oversampling(bmp280_handle_t *handle, bmp280_overs
 
     if (handle == NULL)                                                        /* check handle */
     {
-        return 2;                                                              /* return error */
+        return SENSOR_HANDLE_NULL;                                                              /* return error */
     }
     if (handle->inited != 1)                                                   /* check handle initialization */
     {
-        return 3;                                                              /* return error */
+        return SENSOR_HANDLE_NOT_INIT;                                                              /* return error */
     }
 
     if (a_bmp280_iic_spi_read(handle, BMP280_REG_CTRL_MEAS, &prev, 1) != 0)    /* read ctrl meas */
     {
         handle->debug_print("bmp280: read ctrl meas failed.\n");               /* read ctrl meas failed */
 
-        return 1;                                                              /* return error */
+        return SENSOR_READ_OR_WRITE_FAIL;                                                              /* return error */
     }
     prev &= ~(7 << 5);                                                         /* clear settings */
     prev |= oversampling << 5;                                                 /* set oversampling */
@@ -746,10 +746,10 @@ uint8_t bmp280_set_temperatue_oversampling(bmp280_handle_t *handle, bmp280_overs
     {
         handle->debug_print("bmp280: write ctrl meas failed.\n");              /* write ctrl meas failed */
 
-        return 1;                                                              /* return error */
+        return SENSOR_READ_OR_WRITE_FAIL;                                                              /* return error */
     }
 
-    return 0;                                                                  /* success return 0 */
+    return SENSOR_OK;                                                                  /* success return SENSOR_OK */
 }
 
 /**
@@ -769,22 +769,22 @@ uint8_t bmp280_get_temperatue_oversampling(bmp280_handle_t *handle, bmp280_overs
 
     if (handle == NULL)                                                        /* check handle */
     {
-        return 2;                                                              /* return error */
+        return SENSOR_HANDLE_NULL;                                                              /* return error */
     }
     if (handle->inited != 1)                                                   /* check handle initialization */
     {
-        return 3;                                                              /* return error */
+        return SENSOR_HANDLE_NOT_INIT;                                                              /* return error */
     }
 
     if (a_bmp280_iic_spi_read(handle, BMP280_REG_CTRL_MEAS, &prev, 1) != 0)    /* read ctrl meas */
     {
         handle->debug_print("bmp280: read ctrl meas failed.\n");               /* read ctrl meas failed */
 
-        return 1;                                                              /* return error */
+        return SENSOR_READ_OR_WRITE_FAIL;                                                              /* return error */
     }
     *oversampling = (bmp280_oversampling_t)((prev >> 5) & 0x7);                /* set oversampling */
 
-    return 0;                                                                  /* success return 0 */
+    return SENSOR_OK;                                                                  /* success return SENSOR_OK */
 }
 
 /**
@@ -804,18 +804,18 @@ uint8_t bmp280_set_pressure_oversampling(bmp280_handle_t *handle, bmp280_oversam
 
     if (handle == NULL)                                                        /* check handle */
     {
-        return 2;                                                              /* return error */
+        return SENSOR_HANDLE_NULL;                                                              /* return error */
     }
     if (handle->inited != 1)                                                   /* check handle initialization */
     {
-        return 3;                                                              /* return error */
+        return SENSOR_HANDLE_NOT_INIT;                                                              /* return error */
     }
 
     if (a_bmp280_iic_spi_read(handle, BMP280_REG_CTRL_MEAS, &prev, 1) != 0)    /* read ctrl meas */
     {
         handle->debug_print("bmp280: read ctrl meas failed.\n");               /* read ctrl meas failed */
 
-        return 1;                                                              /* return error */
+        return SENSOR_READ_OR_WRITE_FAIL;                                                              /* return error */
     }
     prev &= ~(7 << 2);                                                         /* clear settings */
     prev |= oversampling << 2;                                                 /* set oversampling */
@@ -823,10 +823,10 @@ uint8_t bmp280_set_pressure_oversampling(bmp280_handle_t *handle, bmp280_oversam
     {
         handle->debug_print("bmp280: write ctrl meas failed.\n");              /* write ctrl meas failed */
 
-        return 1;                                                              /* return error */
+        return SENSOR_READ_OR_WRITE_FAIL;                                                              /* return error */
     }
 
-    return 0;                                                                  /* success return 0 */
+    return SENSOR_OK;                                                                  /* success return SENSOR_OK */
 }
 
 /**
@@ -846,22 +846,22 @@ uint8_t bmp280_get_pressure_oversampling(bmp280_handle_t *handle, bmp280_oversam
 
     if (handle == NULL)                                                        /* check handle */
     {
-        return 2;                                                              /* return error */
+        return SENSOR_HANDLE_NULL;                                                              /* return error */
     }
     if (handle->inited != 1)                                                   /* check handle initialization */
     {
-        return 3;                                                              /* return error */
+        return SENSOR_HANDLE_NOT_INIT;                                                              /* return error */
     }
 
     if (a_bmp280_iic_spi_read(handle, BMP280_REG_CTRL_MEAS, &prev, 1) != 0)    /* read ctrl meas */
     {
         handle->debug_print("bmp280: read ctrl meas failed.\n");               /* read ctrl meas failed */
 
-        return 1;                                                              /* return error */
+        return SENSOR_READ_OR_WRITE_FAIL;                                                              /* return error */
     }
     *oversampling = (bmp280_oversampling_t)((prev >> 2) & 0x7);                /* set oversampling */
 
-    return 0;                                                                  /* success return 0 */
+    return SENSOR_OK;                                                                  /* success return SENSOR_OK */
 }
 
 /**
@@ -881,18 +881,18 @@ uint8_t bmp280_set_mode(bmp280_handle_t *handle, bmp280_mode_t mode)
 
     if (handle == NULL)                                                             /* check handle */
     {
-        return 2;                                                                   /* return error */
+        return SENSOR_HANDLE_NULL;                                                                   /* return error */
     }
     if (handle->inited != 1)                                                        /* check handle initialization */
     {
-        return 3;                                                                   /* return error */
+        return SENSOR_HANDLE_NOT_INIT;                                                                   /* return error */
     }
 
     if (a_bmp280_iic_spi_read(handle, BMP280_REG_CTRL_MEAS, &prev, 1) != 0)         /* read ctrl meas */
     {
         handle->debug_print("bmp280: read ctrl meas failed.\n");                    /* read ctrl meas failed */
 
-        return 1;                                                                   /* return error */
+        return SENSOR_READ_OR_WRITE_FAIL;                                                                   /* return error */
     }
     prev &= ~(3 << 0);                                                              /* clear settings */
     prev |= mode << 0;                                                              /* set mode */
@@ -900,10 +900,10 @@ uint8_t bmp280_set_mode(bmp280_handle_t *handle, bmp280_mode_t mode)
     {
         handle->debug_print("bmp280: write ctrl meas failed.\n");                   /* write ctrl meas failed */
 
-        return 1;                                                                   /* return error */
+        return SENSOR_READ_OR_WRITE_FAIL;                                                                   /* return error */
     }
 
-    return 0;                                                                       /* success return 0 */
+    return SENSOR_OK;                                                                       /* success return SENSOR_OK */
 }
 
 /**
@@ -923,22 +923,22 @@ uint8_t bmp280_get_mode(bmp280_handle_t *handle, bmp280_mode_t *mode)
 
     if (handle == NULL)                                                        /* check handle */
     {
-        return 2;                                                              /* return error */
+        return SENSOR_HANDLE_NULL;                                                              /* return error */
     }
     if (handle->inited != 1)                                                   /* check handle initialization */
     {
-        return 3;                                                              /* return error */
+        return SENSOR_HANDLE_NOT_INIT;                                                              /* return error */
     }
 
     if (a_bmp280_iic_spi_read(handle, BMP280_REG_CTRL_MEAS, &prev, 1) != 0)    /* read ctrl meas */
     {
         handle->debug_print("bmp280: read ctrl meas failed.\n");               /* read ctrl meas failed */
 
-        return 1;                                                              /* return error */
+        return SENSOR_READ_OR_WRITE_FAIL;                                                              /* return error */
     }
     *mode = (bmp280_mode_t)((prev >> 0) & 0x3);                                /* set mode */
 
-    return 0;                                                                  /* success return 0 */
+    return SENSOR_OK;                                                                  /* success return SENSOR_OK */
 }
 
 /**
@@ -958,18 +958,18 @@ uint8_t bmp280_set_standby_time(bmp280_handle_t *handle, bmp280_standby_time_t s
 
     if (handle == NULL)                                                          /* check handle */
     {
-        return 2;                                                                /* return error */
+        return SENSOR_HANDLE_NULL;                                                                /* return error */
     }
     if (handle->inited != 1)                                                     /* check handle initialization */
     {
-        return 3;                                                                /* return error */
+        return SENSOR_HANDLE_NOT_INIT;                                                                /* return error */
     }
 
     if (a_bmp280_iic_spi_read(handle, BMP280_REG_CONFIG, &prev, 1) != 0)         /* read config */
     {
         handle->debug_print("bmp280: read config failed.\n");                    /* read config failed */
 
-        return 1;                                                                /* return error */
+        return SENSOR_READ_OR_WRITE_FAIL;                                                                /* return error */
     }
     prev &= ~(7 << 5);                                                           /* clear settings */
     prev |= standby_time << 5;                                                   /* set standby time */
@@ -977,10 +977,10 @@ uint8_t bmp280_set_standby_time(bmp280_handle_t *handle, bmp280_standby_time_t s
     {
         handle->debug_print("bmp280: write config failed.\n");                   /* write config failed */
 
-        return 1;                                                                /* return error */
+        return SENSOR_READ_OR_WRITE_FAIL;                                                                /* return error */
     }
 
-    return 0;                                                                    /* success return 0 */
+    return SENSOR_OK;                                                                    /* success return SENSOR_OK */
 }
 
 /**
@@ -1000,22 +1000,22 @@ uint8_t bmp280_get_standby_time(bmp280_handle_t *handle, bmp280_standby_time_t *
 
     if (handle == NULL)                                                         /* check handle */
     {
-        return 2;                                                               /* return error */
+        return SENSOR_HANDLE_NULL;                                                               /* return error */
     }
     if (handle->inited != 1)                                                    /* check handle initialization */
     {
-        return 3;                                                               /* return error */
+        return SENSOR_HANDLE_NOT_INIT;                                                               /* return error */
     }
 
     if (a_bmp280_iic_spi_read(handle, BMP280_REG_CONFIG, &prev, 1) != 0)        /* read config */
     {
         handle->debug_print("bmp280: read config failed.\n");                   /* read config failed */
 
-        return 1;                                                               /* return error */
+        return SENSOR_READ_OR_WRITE_FAIL;                                                               /* return error */
     }
     *standby_time = (bmp280_standby_time_t)((prev >> 5) & 0x7);                 /* get standby time */
 
-    return 0;                                                                   /* success return 0 */
+    return SENSOR_OK;                                                                   /* success return SENSOR_OK */
 }
 
 /**
@@ -1035,18 +1035,18 @@ uint8_t bmp280_set_filter(bmp280_handle_t *handle, bmp280_filter_t filter)
 
     if (handle == NULL)                                                          /* check handle */
     {
-        return 2;                                                                /* return error */
+        return SENSOR_HANDLE_NULL;                                                                /* return error */
     }
     if (handle->inited != 1)                                                     /* check handle initialization */
     {
-        return 3;                                                                /* return error */
+        return SENSOR_HANDLE_NOT_INIT;                                                                /* return error */
     }
 
     if (a_bmp280_iic_spi_read(handle, BMP280_REG_CONFIG, &prev, 1) != 0)         /* read config */
     {
         handle->debug_print("bmp280: read config failed.\n");                    /* read config failed */
 
-        return 1;                                                                /* return error */
+        return SENSOR_READ_OR_WRITE_FAIL;                                                                /* return error */
     }
     prev &= ~(7 << 2);                                                           /* clear settings */
     prev |= (filter & 0x07) << 2;                                                /* set filter */
@@ -1054,10 +1054,10 @@ uint8_t bmp280_set_filter(bmp280_handle_t *handle, bmp280_filter_t filter)
     {
         handle->debug_print("bmp280: write config failed.\n");                   /* write config failed */
 
-        return 1;                                                                /* return error */
+        return SENSOR_READ_OR_WRITE_FAIL;                                                                /* return error */
     }
 
-    return 0;                                                                    /* success return 0 */
+    return SENSOR_OK;                                                                    /* success return SENSOR_OK */
 }
 
 /**
@@ -1077,22 +1077,22 @@ uint8_t bmp280_get_filter(bmp280_handle_t *handle, bmp280_filter_t *filter)
 
     if (handle == NULL)                                                          /* check handle */
     {
-        return 2;                                                                /* return error */
+        return SENSOR_HANDLE_NULL;                                                                /* return error */
     }
     if (handle->inited != 1)                                                     /* check handle initialization */
     {
-        return 3;                                                                /* return error */
+        return SENSOR_HANDLE_NOT_INIT;                                                                /* return error */
     }
 
     if (a_bmp280_iic_spi_read(handle, BMP280_REG_CONFIG, &prev, 1) != 0)         /* read config */
     {
         handle->debug_print("bmp280: read config failed.\n");                    /* read config failed */
 
-        return 1;                                                                /* return error */
+        return SENSOR_READ_OR_WRITE_FAIL;                                                                /* return error */
     }
     *filter = (bmp280_filter_t)((prev >> 2) & 0x07);                             /* set filter */
 
-    return 0;                                                                    /* success return 0 */
+    return SENSOR_OK;                                                                    /* success return SENSOR_OK */
 }
 
 /**
@@ -1112,18 +1112,18 @@ uint8_t bmp280_set_spi_wire(bmp280_handle_t *handle, bmp280_spi_wire_t spi)
 
     if (handle == NULL)                                                          /* check handle */
     {
-        return 2;                                                                /* return error */
+        return SENSOR_HANDLE_NULL;                                                                /* return error */
     }
     if (handle->inited != 1)                                                     /* check handle initialization */
     {
-        return 3;                                                                /* return error */
+        return SENSOR_HANDLE_NOT_INIT;                                                                /* return error */
     }
 
     if (a_bmp280_iic_spi_read(handle, BMP280_REG_CONFIG, &prev, 1) != 0)         /* read config */
     {
         handle->debug_print("bmp280: read config failed.\n");                    /* read config failed */
 
-        return 1;                                                                /* return error */
+        return SENSOR_READ_OR_WRITE_FAIL;                                                                /* return error */
     }
     prev &= ~(1 << 0);                                                           /* clear settings */
     prev |= spi << 0;                                                            /* set spi wire */
@@ -1131,10 +1131,10 @@ uint8_t bmp280_set_spi_wire(bmp280_handle_t *handle, bmp280_spi_wire_t spi)
     {
         handle->debug_print("bmp280: write config failed.\n");                   /* write config failed */
 
-        return 1;                                                                /* return error */
+        return SENSOR_READ_OR_WRITE_FAIL;                                                                /* return error */
     }
 
-    return 0;                                                                    /* success return 0 */
+    return SENSOR_OK;                                                                    /* success return SENSOR_OK */
 }
 
 /**
@@ -1154,22 +1154,22 @@ uint8_t bmp280_get_spi_wire(bmp280_handle_t *handle, bmp280_spi_wire_t *spi)
 
     if (handle == NULL)                                                          /* check handle */
     {
-        return 2;                                                                /* return error */
+        return SENSOR_HANDLE_NULL;                                                                /* return error */
     }
     if (handle->inited != 1)                                                     /* check handle initialization */
     {
-        return 3;                                                                /* return error */
+        return SENSOR_HANDLE_NOT_INIT;                                                                /* return error */
     }
 
     if (a_bmp280_iic_spi_read(handle, BMP280_REG_CONFIG, &prev, 1) != 0)         /* read config */
     {
         handle->debug_print("bmp280: read config failed.\n");                    /* read config failed */
 
-        return 1;                                                                /* return error */
+        return SENSOR_READ_OR_WRITE_FAIL;                                                                /* return error */
     }
     *spi = (bmp280_spi_wire_t)((prev >> 0) & 0x01);                              /* get spi */
 
-    return 0;                                                                    /* success return 0 */
+    return SENSOR_OK;                                                                    /* success return SENSOR_OK */
 }
 
 /**
@@ -1197,18 +1197,18 @@ uint8_t bmp280_read_pressure(bmp280_handle_t *handle, uint32_t *pressure_raw, fl
 
     if (handle == NULL)                                                                        /* check handle */
     {
-        return 2;                                                                              /* return error */
+        return SENSOR_HANDLE_NULL;                                                                              /* return error */
     }
     if (handle->inited != 1)                                                                   /* check handle initialization */
     {
-        return 3;                                                                              /* return error */
+        return SENSOR_HANDLE_NOT_INIT;                                                                              /* return error */
     }
 
     if (a_bmp280_iic_spi_read(handle, BMP280_REG_CTRL_MEAS, &prev, 1) != 0)                    /* read ctrl meas */
     {
         handle->debug_print("bmp280: read ctrl meas failed.\n");                               /* read ctrl meas failed */
 
-        return 1;                                                                              /* return error */
+        return SENSOR_READ_OR_WRITE_FAIL;                                                                              /* return error */
     }
     if ((prev & 0x3) == 3)                                                                     /* normal mode */
     {
@@ -1217,7 +1217,7 @@ uint8_t bmp280_read_pressure(bmp280_handle_t *handle, uint32_t *pressure_raw, fl
         {
             handle->debug_print("bmp280: read failed.\n");                                     /* read failed */
 
-            return 1;                                                                          /* return error */
+            return SENSOR_READ_OR_WRITE_FAIL;                                                                          /* return error */
         }
         temperature_raw = ((((uint32_t)(buf[3])) << 12) |
                           (((uint32_t)(buf[4])) << 4) |
@@ -1227,7 +1227,7 @@ uint8_t bmp280_read_pressure(bmp280_handle_t *handle, uint32_t *pressure_raw, fl
         {
             handle->debug_print("bmp280: compensate temperature failed.\n");                   /* compensate temperature failed */
 
-            return 4;                                                                          /* return error */
+            return SENSOR_COMPENSATE_PARAM_FAIL;                                                                          /* return error */
         }
         *pressure_raw = ((((int32_t)(buf[0])) << 12) |
                         (((int32_t)(buf[1])) << 4) |
@@ -1237,7 +1237,7 @@ uint8_t bmp280_read_pressure(bmp280_handle_t *handle, uint32_t *pressure_raw, fl
         {
             handle->debug_print("bmp280: compensate pressure failed.\n");                      /* compensate pressure failed */
 
-            return 4;                                                                          /* return error */
+            return SENSOR_COMPENSATE_PARAM_FAIL;                                                                          /* return error */
         }
     }
     else                                                                                       /* forced mode */
@@ -1246,7 +1246,7 @@ uint8_t bmp280_read_pressure(bmp280_handle_t *handle, uint32_t *pressure_raw, fl
         {
             handle->debug_print("bmp280: read ctrl meas failed.\n");                           /* read ctrl meas failed */
 
-            return 1;                                                                          /* return error */
+            return SENSOR_READ_OR_WRITE_FAIL;                                                                          /* return error */
         }
         prev &= ~(3 << 0);                                                                     /* clear settings */
         prev |= 0x01 << 0;                                                                     /* set forced mode */
@@ -1254,7 +1254,7 @@ uint8_t bmp280_read_pressure(bmp280_handle_t *handle, uint32_t *pressure_raw, fl
         {
             handle->debug_print("bmp280: write ctrl meas failed.\n");                          /* write ctrl meas failed */
 
-            return 1;                                                                          /* return error */
+            return SENSOR_READ_OR_WRITE_FAIL;                                                                          /* return error */
         }
         timeout = 10 * 1000;                                                                   /* set timeout */
         while (timeout != 0)                                                                   /* check timeout */
@@ -1263,7 +1263,7 @@ uint8_t bmp280_read_pressure(bmp280_handle_t *handle, uint32_t *pressure_raw, fl
             {
                 handle->debug_print("bmp280: read ctrl meas failed.\n");                       /* read ctrl meas failed */
 
-                return 1;                                                                      /* return error */
+                return SENSOR_READ_OR_WRITE_FAIL;                                                                      /* return error */
             }
             if ((prev & 0x03) == 0)                                                            /* if finished */
             {
@@ -1276,14 +1276,14 @@ uint8_t bmp280_read_pressure(bmp280_handle_t *handle, uint32_t *pressure_raw, fl
         {
             handle->debug_print("bmp280: read timeout.\n");                                    /* read timeout */
 
-            return 5;                                                                          /* return error */
+            return SENSOR_READ_TIMEOUT;                                                                          /* return error */
         }
         res = a_bmp280_iic_spi_read(handle, BMP280_REG_PRESS_MSB, buf, 6);                     /* read temperature and pressure */
         if (res != 0)
         {
             handle->debug_print("bmp280: read failed.\n");                                     /* read failed */
 
-            return 1;                                                                          /* return error */
+            return SENSOR_READ_OR_WRITE_FAIL;                                                                          /* return error */
         }
         temperature_raw = ((((uint32_t)(buf[3])) << 12) |
                           (((uint32_t)(buf[4])) << 4) |
@@ -1293,7 +1293,7 @@ uint8_t bmp280_read_pressure(bmp280_handle_t *handle, uint32_t *pressure_raw, fl
         {
             handle->debug_print("bmp280: compensate temperature failed.\n");                   /* compensate temperature failed */
 
-            return 4;                                                                          /* return error */
+            return SENSOR_COMPENSATE_PARAM_FAIL;                                                                          /* return error */
         }
         *pressure_raw = ((((int32_t)(buf[0])) << 12) |
                         (((int32_t)(buf[1])) << 4) |
@@ -1303,11 +1303,11 @@ uint8_t bmp280_read_pressure(bmp280_handle_t *handle, uint32_t *pressure_raw, fl
         {
             handle->debug_print("bmp280: compensate pressure failed.\n");                      /* compensate pressure failed */
 
-            return 4;                                                                          /* return error */
+            return SENSOR_COMPENSATE_PARAM_FAIL;                                                                          /* return error */
         }
     }
 
-    return 0;                                                                                  /* success return 0 */
+    return SENSOR_OK;                                                                                  /* success return SENSOR_OK */
 }
 
 /**
@@ -1333,18 +1333,18 @@ uint8_t bmp280_read_temperature(bmp280_handle_t *handle, uint32_t *temperature_r
 
     if (handle == NULL)                                                                        /* check handle */
     {
-        return 2;                                                                              /* return error */
+        return SENSOR_HANDLE_NULL;                                                                              /* return error */
     }
     if (handle->inited != 1)                                                                   /* check handle initialization */
     {
-        return 3;                                                                              /* return error */
+        return SENSOR_HANDLE_NOT_INIT;                                                                              /* return error */
     }
 
     if (a_bmp280_iic_spi_read(handle, BMP280_REG_CTRL_MEAS, &prev, 1) != 0)                    /* read ctrl meas */
     {
         handle->debug_print("bmp280: read ctrl meas failed.\n");                               /* read ctrl meas failed */
 
-        return 1;                                                                              /* return error */
+        return SENSOR_READ_OR_WRITE_FAIL;                                                                              /* return error */
     }
     if ((prev & 0x3) == 3)                                                                     /* normal mode */
     {
@@ -1353,7 +1353,7 @@ uint8_t bmp280_read_temperature(bmp280_handle_t *handle, uint32_t *temperature_r
         {
             handle->debug_print("bmp280: read failed.\n");                                     /* read failed */
 
-            return 1;                                                                          /* return error */
+            return SENSOR_READ_OR_WRITE_FAIL;                                                                          /* return error */
         }
         *temperature_raw = ((((uint32_t)(buf[3])) << 12) |
                            (((uint32_t)(buf[4])) << 4) |
@@ -1363,7 +1363,7 @@ uint8_t bmp280_read_temperature(bmp280_handle_t *handle, uint32_t *temperature_r
         {
             handle->debug_print("bmp280: compensate temperature failed.\n");                   /* compensate temperature failed */
 
-            return 4;                                                                          /* return error */
+            return SENSOR_COMPENSATE_PARAM_FAIL;                                                                          /* return error */
         }
     }
     else                                                                                       /* forced mode */
@@ -1372,7 +1372,7 @@ uint8_t bmp280_read_temperature(bmp280_handle_t *handle, uint32_t *temperature_r
         {
             handle->debug_print("bmp280: read ctrl meas failed.\n");                           /* read ctrl meas failed */
 
-            return 1;                                                                          /* return error */
+            return SENSOR_READ_OR_WRITE_FAIL;                                                                          /* return error */
         }
         prev &= ~(3 << 0);                                                                     /* clear settings */
         prev |= 0x01 << 0;                                                                     /* set forced mode */
@@ -1380,7 +1380,7 @@ uint8_t bmp280_read_temperature(bmp280_handle_t *handle, uint32_t *temperature_r
         {
             handle->debug_print("bmp280: write ctrl meas failed.\n");                          /* write ctrl meas failed */
 
-            return 1;                                                                          /* return error */
+            return SENSOR_READ_OR_WRITE_FAIL;                                                                          /* return error */
         }
         timeout = 10 * 1000;                                                                   /* set timeout */
         while (timeout != 0)                                                                   /* check timeout */
@@ -1389,7 +1389,7 @@ uint8_t bmp280_read_temperature(bmp280_handle_t *handle, uint32_t *temperature_r
             {
                 handle->debug_print("bmp280: read ctrl meas failed.\n");                       /* read ctrl meas failed */
 
-                return 1;                                                                      /* return error */
+                return SENSOR_READ_OR_WRITE_FAIL;                                                                      /* return error */
             }
             if ((prev & 0x03) == 0)                                                            /* if finished */
             {
@@ -1402,14 +1402,14 @@ uint8_t bmp280_read_temperature(bmp280_handle_t *handle, uint32_t *temperature_r
         {
             handle->debug_print("bmp280: read timeout.\n");                                    /* read timeout */
 
-            return 5;                                                                          /* return error */
+            return SENSOR_READ_TIMEOUT;                                                                          /* return error */
         }
         res = a_bmp280_iic_spi_read(handle, BMP280_REG_PRESS_MSB, buf, 6);                     /* read temperature and pressure */
         if (res != 0)
         {
             handle->debug_print("bmp280: read failed.\n");                                     /* read failed */
 
-            return 1;                                                                          /* return error */
+            return SENSOR_READ_OR_WRITE_FAIL;                                                                          /* return error */
         }
         *temperature_raw = ((((uint32_t)(buf[3])) << 12) |
                            (((uint32_t)(buf[4])) << 4) |
@@ -1419,11 +1419,11 @@ uint8_t bmp280_read_temperature(bmp280_handle_t *handle, uint32_t *temperature_r
         {
             handle->debug_print("bmp280: compensate temperature failed.\n");                   /* compensate temperature failed */
 
-            return 4;                                                                          /* return error */
+            return SENSOR_COMPENSATE_PARAM_FAIL;                                                                          /* return error */
         }
     }
 
-    return 0;                                                                                  /* success return 0 */
+    return SENSOR_OK;                                                                                  /* success return SENSOR_OK */
 }
 
 /**
@@ -1452,18 +1452,18 @@ uint8_t bmp280_read_temperature_pressure(bmp280_handle_t *handle, uint32_t *temp
 
     if (handle == NULL)                                                                        /* check handle */
     {
-        return 2;                                                                              /* return error */
+        return SENSOR_HANDLE_NULL;                                                                              /* return error */
     }
     if (handle->inited != 1)                                                                   /* check handle initialization */
     {
-        return 3;                                                                              /* return error */
+        return SENSOR_HANDLE_NOT_INIT;                                                                              /* return error */
     }
 
     if (a_bmp280_iic_spi_read(handle, BMP280_REG_CTRL_MEAS, &prev, 1) != 0)                    /* read ctrl meas */
     {
         handle->debug_print("bmp280: read ctrl meas failed.\n");                               /* read ctrl meas failed */
 
-        return 1;                                                                              /* return error */
+        return SENSOR_READ_OR_WRITE_FAIL;                                                                              /* return error */
     }
     if ((prev & 0x3) == 3)                                                                     /* normal mode */
     {
@@ -1472,7 +1472,7 @@ uint8_t bmp280_read_temperature_pressure(bmp280_handle_t *handle, uint32_t *temp
         {
             handle->debug_print("bmp280: read failed.\n");                                     /* read failed */
 
-            return 1;                                                                          /* return error */
+            return SENSOR_READ_OR_WRITE_FAIL;                                                                          /* return error */
         }
         *temperature_raw = ((((uint32_t)(buf[3])) << 12) |
                            (((uint32_t)(buf[4])) << 4) |
@@ -1482,7 +1482,7 @@ uint8_t bmp280_read_temperature_pressure(bmp280_handle_t *handle, uint32_t *temp
         {
             handle->debug_print("bmp280: compensate temperature failed.\n");                   /* compensate temperature failed */
 
-            return 4;                                                                          /* return error */
+            return SENSOR_COMPENSATE_PARAM_FAIL;                                                                          /* return error */
         }
         *pressure_raw = ((((int32_t)(buf[0])) << 12) |
                         (((int32_t)(buf[1])) << 4) |
@@ -1492,7 +1492,7 @@ uint8_t bmp280_read_temperature_pressure(bmp280_handle_t *handle, uint32_t *temp
         {
             handle->debug_print("bmp280: compensate pressure failed.\n");                      /* compensate pressure failed */
 
-            return 4;                                                                          /* return error */
+            return SENSOR_COMPENSATE_PARAM_FAIL;                                                                          /* return error */
         }
     }
     else                                                                                       /* forced mode */
@@ -1501,7 +1501,7 @@ uint8_t bmp280_read_temperature_pressure(bmp280_handle_t *handle, uint32_t *temp
         {
             handle->debug_print("bmp280: read ctrl meas failed.\n");                           /* read ctrl meas failed */
 
-            return 1;                                                                          /* return error */
+            return SENSOR_READ_OR_WRITE_FAIL;                                                                          /* return error */
         }
         prev &= ~(3 << 0);                                                                     /* clear settings */
         prev |= 0x01 << 0;                                                                     /* set forced mode */
@@ -1509,7 +1509,7 @@ uint8_t bmp280_read_temperature_pressure(bmp280_handle_t *handle, uint32_t *temp
         {
             handle->debug_print("bmp280: write ctrl meas failed.\n");                          /* write ctrl meas failed */
 
-            return 1;                                                                          /* return error */
+            return SENSOR_READ_OR_WRITE_FAIL;                                                                          /* return error */
         }
         timeout = 10 * 1000;                                                                   /* set timeout */
         while (timeout != 0)                                                                   /* check timeout */
@@ -1518,7 +1518,7 @@ uint8_t bmp280_read_temperature_pressure(bmp280_handle_t *handle, uint32_t *temp
             {
                 handle->debug_print("bmp280: read ctrl meas failed.\n");                       /* read ctrl meas failed */
 
-                return 1;                                                                      /* return error */
+                return SENSOR_READ_OR_WRITE_FAIL;                                                                      /* return error */
             }
             if ((prev & 0x03) == 0)                                                            /* if finished */
             {
@@ -1531,14 +1531,14 @@ uint8_t bmp280_read_temperature_pressure(bmp280_handle_t *handle, uint32_t *temp
         {
             handle->debug_print("bmp280: read timeout.\n");                                    /* read timeout */
 
-            return 5;                                                                          /* return error */
+            return SENSOR_READ_TIMEOUT;                                                                          /* return error */
         }
         res = a_bmp280_iic_spi_read(handle, BMP280_REG_PRESS_MSB, buf, 6);                     /* read temperature and pressure */
         if (res != 0)
         {
             handle->debug_print("bmp280: read failed.\n");                                     /* read failed */
 
-            return 1;                                                                          /* return error */
+            return SENSOR_READ_OR_WRITE_FAIL;                                                                          /* return error */
         }
         *temperature_raw = ((((uint32_t)(buf[3])) << 12) |
                            (((uint32_t)(buf[4])) << 4) |
@@ -1548,7 +1548,7 @@ uint8_t bmp280_read_temperature_pressure(bmp280_handle_t *handle, uint32_t *temp
         {
             handle->debug_print("bmp280: compensate temperature failed.\n");                   /* compensate temperature failed */
 
-            return 4;                                                                          /* return error */
+            return SENSOR_COMPENSATE_PARAM_FAIL;                                                                          /* return error */
         }
         *pressure_raw = ((((int32_t)(buf[0])) << 12) |
                         (((int32_t)(buf[1])) << 4) |
@@ -1558,11 +1558,11 @@ uint8_t bmp280_read_temperature_pressure(bmp280_handle_t *handle, uint32_t *temp
         {
             handle->debug_print("bmp280: compensate pressure failed.\n");                      /* compensate pressure failed */
 
-            return 4;                                                                          /* return error */
+            return SENSOR_COMPENSATE_PARAM_FAIL;                                                                          /* return error */
         }
     }
 
-    return 0;                                                                                  /* success return 0 */
+    return SENSOR_OK;                                                                                  /* success return SENSOR_OK */
 }
 
 /**
@@ -1581,11 +1581,11 @@ uint8_t bmp280_set_reg(bmp280_handle_t *handle, uint8_t reg, uint8_t value)
 {
     if (handle == NULL)                                          /* check handle */
     {
-        return 2;                                                /* return error */
+        return SENSOR_HANDLE_NULL;                                                /* return error */
     }
     if (handle->inited != 1)                                     /* check handle initialization */
     {
-        return 3;                                                /* return error */
+        return SENSOR_HANDLE_NOT_INIT;                                                /* return error */
     }
 
     return a_bmp280_iic_spi_write(handle, reg, &value, 1);       /* write register */
@@ -1607,11 +1607,11 @@ uint8_t bmp280_get_reg(bmp280_handle_t *handle, uint8_t reg, uint8_t *value)
 {
     if (handle == NULL)                                        /* check handle */
     {
-        return 2;                                              /* return error */
+        return SENSOR_HANDLE_NULL;                                              /* return error */
     }
     if (handle->inited != 1)                                   /* check handle initialization */
     {
-        return 3;                                              /* return error */
+        return SENSOR_HANDLE_NOT_INIT;                                              /* return error */
     }
 
     return a_bmp280_iic_spi_read(handle, reg, value, 1);       /* read register */
@@ -1629,7 +1629,7 @@ uint8_t bmp280_info(bmp280_info_t *info)
 {
     if (info == NULL)                                               /* check handle */
     {
-        return 2;                                                   /* return error */
+        return SENSOR_HANDLE_NULL;                                                   /* return error */
     }
 
     memset(info, 0, sizeof(bmp280_info_t));                         /* initialize bmp280 info structure */
@@ -1643,5 +1643,5 @@ uint8_t bmp280_info(bmp280_info_t *info)
     info->temperature_min = TEMPERATURE_MIN;                        /* set maximum temperature */
     info->driver_version = DRIVER_VERSION;                          /* set driver version */
 
-    return 0;                                                       /* success return 0 */
+    return SENSOR_OK;                                                       /* success return SENSOR_OK */
 }

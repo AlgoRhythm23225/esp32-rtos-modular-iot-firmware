@@ -11,7 +11,7 @@ static bme280_handle_t gs_handle;               // bme280 handle
  *            - 1 init failed
  * @note      none
  */
-uint8_t bme280_app_init(bme280_interface_t interface, bme280_address_t addr_pin) {
+esp_err_t bme280_app_init(bme280_interface_t interface, bme280_address_t addr_pin) {
     uint8_t res;
     uint8_t check = 0;
     // link interface function
@@ -33,7 +33,7 @@ uint8_t bme280_app_init(bme280_interface_t interface, bme280_address_t addr_pin)
     if (res != 0) {
         bme280_interface_debug_print("bme280: set addr pin failed.\n");
         
-        return 1;
+        return SENSOR_SET_FAIL;
     }
     bme280_interface_debug_print("INTERFACE SUCCESS!\n");
     check++;
@@ -43,7 +43,7 @@ uint8_t bme280_app_init(bme280_interface_t interface, bme280_address_t addr_pin)
     if (res != 0) {
         bme280_interface_debug_print("bme280: set addr pin failed.\n");
 
-        return 1;
+        return SENSOR_SET_FAIL;
     }
     bme280_interface_debug_print("SET ADDR PIN SUCCESS!\n");
     check++;
@@ -53,7 +53,7 @@ uint8_t bme280_app_init(bme280_interface_t interface, bme280_address_t addr_pin)
     if (res != 0) {
         bme280_interface_debug_print("bme280: init failed.\n");
 
-        return 1;
+        return SENSOR_HARDWARE_ERR;
     }
     bme280_interface_debug_print("BME280 INIT SUCCESS!\n");
     check++;
@@ -64,7 +64,7 @@ uint8_t bme280_app_init(bme280_interface_t interface, bme280_address_t addr_pin)
         bme280_interface_debug_print("bme280: set temperature oversampling failed.\n");
         (void)bme280_deinit(&gs_handle);
 
-        return 1;
+        return SENSOR_SET_FAIL;
     }    
     bme280_interface_debug_print("TEMP OVERSAMPLING SUCCESS!\n");
     check++;
@@ -75,7 +75,7 @@ uint8_t bme280_app_init(bme280_interface_t interface, bme280_address_t addr_pin)
         bme280_interface_debug_print("bme280: set pressure oversampling failed.\n");
         (void)bme280_deinit(&gs_handle);
 
-        return 1;
+        return SENSOR_SET_FAIL;
     }   
     bme280_interface_debug_print("PRESS OVERSAMPLING SUCCESS!\n");
     check++;
@@ -86,7 +86,7 @@ uint8_t bme280_app_init(bme280_interface_t interface, bme280_address_t addr_pin)
         bme280_interface_debug_print("bme280: set humidity oversampling failed.\n");
         (void)bme280_deinit(&gs_handle);
 
-        return 1;
+        return SENSOR_SET_FAIL;
     }  
     bme280_interface_debug_print("HUM OVERSAMPLING SUCCESS!\n");
     check++; 
@@ -97,7 +97,7 @@ uint8_t bme280_app_init(bme280_interface_t interface, bme280_address_t addr_pin)
         bme280_interface_debug_print("bme280: set filter failed.\n");
         (void)bme280_deinit(&gs_handle);
 
-        return 1;
+        return SENSOR_SET_FAIL;
     }   
     bme280_interface_debug_print("SET FILTER SUCCESS!\n");
     check++;
@@ -108,7 +108,7 @@ uint8_t bme280_app_init(bme280_interface_t interface, bme280_address_t addr_pin)
         bme280_interface_debug_print("bme280: set mode failed.\n");
         (void)bme280_deinit(&gs_handle);
 
-        return 1;
+        return SENSOR_SET_FAIL;
     }  
     bme280_interface_debug_print("SET MODE SUCCESS!\n");
     check++; 
@@ -116,7 +116,7 @@ uint8_t bme280_app_init(bme280_interface_t interface, bme280_address_t addr_pin)
     ESP_LOGI("BME280", "%d/8", check);
     ESP_LOGI("bme280", "Init SUCCESS!");
 
-    return 0;
+    return SENSOR_OK;
 }
 
 /**
@@ -140,10 +140,10 @@ uint8_t bme280_app_read(float *temperature, float *pressure, float *humidity_per
                                                 (uint32_t*)&pressure_raw, pressure, 
                                                 (uint32_t*)&humidity_raw, humidity_percentage) != 0)
     {
-        return 1;
+        return SENSOR_READ_FAIL;
     }
 
-    return 0;
+    return SENSOR_OK;
 }
 
 /**
@@ -155,10 +155,10 @@ uint8_t bme280_app_read(float *temperature, float *pressure, float *humidity_per
  */
 uint8_t bme280_app_deinit(void) {
     if (bme280_deinit(&gs_handle) != 0) {
-        return 1;
+        return SENSOR_DEINIT_FAIL;
     }
 
-    return 0;
+    return SENSOR_OK;
 }
 
 /**         
@@ -168,14 +168,14 @@ uint8_t bme280_app_deinit(void) {
  *         - 1 deinit failed
  * @note   none
  */
-uint8_t bme280_I2C_init(void) {
+esp_err_t bme280_I2C_init(void) {
     uint8_t res;
     res = bme280_app_init(BME280_INTERFACE_IIC, 0x76);
     if (res != 0) {
-        return 1;
+        return SENSOR_HARDWARE_ERR;
     }
     
-    return 0;
+    return SENSOR_OK;
 }
 
 /**         

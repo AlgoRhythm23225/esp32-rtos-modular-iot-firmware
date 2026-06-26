@@ -8,6 +8,7 @@ extern "C" {
 #endif
 
 esp_err_t wifi_start(void);
+esp_err_t wifi_service_sta_connect(const char *ssid, const char *password);
 
 #ifdef __cplusplus
 }

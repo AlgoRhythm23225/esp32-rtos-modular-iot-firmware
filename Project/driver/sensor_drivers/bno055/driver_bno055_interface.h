@@ -45,6 +45,8 @@
 extern "C"{
 #endif
 
+#include "sensor_driver_interface_manager.h"
+
 /**
  * @defgroup bno055_interface_driver bno055 interface driver function
  * @brief    bno055 interface driver modules

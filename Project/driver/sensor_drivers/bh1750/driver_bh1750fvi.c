@@ -77,11 +77,11 @@ static uint8_t a_bh1750fvi_iic_read(bh1750fvi_handle_t *handle, uint8_t *data, u
 {
     if (handle->iic_read_cmd(handle->iic_addr, data, len) != 0)        /* read the register */
     {
-        return 1;                                                      /* return error */
+        return SENSOR_READ_FAIL;                                                      /* return error */
     }
     else
     {
-        return 0;                                                      /* success return 0 */
+        return SENSOR_OK;                                                      /* success return 0 */
     }
 }
 
@@ -99,11 +99,11 @@ static uint8_t a_bh1750fvi_iic_write(bh1750fvi_handle_t *handle, uint8_t *data, 
 {
     if (handle->iic_write_cmd(handle->iic_addr, data, len) != 0)        /* write the register */
     {
-        return 1;                                                       /* return error */
+        return SENSOR_WRITE_FAIL;                                                       /* return error */
     }
     else
     {
-        return 0;                                                       /* success return 0 */
+        return SENSOR_OK;                                                       /* success return 0 */
     }
 }
 
@@ -120,12 +120,12 @@ uint8_t bh1750fvi_set_addr_pin(bh1750fvi_handle_t *handle, bh1750fvi_address_t a
 {
     if (handle == NULL)                 /* check handle */
     {
-        return 2;                       /* return error */
+        return SENSOR_HANDLE_NULL;                       /* return error */
     }
 
     handle->iic_addr = addr_pin;        /* set iic addr */
     
-    return 0;                           /* success return 0 */
+    return SENSOR_OK;                           /* success return 0 */
 }
 
 /**
@@ -141,12 +141,12 @@ uint8_t bh1750fvi_get_addr_pin(bh1750fvi_handle_t *handle, bh1750fvi_address_t *
 {
     if (handle == NULL)                                         /* check handle */
     {
-        return 2;                                               /* return error */
+        return SENSOR_HANDLE_NULL;                                               /* return error */
     }
 
     *addr_pin = (bh1750fvi_address_t)(handle->iic_addr);        /*get iic address */
     
-    return 0;                                                   /* success return 0 */
+    return SENSOR_OK;                                                   /* success return 0 */
 }
 
 /**
@@ -163,16 +163,16 @@ uint8_t bh1750fvi_set_mode(bh1750fvi_handle_t *handle, bh1750fvi_mode_t mode)
 {
     if (handle == NULL)                        /* check handle */
     {
-        return 2;                              /* return error */
+        return SENSOR_HANDLE_NULL;                              /* return error */
     }
     if (handle->inited != 1)                   /* check handle initialization */
     {
-        return 3;                              /* return error */
+        return SENSOR_HANDLE_NOT_INIT;                              /* return error */
     }
     
     handle->mode = (uint8_t)(mode);            /* set the mode */
     
-    return 0;                                  /* success return 0 */
+    return SENSOR_OK;                                  /* success return 0 */
 }
 
 /**
@@ -189,16 +189,16 @@ uint8_t bh1750fvi_get_mode(bh1750fvi_handle_t *handle, bh1750fvi_mode_t *mode)
 {
     if (handle == NULL)                              /* check handle */
     {
-        return 2;                                    /* return error */
+        return SENSOR_HANDLE_NULL;                                    /* return error */
     }
     if (handle->inited != 1)                         /* check handle initialization */
     {
-        return 3;                                    /* return error */
+        return SENSOR_HANDLE_NOT_INIT;                                    /* return error */
     }
     
     *mode = (bh1750fvi_mode_t)(handle->mode);        /* get the mode */
     
-    return 0;                                        /* success return 0 */
+    return SENSOR_OK;                                        /* success return 0 */
 }
 
 /**
@@ -220,48 +220,48 @@ uint8_t bh1750fvi_init(bh1750fvi_handle_t *handle)
     
     if (handle == NULL)                                                               /* check handle */
     {
-        return 2;                                                                     /* return error */
+        return SENSOR_HANDLE_NULL;                                                                     /* return error */
     }
     if (handle->debug_print == NULL)                                                  /* check debug_print */
     {
-        return 3;                                                                     /* return error */
+        return SENSOR_HANDLE_NOT_INIT;                                                                     /* return error */
     }
     if (handle->iic_init == NULL)                                                     /* check iic_init */
     {
         handle->debug_print("bh1750fvi: iic_init is null.\n");                        /* iic_init is null */
         
-        return 3;                                                                     /* return error */
+        return SENSOR_HANDLE_NOT_INIT;                                                                     /* return error */
     }
     if (handle->iic_deinit == NULL)                                                   /* check iic_deinit */
     {
         handle->debug_print("bh1750fvi: iic_deinit is null.\n");                      /* iic_deinit is null */
         
-        return 3;                                                                     /* return error */
+        return SENSOR_HANDLE_NOT_INIT;                                                                     /* return error */
     }
     if (handle->iic_read_cmd == NULL)                                                 /* check iic_read_cmd */
     {
         handle->debug_print("bh1750fvi: iic_read_cmd is null.\n");                    /* iic_read_cmd is null */
         
-        return 3;                                                                     /* return error */
+        return SENSOR_HANDLE_NOT_INIT;                                                                     /* return error */
     }
     if (handle->iic_write_cmd == NULL)                                                /* check iic_write_cmd */
     {
         handle->debug_print("bh1750fvi: iic_write_cmd is null.\n");                   /* iic_write_cmd is null */
         
-        return 3;                                                                     /* return error */
+        return SENSOR_HANDLE_NOT_INIT;                                                                     /* return error */
     }
     if (handle->delay_ms == NULL)                                                     /* check delay_ms */
     {
         handle->debug_print("bh1750fvi: delay_ms is null.\n");                        /* delay_ms is null */
         
-        return 3;                                                                     /* return error */
+        return SENSOR_HANDLE_NOT_INIT;                                                                     /* return error */
     }
     
     if (handle->iic_init() != 0)                                                      /* iic init */
     {
         handle->debug_print("bh1750fvi: iic init failed.\n");                         /* iic init failed */
         
-        return 1;                                                                     /* return error */
+        return SENSOR_BUS_ERR;                                                                     /* return error */
     }
     
     prev = BH1750FVI_COMMAND_POWER_ON;                                                /* set the command */
@@ -290,7 +290,7 @@ uint8_t bh1750fvi_init(bh1750fvi_handle_t *handle)
     {
         handle->debug_print("bh1750fvi: set measurement time failed.\n");             /* set measurement time failed */
         
-        return 1;                                                                     /* return error */
+        return SENSOR_WRITE_FAIL;                                                                     /* return error */
     }
     prev = BH1750FVI_COMMAND_CHANGE_MEASUREMENT_TIME_LOW | ((69 >> 0) & 0x1F);        /* set the command */
     res = a_bh1750fvi_iic_write(handle, &prev, 1);                                    /* write the command */
@@ -298,14 +298,14 @@ uint8_t bh1750fvi_init(bh1750fvi_handle_t *handle)
     {
         handle->debug_print("bh1750fvi: set measurement time failed.\n");             /* set measurement time failed */
         
-        return 1;                                                                     /* return error */
+        return SENSOR_WRITE_FAIL;                                                                     /* return error */
     }
     handle->delay_ms(5);                                                              /* delay 5ms */
     handle->mode = BH1750FVI_MODE_HIGH_RESOLUTION_MODE;                               /* high resolution mode */
     handle->t = 69;                                                                   /* set default 69 */
     handle->inited = 1;                                                               /* flag finish initialization */
     
-    return 0;                                                                         /* success return 0 */
+    return SENSOR_OK;                                                                         /* success return 0 */
 }
 
 /**
@@ -326,11 +326,11 @@ uint8_t bh1750fvi_deinit(bh1750fvi_handle_t *handle)
     
     if (handle == NULL)                                                /* check handle */
     {
-        return 2;                                                      /* return error */
+        return SENSOR_HANDLE_NULL;                                                      /* return error */
     }
     if (handle->inited != 1)                                           /* check handle initialization */
     {
-        return 3;                                                      /* return error */
+        return SENSOR_HANDLE_NOT_INIT;                                                      /* return error */
     }
     
     prev = BH1750FVI_COMMAND_POWER_DOWN;                               /* set the command */
@@ -346,11 +346,11 @@ uint8_t bh1750fvi_deinit(bh1750fvi_handle_t *handle)
     {
         handle->debug_print("bh1750fvi: iic deinit failed.\n");        /* iic deinit failed */
         
-        return 1;                                                      /* return error */
+        return SENSOR_DEINIT_FAIL;                                                      /* return error */
     }
     handle->inited = 0;                                                /* flag closed */
     
-    return 0;                                                          /* success return 0 */
+    return SENSOR_OK;                                                          /* success return 0 */
 }
 
 /**
@@ -370,11 +370,11 @@ uint8_t bh1750fvi_power_down(bh1750fvi_handle_t *handle)
     
     if (handle == NULL)                                                /* check handle */
     {
-        return 2;                                                      /* return error */
+        return SENSOR_HANDLE_NULL;                                                      /* return error */
     }
     if (handle->inited != 1)                                           /* check handle initialization */
     {
-        return 3;                                                      /* return error */
+        return SENSOR_HANDLE_NOT_INIT;                                                      /* return error */
     }
     
     prev = BH1750FVI_COMMAND_POWER_DOWN;                               /* set the command */
@@ -383,10 +383,10 @@ uint8_t bh1750fvi_power_down(bh1750fvi_handle_t *handle)
     {
         handle->debug_print("bh1750fvi: power down failed.\n");        /* power down failed */
         
-        return 1;                                                      /* return error */
+        return SENSOR_WRITE_FAIL;                                                      /* return error */
     }
     
-    return 0;                                                          /* success return 0 */
+    return SENSOR_OK;                                                          /* success return 0 */
 }
 
 /**
@@ -406,11 +406,11 @@ uint8_t bh1750fvi_power_on(bh1750fvi_handle_t *handle)
     
     if (handle == NULL)                                              /* check handle */
     {
-        return 2;                                                    /* return error */
+        return SENSOR_HANDLE_NULL;                                                    /* return error */
     }
     if (handle->inited != 1)                                         /* check handle initialization */
     {
-        return 3;                                                    /* return error */
+        return SENSOR_HANDLE_NOT_INIT;                                                    /* return error */
     }
     
     prev = BH1750FVI_COMMAND_POWER_ON;                               /* set the command */
@@ -419,10 +419,10 @@ uint8_t bh1750fvi_power_on(bh1750fvi_handle_t *handle)
     {
         handle->debug_print("bh1750fvi: power on failed.\n");        /* power on failed */
         
-        return 1;                                                    /* return error */
+        return SENSOR_WRITE_FAIL;                                                    /* return error */
     }
     
-    return 0;                                                        /* success return 0 */
+    return SENSOR_OK;                                                        /* success return 0 */
 }
 
 /**
@@ -442,11 +442,11 @@ uint8_t bh1750fvi_reset(bh1750fvi_handle_t *handle)
     
     if (handle == NULL)                                           /* check handle */
     {
-        return 2;                                                 /* return error */
+        return SENSOR_HANDLE_NULL;                                                 /* return error */
     }
     if (handle->inited != 1)                                      /* check handle initialization */
     {
-        return 3;                                                 /* return error */
+        return SENSOR_HANDLE_NOT_INIT;                                                 /* return error */
     }
     
     prev = BH1750FVI_COMMAND_RESET;                               /* set the command */
@@ -455,10 +455,10 @@ uint8_t bh1750fvi_reset(bh1750fvi_handle_t *handle)
     {
         handle->debug_print("bh1750fvi: reset failed.\n");        /* reset failed */
         
-        return 1;                                                 /* return error */
+        return SENSOR_WRITE_FAIL;                                                 /* return error */
     }
     
-    return 0;                                                     /* success return 0 */
+    return SENSOR_OK;                                                     /* success return 0 */
 }
 
 /**
@@ -480,11 +480,11 @@ uint8_t bh1750fvi_set_measurement_time(bh1750fvi_handle_t *handle, uint8_t t)
     
     if (handle == NULL)                                                               /* check handle */
     {
-        return 2;                                                                     /* return error */
+        return SENSOR_HANDLE_NULL;                                                                     /* return error */
     }
     if (handle->inited != 1)                                                          /* check handle initialization */
     {
-        return 3;                                                                     /* return error */
+        return SENSOR_HANDLE_NOT_INIT;                                                                     /* return error */
     }
     if ((t < 31) || (t > 254))                                                        /* check t */
     {
@@ -499,7 +499,7 @@ uint8_t bh1750fvi_set_measurement_time(bh1750fvi_handle_t *handle, uint8_t t)
     {
         handle->debug_print("bh1750fvi: set measurement time failed.\n");             /* set measurement time failed */
         
-        return 1;                                                                     /* return error */
+        return SENSOR_WRITE_FAIL;                                                                     /* return error */
     }
     prev = BH1750FVI_COMMAND_CHANGE_MEASUREMENT_TIME_LOW | ((t >> 0) & 0x1F);         /* set the command */
     res = a_bh1750fvi_iic_write(handle, &prev, 1);                                    /* write the command */
@@ -507,11 +507,11 @@ uint8_t bh1750fvi_set_measurement_time(bh1750fvi_handle_t *handle, uint8_t t)
     {
         handle->debug_print("bh1750fvi: set measurement time failed.\n");             /* set measurement time failed */
         
-        return 1;                                                                     /* return error */
+        return SENSOR_WRITE_FAIL;                                                                     /* return error */
     }
     handle->t = t;                                                                    /* save the time */
     
-    return 0;                                                                         /* success return 0 */
+    return SENSOR_OK;                                                                         /* success return 0 */
 }
 
 /**
@@ -535,11 +535,11 @@ uint8_t bh1750fvi_single_read(bh1750fvi_handle_t *handle, uint16_t *raw, float *
     
     if (handle == NULL)                                                             /* check handle */
     {
-        return 2;                                                                   /* return error */
+        return SENSOR_HANDLE_NULL;                                                                   /* return error */
     }
     if (handle->inited != 1)                                                        /* check handle initialization */
     {
-        return 3;                                                                   /* return error */
+        return SENSOR_HANDLE_NOT_INIT;                                                                   /* return error */
     }
     
     if (handle->mode == BH1750FVI_MODE_HIGH_RESOLUTION_MODE)                        /* high resolution mode */
@@ -566,7 +566,7 @@ uint8_t bh1750fvi_single_read(bh1750fvi_handle_t *handle, uint16_t *raw, float *
     {
         handle->debug_print("bh1750fvi: set measurement time failed.\n");           /* set measurement time failed */
         
-        return 1;                                                                   /* return error */
+        return SENSOR_WRITE_FAIL;                                                                   /* return error */
     }
     if (handle->mode == BH1750FVI_MODE_HIGH_RESOLUTION_MODE)                        /* high resolution mode */
     {
@@ -585,7 +585,7 @@ uint8_t bh1750fvi_single_read(bh1750fvi_handle_t *handle, uint16_t *raw, float *
     {
         handle->debug_print("bh1750fvi: read data failed.\n");                      /* read data failed */
         
-        return 1;                                                                   /* return error */
+        return SENSOR_READ_FAIL;                                                                   /* return error */
     }
     *raw = (((uint16_t)buf[0]) << 8) | buf[1];                                      /* get the raw data */
     if (handle->mode == BH1750FVI_MODE_HIGH_RESOLUTION_MODE)                        /* high resolution mode */
@@ -601,7 +601,7 @@ uint8_t bh1750fvi_single_read(bh1750fvi_handle_t *handle, uint16_t *raw, float *
         *lux = (float)(*raw) / 1.2f * (69.0f / ((float)(handle->t)));               /* convert */
     }
     
-    return 0;                                                                       /* success return 0 */
+    return SENSOR_OK;                                                                       /* success return 0 */
 }
 
 /**
@@ -624,11 +624,11 @@ uint8_t bh1750fvi_continuous_read(bh1750fvi_handle_t *handle, uint16_t *raw, flo
     
     if (handle == NULL)                                                             /* check handle */
     {
-        return 2;                                                                   /* return error */
+        return SENSOR_HANDLE_NULL;                                                                   /* return error */
     }
     if (handle->inited != 1)                                                        /* check handle initialization */
     {
-        return 3;                                                                   /* return error */
+        return SENSOR_HANDLE_NOT_INIT;                                                                   /* return error */
     }
     
     res = a_bh1750fvi_iic_read(handle, buf, 2);                                     /* read data */
@@ -636,7 +636,7 @@ uint8_t bh1750fvi_continuous_read(bh1750fvi_handle_t *handle, uint16_t *raw, flo
     {
         handle->debug_print("bh1750fvi: read data failed.\n");                      /* read data failed */
         
-        return 1;                                                                   /* return error */
+        return SENSOR_READ_FAIL;                                                                   /* return error */
     }
     *raw = (((uint16_t)buf[0]) << 8) | buf[1];                                      /* get the raw data */
     if (handle->mode == BH1750FVI_MODE_HIGH_RESOLUTION_MODE)                        /* high resolution mode */
@@ -652,7 +652,7 @@ uint8_t bh1750fvi_continuous_read(bh1750fvi_handle_t *handle, uint16_t *raw, flo
         *lux = (float)(*raw) / 1.2f * (69.0f / ((float)(handle->t)));               /* convert */
     }
     
-    return 0;                                                                       /* success return 0 */
+    return SENSOR_OK;                                                                       /* success return 0 */
 }
 
 /**
@@ -673,11 +673,11 @@ uint8_t bh1750fvi_start_continuous_read(bh1750fvi_handle_t *handle)
     
     if (handle == NULL)                                                          /* check handle */
     {
-        return 2;                                                                /* return error */
+        return SENSOR_HANDLE_NULL;                                                                /* return error */
     }
     if (handle->inited != 1)                                                     /* check handle initialization */
     {
-        return 3;                                                                /* return error */
+        return SENSOR_HANDLE_NOT_INIT;                                                                /* return error */
     }
     
     if (handle->mode == BH1750FVI_MODE_HIGH_RESOLUTION_MODE)                     /* high resolution mode */
@@ -704,10 +704,10 @@ uint8_t bh1750fvi_start_continuous_read(bh1750fvi_handle_t *handle)
     {
         handle->debug_print("bh1750fvi: set measurement time failed.\n");        /* set measurement time failed */
         
-        return 1;                                                                /* return error */
+        return SENSOR_WRITE_FAIL;                                                                /* return error */
     }
     
-    return 0;                                                                    /* success return 0 */
+    return SENSOR_OK;                                                                    /* success return 0 */
 }
 
 /**
@@ -728,11 +728,11 @@ uint8_t bh1750fvi_stop_continuous_read(bh1750fvi_handle_t *handle)
     
     if (handle == NULL)                                                          /* check handle */
     {
-        return 2;                                                                /* return error */
+        return SENSOR_HANDLE_NULL;                                                                /* return error */
     }
     if (handle->inited != 1)                                                     /* check handle initialization */
     {
-        return 3;                                                                /* return error */
+        return SENSOR_HANDLE_NOT_INIT;                                                                /* return error */
     }
     
     if (handle->mode == BH1750FVI_MODE_HIGH_RESOLUTION_MODE)                     /* high resolution mode */
@@ -759,10 +759,10 @@ uint8_t bh1750fvi_stop_continuous_read(bh1750fvi_handle_t *handle)
     {
         handle->debug_print("bh1750fvi: set measurement time failed.\n");        /* set measurement time failed */
         
-        return 1;                                                                /* return error */
+        return SENSOR_WRITE_FAIL;                                                                /* return error */
     }
     
-    return 0;                                                                    /* success return 0 */
+    return SENSOR_OK;                                                                    /* success return 0 */
 }
 
 /**
@@ -781,11 +781,11 @@ uint8_t bh1750fvi_set_reg(bh1750fvi_handle_t *handle, uint8_t *buf, uint16_t len
 {
     if (handle == NULL)                                    /* check handle */
     {
-        return 2;                                          /* return error */
+        return SENSOR_HANDLE_NULL;                                          /* return error */
     }
     if (handle->inited != 1)                               /* check handle initialization */
     {
-        return 3;                                          /* return error */
+        return SENSOR_HANDLE_NOT_INIT;                                          /* return error */
     }
     
     return a_bh1750fvi_iic_write(handle, buf, len);        /* write command */
@@ -807,11 +807,11 @@ uint8_t bh1750fvi_get_reg(bh1750fvi_handle_t *handle, uint8_t *buf, uint16_t len
 {
     if (handle == NULL)                                   /* check handle */
     {
-        return 2;                                         /* return error */
+        return SENSOR_HANDLE_NULL;                                         /* return error */
     }
     if (handle->inited != 1)                              /* check handle initialization */
     {
-        return 3;                                         /* return error */
+        return SENSOR_HANDLE_NOT_INIT;                                         /* return error */
     }
     
     return a_bh1750fvi_iic_read(handle, buf, len);        /* read command */
@@ -829,7 +829,7 @@ uint8_t bh1750fvi_info(bh1750fvi_info_t *info)
 {
     if (info == NULL)                                               /* check handle */
     {
-        return 2;                                                   /* return error */
+        return SENSOR_HANDLE_NULL;                                                   /* return error */
     }
     
     memset(info, 0, sizeof(bh1750fvi_info_t));                      /* initialize bh1750fvi info structure */
@@ -843,5 +843,5 @@ uint8_t bh1750fvi_info(bh1750fvi_info_t *info)
     info->temperature_min = TEMPERATURE_MIN;                        /* set maximum temperature */
     info->driver_version = DRIVER_VERSION;                          /* set driver version */
     
-    return 0;                                                       /* success return 0 */
+    return SENSOR_OK;                                                       /* success return 0 */
 }

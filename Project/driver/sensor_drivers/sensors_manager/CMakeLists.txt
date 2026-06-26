@@ -1,12 +1,13 @@
 idf_component_register(SRCS "sensors_manager.c"
                     INCLUDE_DIRS "."
                     REQUIRES
-                    PRIV_REQUIRES
                         i2c_bus
+                        aht20    
                         bh1750
                         bme280
                         bmp280
-                        aht20    
+                        bno055 
                         ina226
-                        bno055  
+                        config 
+                    PRIV_REQUIRES
 )

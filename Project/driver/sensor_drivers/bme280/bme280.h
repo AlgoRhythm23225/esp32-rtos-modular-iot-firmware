@@ -19,7 +19,7 @@
  *            - 1 init failed
  * @note      none
  */
-uint8_t bme280_full_init(bme280_interface_t interface, bme280_address_t addr_pin);
+esp_err_t bme280_full_init(bme280_interface_t interface, bme280_address_t addr_pin);
 
 /**
  * @brief      basic example read
@@ -49,7 +49,7 @@ uint8_t bme280_app_deinit(void);
  *         - 1 deinit failed
  * @note   none
  */
-uint8_t bme280_I2C_init(void);
+esp_err_t bme280_I2C_init(void);
 
 /**         
  * @brief  test if the app work

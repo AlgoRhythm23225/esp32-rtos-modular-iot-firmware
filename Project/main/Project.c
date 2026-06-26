@@ -9,11 +9,10 @@
 #include "mqtt_task.h"
 #include "wifi_task.h"
 #include "esp_log.h"
-#include "nvs_manager.h"
 #include "ble_manager.h"
-#include "ble_gatts_svc.h"
-#include "i2c_manager.h"
-#include "bno055.h"
+#include "sensors_manager.h"
+#include "i2c_scan.h"
+#include "storage_service.h"
 
 static const char *TAG = "MAIN";
 
@@ -43,22 +42,36 @@ static esp_err_t rtos_resources_create(void)
     ESP_LOGI(TAG, "RTOS resources created");
     return ESP_OK;
 }
+
 void app_main(void)
 {
+    ble_manager_init();
+
     esp_err_t ret = rtos_resources_create();
     if (ret != ESP_OK) {
         ESP_LOGE(TAG, "Failed to create RTOS resources: %d", ret);
         return;
     }
 
+    ESP_ERROR_CHECK(storage_service_init());
+
     i2c_init();
 
     xTaskCreate(bno055_ndof_task, "bno055", 6144, NULL, 5, NULL);
 
+    // xTaskCreate(bmp280_app_test, "bme280", 6144, NULL, 5, NULL);
+    
     ret = wifi_start();
     if (ret != ESP_OK) {
         ESP_LOGE(TAG, "Failed to start WiFi: %d", ret);
         return;
+    }
+
+    char ssid[65] = {0};
+    char password[65] = {0};
+    if (storage_service_read_wifi(ssid, sizeof(ssid), password, sizeof(password)))
+    {
+        wifi_service_sta_connect(ssid, password);
     }
 
     xTaskCreate(mqtt_task,
@@ -67,9 +80,4 @@ void app_main(void)
                 NULL,
                 TASK_PRIO_MQTT,
                 NULL);
-    
-    nvs_manager_init();
-    ble_manager_init();
-    gatt_svc_init();
-    ble_manager_start();
 }

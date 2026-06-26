@@ -3,9 +3,11 @@
 #include "rtos_config.h"
 #include <stdio.h>
 #include <string.h>
+#include "math.h"
+#include "sensor_types.h"
 static const char *TAG = "bno055";
 
-void bno055_I2C_init() {
+esp_err_t bno055_full_init() {
     bno055_interface_iic_init();
     uint8_t data = OPERATION_MODE_CONFIG;
     esp_err_t err = bno055_interface_iic_write(0x28, BNO055_OPR_MODE_ADDR, &data, 1);
@@ -30,6 +32,8 @@ void bno055_I2C_init() {
     bno055_interface_delay_ms(1000);
     err = bno055_set_opmode(OPERATION_MODE_NDOF);
     bno055_interface_delay_ms(1000);
+
+    return ESP_OK;
 }
 
 void bno055_print_app_id() {
@@ -47,7 +51,7 @@ void bno055_print_app_id() {
 }
 
 void bno055_ndof_task(void *pvParameters) {
-    bno055_I2C_init();
+    bno055_full_init();
 
     esp_err_t err;
     bno055_quaternion_t quat;
@@ -61,31 +65,54 @@ void bno055_ndof_task(void *pvParameters) {
             bno055_interface_delay_ms(50);
             continue;
         }
+        
+        // quat.w = 1.0f; quat.x = 2.0f; quat.y = 3.0f; quat.z = 4.0f;
+        // lin_accel.x = 2.0f; lin_accel.y = 6.0f; lin_accel.z = 3.0f;
+        // gravity.x = 0.0f; gravity.y = 0.0f; gravity.z = 9.8f;
 
         ESP_LOGI(TAG, "quat w=%.4f x=%.4f y=%.4f z=%.4f | accel x=%.2f y=%.2f z=%.2f",
                  (double)quat.w, (double)quat.x, (double)quat.y, (double)quat.z,
                  (double)lin_accel.x, (double)lin_accel.y, (double)lin_accel.z);
-
-        if (g_mqtt_publish_queue != NULL) {
-            mqtt_publish_msg_t msg;
-            memset(&msg, 0, sizeof(msg));
-            strncpy(msg.topic, TOPIC_SENSOR, sizeof(msg.topic) - 1);
-            msg.payload_len = (size_t)snprintf(
-                msg.payload, sizeof(msg.payload),
-                "{\"quat\":{\"w\":%.6f,\"x\":%.6f,\"y\":%.6f,\"z\":%.6f},"
-                "\"lin_accel\":{\"x\":%.4f,\"y\":%.4f,\"z\":%.4f},"
-                "\"gravity\":{\"x\":%.4f,\"y\":%.4f,\"z\":%.4f}}",
-                (double)quat.w, (double)quat.x, (double)quat.y, (double)quat.z,
-                (double)lin_accel.x, (double)lin_accel.y, (double)lin_accel.z,
-                (double)gravity.x, (double)gravity.y, (double)gravity.z
-            );
-            xQueueSend(g_mqtt_publish_queue, &msg, 0);
+        
+        if(is_mqtt_on) {
+            if (g_mqtt_publish_queue != NULL) {
+                mqtt_publish_msg_t msg;
+                memset(&msg, 0, sizeof(msg));
+                strncpy(msg.topic, TOPIC_SENSOR, sizeof(msg.topic) - 1);
+                msg.payload_len = (size_t)snprintf(
+                    msg.payload, sizeof(msg.payload),
+                    "{\"quat\":{\"w\":%.6f,\"x\":%.6f,\"y\":%.6f,\"z\":%.6f},"
+                    "\"lin_accel\":{\"x\":%.4f,\"y\":%.4f,\"z\":%.4f},"
+                    "\"gravity\":{\"x\":%.4f,\"y\":%.4f,\"z\":%.4f}}",
+                    (double)quat.w, (double)quat.x, (double)quat.y, (double)quat.z,
+                    (double)lin_accel.x, (double)lin_accel.y, (double)lin_accel.z,
+                    (double)gravity.x, (double)gravity.y, (double)gravity.z
+                );
+                xQueueSend(g_mqtt_publish_queue, &msg, 0);
+            }
         }
-
-        bno055_interface_delay_ms(50);
+        bno055_interface_delay_ms(1000);
     }
 }
 
+uint8_t bno055_accel_read(float *accel) {
+    esp_err_t err;
 
+    bno055_quaternion_t quat;
+    bno055_vec3_t lin_accel;
+    bno055_vec3_t gravity;
+
+    err = bno055_get_fusion_data(0, &quat, &lin_accel, &gravity);
+    if( err != ESP_OK ) {
+        printf("bno055_get_fusion_data() returned error: %02x \n", err);
+        return ESP_FAIL;
+    }
+
+    *accel = (float)sqrt(lin_accel.x * lin_accel.x +
+                    lin_accel.y * lin_accel.y +
+                    lin_accel.z * lin_accel.z);
+
+    return ESP_OK;
+}
   
  

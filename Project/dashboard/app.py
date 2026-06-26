@@ -1,6 +1,6 @@
 """
-app.py  –  ESP32 BNO055 IMU Real-time Dashboard
-Chạy:  streamlit run app.py
+app.py – ESP32 BNO055 IMU Real-time Dashboard
+Run: streamlit run app.py
 """
 
 import datetime
@@ -13,7 +13,7 @@ import streamlit as st
 import config
 from mqtt_subscriber import sensor_data, start_mqtt_subscriber
 
-# ── Cấu hình trang ─────────────────────────────────────────────────────
+# ── Page Configuration ─────────────────────────────────────────────────────
 st.set_page_config(
     page_title="ESP32 IMU Dashboard",
     page_icon="🛰️",
@@ -21,11 +21,11 @@ st.set_page_config(
     initial_sidebar_state="collapsed",
 )
 
-# ── Khởi động MQTT (chỉ một lần mỗi tiến trình) ────────────────────────
+# ── Start MQTT Subscriber (Once per process) ──────────────────────────────
 start_mqtt_subscriber()
 
-# ── Tiêu đề ─────────────────────────────────────────────────────────────
-st.title("🛰️ ESP32 BNO055 IMU Dashboard")
+# ── Title ─────────────────────────────────────────────────────────────────
+st.title("ESP32 Environmental Sensor Dashboard")
 st.caption(
     f"**Endpoint:** `{config.AWS_ENDPOINT}` &nbsp;|&nbsp; "
     f"**Device:** `{config.DEVICE_ID}` &nbsp;|&nbsp; "
@@ -34,19 +34,19 @@ st.caption(
 
 snap = sensor_data.snapshot()
 
-# ── Thanh trạng thái ────────────────────────────────────────────────────
+# ── Status Bar ────────────────────────────────────────────────────────────
 c1, c2, c3 = st.columns(3)
 if snap["connected"]:
-    c1.success("🟢  MQTT Đã kết nối")
+    c1.success("🟢   MQTT Connected")
 else:
     err = snap.get("last_error", "")
-    c1.error(f"🔴  MQTT Mất kết nối{': ' + err if err else ''}")
-c2.metric("Tin nhắn đã nhận", snap["message_count"])
-c3.metric("Điểm dữ liệu lưu trữ", len(snap["timestamps"]))
+    c1.error(f"🔴   MQTT Disconnected{': ' + err if err else ''}")
+c2.metric("Messages Received", snap["message_count"])
+c3.metric("Stored Data Points", len(snap["timestamps"]))
 
 st.divider()
 
-# ── Giá trị mới nhất ────────────────────────────────────────────────────
+# ── Latest Values ─────────────────────────────────────────────────────────
 latest = snap["latest"]
 
 if latest:
@@ -59,7 +59,7 @@ if latest:
     y = float(quat.get("y", 0.0))
     z = float(quat.get("z", 0.0))
 
-    # ── Chuyển Quaternion → Euler ───────────────────────────────
+    # ── Convert Quaternion → Euler Angles ─────────────────────────────────
     sinr_cosp = 2.0 * (w * x + y * z)
     cosr_cosp = 1.0 - 2.0 * (x * x + y * y)
     roll  = math.degrees(math.atan2(sinr_cosp, cosr_cosp))
@@ -71,8 +71,8 @@ if latest:
     cosy_cosp = 1.0 - 2.0 * (y * y + z * z)
     yaw   = math.degrees(math.atan2(siny_cosp, cosy_cosp))
 
-    # ── Đồng hồ đo Euler ────────────────────────────────────────
-    st.subheader("Góc Euler  (tính từ Quaternion)")
+    # ── Euler Gauges ──────────────────────────────────────────────────────
+    st.subheader("Euler Angles (Calculated from Quaternion)")
 
     def _gauge(title: str, value: float, vmin: float, vmax: float, color: str):
         fig = go.Figure(go.Indicator(
@@ -100,32 +100,32 @@ if latest:
 
     st.divider()
 
-    # ── Số liệu tức thời ────────────────────────────────────────
-    st.subheader("Quaternion  (giá trị mới nhất)")
+    # ── Real-time Numerical Metrics ───────────────────────────────────────
+    st.subheader("Quaternion (Latest Values)")
     ca, cb, cc, cd = st.columns(4)
     ca.metric("W", f"{w:.5f}")
     cb.metric("X", f"{x:.5f}")
     cc.metric("Y", f"{y:.5f}")
     cd.metric("Z", f"{z:.5f}")
 
-    st.subheader("Gia tốc tuyến tính  (m/s²)")
+    st.subheader("Linear Acceleration (m/s²)")
     ca, cb, cc = st.columns(3)
     ca.metric("X", f"{lin.get('x', 0):.3f}")
     cb.metric("Y", f"{lin.get('y', 0):.3f}")
     cc.metric("Z", f"{lin.get('z', 0):.3f}")
 
-    st.subheader("Vector trọng lực  (m/s²)")
+    st.subheader("Gravity Vector (m/s²)")
     ca, cb, cc = st.columns(3)
     ca.metric("X", f"{grav.get('x', 0):.3f}")
     cb.metric("Y", f"{grav.get('y', 0):.3f}")
     cc.metric("Z", f"{grav.get('z', 0):.3f}")
 
 else:
-    st.info("⏳  Đang chờ dữ liệu từ cảm biến BNO055...")
+    st.info("⏳  Waiting for data from BME280 sensor...")
 
 st.divider()
 
-# ── Biểu đồ thời gian thực ─────────────────────────────────────────────
+# ── Real-time Charts ──────────────────────────────────────────────────────
 if snap["timestamps"]:
     times = [
         datetime.datetime.fromtimestamp(t).strftime("%H:%M:%S")
@@ -142,9 +142,9 @@ if snap["timestamps"]:
 
     col_l, col_r = st.columns(2)
 
-    # Quaternion
+    # Quaternion Chart
     with col_l:
-        st.subheader("Quaternion theo thời gian")
+        st.subheader("Quaternion over Time")
         fig_q = go.Figure()
         for name, data_y, color in [
             ("W", snap["quat"]["w"], "#FF6B6B"),
@@ -155,12 +155,12 @@ if snap["timestamps"]:
             fig_q.add_trace(go.Scatter(x=times, y=data_y, name=name,
                                         line=dict(color=color, width=1.5)))
         fig_q.update_layout(**layout_defaults, yaxis_range=[-1.1, 1.1],
-                             xaxis=axis_cfg, legend=legend_cfg)
+                            xaxis=axis_cfg, legend=legend_cfg)
         st.plotly_chart(fig_q, use_container_width=True)
 
-    # Gia tốc tuyến tính
+    # Linear Acceleration Chart
     with col_r:
-        st.subheader("Gia tốc tuyến tính theo thời gian  (m/s²)")
+        st.subheader("Linear Acceleration over Time (m/s²)")
         fig_a = go.Figure()
         for name, data_y, color in [
             ("X", snap["lin_accel"]["x"], "#FF6B6B"),
@@ -174,9 +174,9 @@ if snap["timestamps"]:
 
     col_l2, col_r2 = st.columns(2)
 
-    # Trọng lực
+    # Gravity Vector Chart
     with col_l2:
-        st.subheader("Vector trọng lực theo thời gian  (m/s²)")
+        st.subheader("Gravity Vector over Time (m/s²)")
         fig_g = go.Figure()
         for name, data_y, color in [
             ("X", snap["gravity"]["x"], "#FF6B6B"),
@@ -188,18 +188,18 @@ if snap["timestamps"]:
         fig_g.update_layout(**layout_defaults, xaxis=axis_cfg, legend=legend_cfg)
         st.plotly_chart(fig_g, use_container_width=True)
 
-    # Raw JSON
+    # Raw JSON Data Viewer
     with col_r2:
-        st.subheader("Dữ liệu thô (JSON)")
+        st.subheader("Raw Data (JSON)")
         if latest:
             st.json(latest, expanded=True)
 
 st.divider()
 st.caption(
-    f"Tự động làm mới mỗi **{config.REFRESH_INTERVAL_MS} ms** &nbsp;|&nbsp; "
-    "ESP32 BNO055 NDOF → AWS IoT Core → Dashboard"
+    f"Automatically refreshed every **{config.REFRESH_INTERVAL_MS} ms** &nbsp;|&nbsp; "
+    "ESP32 BME280 → AWS IoT Core → Dashboard"
 )
 
-# ── Tự động làm mới ─────────────────────────────────────────────────────
+# ── Auto Refresh Mechanism ────────────────────────────────────────────────
 time.sleep(config.REFRESH_INTERVAL_MS / 1000.0)
 st.rerun()

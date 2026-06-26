@@ -38,38 +38,26 @@
  * @brief I2C hardware defination
  */
 #include "driver_bme280_interface.h"
-#include "i2c_manager.h"
 
 #define BME280_ADDRESS      0x76
 
 static i2c_master_dev_handle_t bme280_handle = NULL;
 
-
 /**
  * @brief  interface iic bus init
- * @return status code
- *         - 0 success
- *         - 1 iic init failed
- * @note   none
  */
 uint8_t bme280_interface_iic_init(void)
 {
-    i2c_add_device(BME280_ADDRESS, &bme280_handle);
-    ESP_LOGI(TAG_I2C, "BME280 sensor added to I2C bus!");
-
-    return 0;
+    // I currently don't have BME280 so I temporary use bmp280 name instead
+    return sensor_driver_interface_init(&bme280_handle, SENSOR_BMP280);
 }
 
 /**
  * @brief  interface iic bus deinit
- * @return status code
- *         - 0 success
- *         - 1 iic deinit failed
- * @note   none
  */
 uint8_t bme280_interface_iic_deinit(void)
 {   
-    return 0;
+    return sensor_driver_interface_deinit(&bme280_handle, SENSOR_BMP280);
 }
 
 /**
@@ -86,9 +74,7 @@ uint8_t bme280_interface_iic_deinit(void)
 uint8_t bme280_interface_iic_read(uint8_t addr, uint8_t reg, uint8_t *buf, uint16_t len)
 {
     uint8_t reg_addr = reg;
-    esp_err_t err = i2c_write_read_sensor(bme280_handle, &reg_addr, 1, buf, len);
-
-    return (err == ESP_OK) ? 0 : 1;
+    return (i2c_write_read_sensor(bme280_handle, &reg_addr, 1, buf, len) == ESP_OK) ? SENSOR_OK : SENSOR_READ_FAIL;
 }
 
 /**
@@ -111,9 +97,7 @@ uint8_t bme280_interface_iic_write(uint8_t addr, uint8_t reg, uint8_t *buf, uint
         write_buf[i + 1] = buf[i];
     }
 
-    esp_err_t err = i2c_write_sensor(bme280_handle, write_buf, len + 1);
-
-    return (err == ESP_OK) ? 0 : 1;
+    return (i2c_write_sensor(bme280_handle, write_buf, len + 1) == ESP_OK) ? SENSOR_OK : SENSOR_WRITE_FAIL;
 }
 
 /**
@@ -125,7 +109,7 @@ uint8_t bme280_interface_iic_write(uint8_t addr, uint8_t reg, uint8_t *buf, uint
  */
 uint8_t bme280_interface_spi_init(void)
 {
-    return 0;
+    return SENSOR_OK;
 }
 
 /**
@@ -137,7 +121,7 @@ uint8_t bme280_interface_spi_init(void)
  */
 uint8_t bme280_interface_spi_deinit(void)
 {   
-    return 0;
+    return SENSOR_OK;
 }
 
 /**
@@ -152,7 +136,7 @@ uint8_t bme280_interface_spi_deinit(void)
  */
 uint8_t bme280_interface_spi_read(uint8_t reg, uint8_t *buf, uint16_t len)
 {
-    return 0;
+    return SENSOR_OK;
 }
 
 /**
@@ -167,7 +151,7 @@ uint8_t bme280_interface_spi_read(uint8_t reg, uint8_t *buf, uint16_t len)
  */
 uint8_t bme280_interface_spi_write(uint8_t reg, uint8_t *buf, uint16_t len)
 {
-    return 0;
+    return SENSOR_OK;
 }
 
 /**

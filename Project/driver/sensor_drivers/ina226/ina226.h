@@ -23,7 +23,7 @@
  *            - 1 init failed
  * @note      none
  */
-uint8_t ina226_app_init(ina226_address_t addr_pin, double r);
+esp_err_t ina226_app_init(ina226_address_t addr_pin, double r);
 
 /**
  * @brief  basic example deinit
@@ -53,7 +53,7 @@ uint8_t ina226_app_read(float *mV, float *mA, float *mW);
  *         - 1 deinit failed
  * @note   none
  */
-uint8_t ina226_I2C_init(void);
+esp_err_t ina226_full_init(void);
 
 /**         
  * @brief  Converse voltage to battery capacity percents
@@ -76,4 +76,10 @@ void ina226_print_battery_percents(float voltage);
  */
 void ina226_app_test(void *pvParameter);
 
-
+/**         
+ * @brief  read voltage and converse it to battery percent
+ * @param[out] battery pointer to buffer
+ * @return 0 - OK
+ * @return 1 - Error
+ */
+uint8_t ina226_read_get_battery(float *battery);

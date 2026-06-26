@@ -41,6 +41,7 @@
 #include "freertos/task.h"
 #include "esp_log.h"
 #include "driver_bmp280.h"
+#include "sensor_driver_interface_manager.h"
 
 #ifdef __cplusplus
 extern "C"{

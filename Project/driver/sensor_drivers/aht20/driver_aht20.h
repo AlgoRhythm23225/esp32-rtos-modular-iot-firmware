@@ -40,6 +40,7 @@
 #include <stdio.h>
 #include <stdint.h>
 #include <string.h>
+#include <sensor_error.h>
 
 #ifdef __cplusplus
 extern "C"{

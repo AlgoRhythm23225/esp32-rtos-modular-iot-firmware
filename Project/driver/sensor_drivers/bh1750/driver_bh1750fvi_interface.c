@@ -35,7 +35,6 @@
  */
 
 #include "driver_bh1750fvi_interface.h"
-#include "i2c_manager.h"
 
 #define BH1750FVI_ADDRESS   0x23
 
@@ -43,29 +42,19 @@ static i2c_master_dev_handle_t bh1750_handle = NULL;
 
 /**
  * @brief  interface iic bus init
- * @return status code
- *         - 0 success
- *         - 1 iic init failed
  * @note   none
  */
 uint8_t bh1750fvi_interface_iic_init(void)
 {
-    i2c_add_device(BH1750FVI_ADDRESS, &bh1750_handle);
-    ESP_LOGI(TAG_I2C, "BH1750 sensor added to I2C bus!");
-    
-    return 0;
+    return sensor_driver_interface_init(&bh1750_handle, SENSOR_BH1750);
 }
 
 /**
  * @brief  interface iic bus deinit
- * @return status code
- *         - 0 success
- *         - 1 iic deinit failed
- * @note   none
  */
 uint8_t bh1750fvi_interface_iic_deinit(void)
 {
-    return 0;
+    return sensor_driver_interface_deinit(&bh1750_handle, SENSOR_BH1750);
 }
 
 /**
@@ -80,9 +69,7 @@ uint8_t bh1750fvi_interface_iic_deinit(void)
  */
 uint8_t bh1750fvi_interface_iic_write_cmd(uint8_t addr, uint8_t *buf, uint16_t len)
 {
-    esp_err_t err = i2c_write_sensor(bh1750_handle, buf, len);
-
-    return (err == ESP_OK) ? 0 : 1;
+    return (i2c_write_sensor(bh1750_handle, buf, len) == ESP_OK) ? SENSOR_OK : SENSOR_WRITE_FAIL;
 }
 
 /**
@@ -97,9 +84,7 @@ uint8_t bh1750fvi_interface_iic_write_cmd(uint8_t addr, uint8_t *buf, uint16_t l
  */
 uint8_t bh1750fvi_interface_iic_read_cmd(uint8_t addr, uint8_t *buf, uint16_t len)
 {
-    esp_err_t err = i2c_read_sensor(bh1750_handle, buf, len);
-
-    return (err == ESP_OK) ? 0 : 1;
+    return (i2c_read_sensor(bh1750_handle, buf, len) == ESP_OK) ? SENSOR_OK : SENSOR_READ_FAIL;
 }
 
 /**
