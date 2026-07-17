@@ -1,8 +1,0 @@
-{
-  "permissions": {
-    "allow": [
-      "Bash(grep -n \"writev\\\\|struct TransportInterface\\\\|} TransportInterface_t\" \"C:/Users/tranm/Downloads/IOT_PROJECT_GROUP2/aws-iot-device-sdk-embedded-C/libraries/standard/coreMQTT/source/interface/transport_interface.h\")",
-      "Read(//c/Users/tranm/Downloads/IOT_PROJECT_GROUP2/aws-iot-device-sdk-embedded-C/libraries/standard/coreMQTT/source/interface/**)"
-    ]
-  }
-}
