@@ -179,7 +179,6 @@ void ble_sensor_cmd_conn_all(uint16_t conn_handle, uint16_t attr_handle, bool co
     }
 }
 
-#define SEN_DELAY 3000
 void ble_notify_sensor_data(ble_cmd_recv_t notify_cmd, uint8_t data_len, task_param_t param, float* data, uint8_t data_size) {
     uint8_t notify_data[data_len];
     notify_data[0] = notify_cmd;
@@ -222,6 +221,30 @@ void ble_sensor_read(uint16_t conn_handle, uint16_t attr_handle, ble_cmd_recv_t 
             ble_gatts_notify_custom(conn_handle, attr_handle, om);
         }  
     }
+    else if (data == ALL_READ || data == ALL_STOP_READ) {
+        for (int i = 0; i < SENSOR_MAX; i++) {
+            if (data == ALL_READ) {
+                if(!is_reading[i]) {
+                    is_reading[i] = true;
+                }
+            }
+            else {
+                if(is_reading[i]) {
+                    is_reading[i] = false;
+                }
+            }
+            // Packet to notify
+            uint8_t notify_data[2];
+            notify_data[0] = i;
+            notify_data[1] = (is_reading[i] == true) ? 0x01 : 0x02;
+
+            // update status
+            struct os_mbuf *om = ble_hs_mbuf_from_flat(notify_data, sizeof(notify_data));
+            if (om) {
+                ble_gatts_notify_custom(conn_handle, attr_handle, om);
+            }  
+        }  
+    }
 }
 
 void mqtt_publish_on(uint16_t conn_handle, uint16_t attr_handle, ble_cmd_recv_t data) {
@@ -248,6 +271,10 @@ void mqtt_publish_on(uint16_t conn_handle, uint16_t attr_handle, ble_cmd_recv_t 
 bool is_thread_created = false;
 static int handle_sensor_ctrl_write(uint16_t attr_handle, uint16_t conn_handle, struct ble_gatt_access_ctxt *ctxt) {
     uint8_t data = ctxt->om->om_data[0];
+
+    uint16_t data_sample_rate;
+    memcpy(&data_sample_rate, &ctxt->om->om_data[2], sizeof(data_sample_rate));
+
     ESP_LOGI(TAG, "Command received: \"%d\"", data);
 
     if (data < SENSOR_MAX) {
@@ -293,6 +320,15 @@ static int handle_sensor_ctrl_write(uint16_t attr_handle, uint16_t conn_handle, 
 
     // Enable sensor continous read    
     ble_sensor_read(conn_handle, attr_handle, data);
+    printf("Got command %d\n", data);
+    printf("Got sample rate %d\n", data_sample_rate);
+    // Sample rate
+    if (data == SET_SAMPLE_RATE) {
+        uint8_t sensor_id = ctxt->om->om_data[1];
+        printf("Got sensor ID %d\n", sensor_id);
+        sensor_timer[sensor_id].period = pdMS_TO_TICKS(data_sample_rate);
+    }
+
 
     // Enable mqtt publish
     mqtt_publish_on(conn_handle, attr_handle, data);

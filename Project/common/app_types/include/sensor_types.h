@@ -3,6 +3,7 @@
 
 #include <stdint.h>
 #include <stdbool.h>
+#include "freertos/FreeRTOS.h"
 
 #define AHT20_ADDRESS       0x38
 #define BH1750FVI_ADDRESS   0x23
@@ -47,5 +48,11 @@ const char *sensor_id_to_str(sensor_id_t sensor_id);
 
 // State of MQTT publish
 extern bool is_mqtt_on;
+
+typedef struct {
+    TickType_t last_tick;
+    TickType_t period;
+} sensor_timer_t;
+extern sensor_timer_t sensor_timer[SENSOR_MAX];
 
 #endif

@@ -79,7 +79,7 @@ class BLEGuiApp:
         self.tab_chart = ChartTab(self.notebook, self)
 
         self.notebook.add(self.tab_provisioning, text="Provisioning")
-        self.notebook.add(self.tab_sensors, text="Sensors")
+        self.notebook.add(self.tab_sensors, text="Timers")
         self.notebook.add(self.tab_ota, text="OTA Update")
         self.notebook.add(self.tab_logs, text="Device Logs")
         self.notebook.add(self.tab_sensor_control, text="Sensors")
@@ -156,7 +156,7 @@ class BLEGuiApp:
         # ==============================================================
         # TAB 2: SENSORS 
         # ==============================================================
-        ttk.Label(self.tab_sensors, text="Sensors Manager", font=("Arial", 14, "bold")).pack(pady=15)
+        ttk.Label(self.tab_sensors, text="Real Time", font=("Arial", 14, "bold")).pack(pady=15)
 
         # -- KHUNG HIỂN THỊ BẢNG (GRID) --
         table_frame = ttk.Frame(self.tab_sensors)

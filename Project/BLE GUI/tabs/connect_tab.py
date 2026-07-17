@@ -88,18 +88,3 @@ class ConnectTab(tk.Frame):
                 self.app.update_status("Not connected")
         except Exception as e:
             self.app.update_status(f"Disconnect error: {e}")
-
-    # async def send_wifi_logic(self):
-    #     if not self.app.client or not self.app.client.is_connected:
-    #         self.app.update_status("Error: Not connected!")
-    #         return
-        
-    #     # SSID UUID
-    #     WRITE_UUID = "6fc254b7-6bc0-475b-b836-720d2287922d"
-    #     data = f"{self.ssid_entry.get()}".encode()
-    #     await self.app.client.write_gatt_char(WRITE_UUID, data)
-    #     # PASSWORD UUID
-    #     WRITE_UUID = "cfedbbc2-0598-4581-b1fd-b7d54fec0396"
-    #     data = f"{self.pass_entry.get()}".encode()
-    #     await self.app.client.write_gatt_char(WRITE_UUID, data)
-    #     self.app.update_status("Data sent!")

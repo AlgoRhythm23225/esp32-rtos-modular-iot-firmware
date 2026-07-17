@@ -52,3 +52,5 @@ const char *sensor_id_to_str(sensor_id_t sensor_id) {
 
 bool is_reading[SENSOR_MAX] = {false};
 bool is_mqtt_on = false;
+
+sensor_timer_t sensor_timer[SENSOR_MAX];

@@ -9,7 +9,7 @@
 #define TOPIC_OTA_CMD "devices/" AWS_DEVICE_ID "/ota/status"
 
 static const char* TAG = "sensor_manager";
-static uint8_t error_trigger_flag = SENSOR_OK;
+static uint8_t error_trigger_flag[SENSOR_MAX];
 
 // For reconnecting when sensor connection is lost
 typedef uint8_t (*sensor_i2c_bus_init_fn_t)(void);
@@ -67,7 +67,7 @@ static void sensor_json(char *buffer, uint8_t buffer_size, sensor_data_t sensor_
 
 // Initialize all sensors
 void sensor_init() {
-    for (int i = 0; i< SENSOR_MAX; i++) {
+    for (int i = 0; i < SENSOR_MAX; i++) {
         if (sensor_init_table[i]() == ESP_OK) {
             sensor_state[i].sensor_init_flag = true;
         }
@@ -75,6 +75,7 @@ void sensor_init() {
             sensor_state[i].sensor_init_flag = false;
         }
     }
+
 }
 
 // if the error is small, reset bus, if everything is broken, reset all
@@ -83,12 +84,12 @@ static void sensor_eror_check_and_set_flag(uint8_t dev_addr, sensor_id_t dev_id)
     if ((ret = i2c_master_probe(i2c_get_bus_handle(), dev_addr, 100)) != ESP_OK) {
         ESP_LOGE(TAG, "0x%02X got bus error, trying to fix...", dev_addr);
         sensor_state[dev_id].i2c_init_flag = false;
-        error_trigger_flag = SENSOR_BUS_ERR;
+        error_trigger_flag[dev_id] = SENSOR_BUS_ERR;
     }
     else {
         ESP_LOGE(TAG, "0x%02X GOT hardware error, trying to fix...", dev_addr);
         sensor_state[dev_id].sensor_init_flag = false;
-        error_trigger_flag = SENSOR_HARDWARE_ERR;
+        error_trigger_flag[dev_id] = SENSOR_HARDWARE_ERR;
     }
 }
 
@@ -98,7 +99,7 @@ static void sensor_find_error_and_fix_small() {
         if (sensor_state[i].i2c_init_flag == false) {
             sensor_deinit_table[i]();
             sensor_i2c_bus_init_table[i]();
-            error_trigger_flag = SENSOR_OK;
+            error_trigger_flag[i] = SENSOR_OK;
         }
     }
 }
@@ -109,16 +110,24 @@ static void sensor_find_error_and_fix_all() {
         if (sensor_state[i].sensor_init_flag == false) {
             sensor_deinit_table[i]();
             sensor_init_table[i]();
-            error_trigger_flag = SENSOR_OK;
+            error_trigger_flag[i] = SENSOR_OK;
         }
     }
 }
 
+// Sample Rate
+static bool can_read_now(TickType_t now, sensor_id_t sensor_id) {
+    return (now - sensor_timer[sensor_id].last_tick) >= sensor_timer[sensor_id].period;
+}
+
 // Read data
 static sensor_data_t sensor_read_all() {
+    TickType_t now = xTaskGetTickCount();
     sensor_data_t sensor_data = {0};
+
     // Humidity
-    if (is_reading[SENSOR_AHT20]) {
+    if (is_reading[SENSOR_AHT20] && can_read_now(now, SENSOR_AHT20)) {
+        sensor_timer[SENSOR_AHT20].last_tick = now;
         if (aht20_app_read_hum(&sensor_data.humidity) != ESP_OK) {
             sensor_data.humidity = 0;
             sensor_eror_check_and_set_flag(AHT20_ADDRESS, SENSOR_AHT20);
@@ -127,7 +136,8 @@ static sensor_data_t sensor_read_all() {
     }
 
     // Lux
-    if (is_reading[SENSOR_BH1750]) {
+    if (is_reading[SENSOR_BH1750] && can_read_now(now, SENSOR_BH1750)) {
+        sensor_timer[SENSOR_BH1750].last_tick = now;
         if (bh1750fvi_basic_read(&sensor_data.lux) != ESP_OK) {
             sensor_data.lux = 0;
             sensor_eror_check_and_set_flag(BH1750FVI_ADDRESS, SENSOR_BH1750);
@@ -136,7 +146,8 @@ static sensor_data_t sensor_read_all() {
     }
     
     // Temperature + pressure
-    if (is_reading[SENSOR_BMP280]) {
+    if (is_reading[SENSOR_BMP280] && can_read_now(now, SENSOR_BMP280)) {
+        sensor_timer[SENSOR_BMP280].last_tick = now;
         if (bmp280_app_read(&sensor_data.temperature, &sensor_data.pressure) != ESP_OK) {
             sensor_data.temperature = 0;
             sensor_data.pressure = 0;
@@ -149,7 +160,8 @@ static sensor_data_t sensor_read_all() {
     }
 
     // Accelarate
-    if (is_reading[SENSOR_BNO055]) {
+    if (is_reading[SENSOR_BNO055] && can_read_now(now, SENSOR_BNO055)) {
+        sensor_timer[SENSOR_BNO055].last_tick = now;
         if (bno055_accel_read(&sensor_data.accel) != ESP_OK) {
             sensor_data.accel = 0;
             sensor_eror_check_and_set_flag(BNO055_ADDRESS, SENSOR_BNO055);
@@ -158,7 +170,8 @@ static sensor_data_t sensor_read_all() {
     }
 
     // Battery
-    if (is_reading[SENSOR_INA226]) {
+    if (is_reading[SENSOR_INA226] && can_read_now(now, SENSOR_INA226)) {
+        sensor_timer[SENSOR_INA226].last_tick = now;
         if (ina226_read_get_battery(&sensor_data.battery) != ESP_OK) {
             sensor_data.battery = 0;
             sensor_eror_check_and_set_flag(INA226_ADDRESS, SENSOR_INA226);
@@ -183,6 +196,18 @@ void sensor_task(void *pvParameter) {
     // For sure
     i2c_init();
 
+    // Init Sample rate    
+    sensor_timer[SENSOR_AHT20].period = pdMS_TO_TICKS(1000);
+    sensor_timer[SENSOR_BH1750].period = pdMS_TO_TICKS(1000);
+    sensor_timer[SENSOR_BMP280].period = pdMS_TO_TICKS(1000);
+    sensor_timer[SENSOR_BNO055].period = pdMS_TO_TICKS(500);
+    sensor_timer[SENSOR_INA226].period = pdMS_TO_TICKS(30000);
+
+    // Init Flag
+    for (int i = 0; i < SENSOR_MAX; i++) {
+        error_trigger_flag[i] = SENSOR_OK;
+    }
+
     // Buffer for publish or notify
     char buffer[128];
     memset(buffer, 0, sizeof(buffer));
@@ -191,31 +216,34 @@ void sensor_task(void *pvParameter) {
     mqtt_publish_msg_t msg;
 
     while (1) {
-        switch (error_trigger_flag) {
-            case SENSOR_BUS_ERR:
-                sensor_find_error_and_fix_small();
-                break;
-            case SENSOR_HARDWARE_ERR:
-                sensor_find_error_and_fix_all();
-                break;
-            default:
-                // Unknown error trigger flag
-                break;
+        for (int i = 0; i < SENSOR_MAX; i++) {
+            if(error_trigger_flag[i] != SENSOR_OK) {
+                switch (error_trigger_flag[i]) {
+                    case SENSOR_BUS_ERR:
+                        sensor_find_error_and_fix_small();
+                        break;
+                    case SENSOR_HARDWARE_ERR:
+                        sensor_find_error_and_fix_all();
+                        break;
+                    default:
+                        // Unknown error trigger flag
+                        break;
+                }
+            }
         }
 
         // packaging JSON data
         sensor_get_data_json_packet(buffer, sizeof(buffer));
-
-        // add topic
-        strncpy(msg.topic, TOPIC_CMD, sizeof(msg.topic) - 1);
-        msg.topic[sizeof(msg.topic) - 1] = '\0';
-        // add payload from buffer
-        strncpy(msg.payload, buffer, sizeof(msg.payload) - 1);
-        msg.payload[sizeof(msg.payload) - 1] = '\0';
-        // add payload length
-        msg.payload_len = strlen(msg.payload);
-
+        
         if (is_mqtt_on) {
+            // add topic
+            strncpy(msg.topic, TOPIC_CMD, sizeof(msg.topic) - 1);
+            msg.topic[sizeof(msg.topic) - 1] = '\0';
+            // add payload from buffer
+            strncpy(msg.payload, buffer, sizeof(msg.payload) - 1);
+            msg.payload[sizeof(msg.payload) - 1] = '\0';
+            // add payload length
+            msg.payload_len = strlen(msg.payload);
             printf("%s\n", buffer);
             
             // send to publish queue
@@ -227,10 +255,8 @@ void sensor_task(void *pvParameter) {
         // // send to notify queue
         // if (xQueueSend(g_ble_send_queue, &msg, 0) != pdTRUE) {
         //     ESP_LOGE("Sensor_task", "BLE queue full - data droped !");
-        // }    
-        
-        // Polling rate
-        vTaskDelay(pdMS_TO_TICKS(SENSOR_PROCESS_LOOP_MS));
+        // }  
+        vTaskDelay(pdMS_TO_TICKS(10));  
     }
 }
 

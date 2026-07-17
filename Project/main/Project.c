@@ -54,12 +54,6 @@ void app_main(void)
     }
 
     ESP_ERROR_CHECK(storage_service_init());
-
-    i2c_init();
-
-    xTaskCreate(bno055_ndof_task, "bno055", 6144, NULL, 5, NULL);
-
-    // xTaskCreate(bmp280_app_test, "bme280", 6144, NULL, 5, NULL);
     
     ret = wifi_start();
     if (ret != ESP_OK) {

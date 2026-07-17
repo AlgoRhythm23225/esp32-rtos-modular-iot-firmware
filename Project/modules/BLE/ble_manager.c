@@ -359,48 +359,48 @@ static void ble_host_task(void *param)
 }
 
 //
-static void ble_notify_task(void *param)
-{
-    ESP_LOGI(TAG, "BLE Notify task started");
-    while (1)
-    {
-        if (s_active_conn_handle != 0xFFFF)
-        {
-            struct ble_gap_conn_desc desc;
-            if (ble_gap_conn_find(s_active_conn_handle, &desc) != 0)
-            {
-                s_active_conn_handle = 0xFFFF;
-                continue;
-            }
+// static void ble_notify_task(void *param)
+// {
+//     ESP_LOGI(TAG, "BLE Notify task started");
+//     while (1)
+//     {
+//         if (s_active_conn_handle != 0xFFFF)
+//         {
+//             struct ble_gap_conn_desc desc;
+//             if (ble_gap_conn_find(s_active_conn_handle, &desc) != 0)
+//             {
+//                 s_active_conn_handle = 0xFFFF;
+//                 continue;
+//             }
 
-            // Random value for testing
-            float temp = 27.8f;
+//             // Random value for testing
+//             float temp = 27.8f;
 
-            uint16_t year = 2026;
-            uint8_t month = 6;
-            uint8_t date = 24;
-            uint8_t hour = 13;
-            uint8_t minute = 42;
-            uint8_t second = 17;    
-            // sensor_manager_get_raw_data(&temp, &year, &month, &date, &hour, &minute, &second);
+//             uint16_t year = 2026;
+//             uint8_t month = 6;
+//             uint8_t date = 24;
+//             uint8_t hour = 13;
+//             uint8_t minute = 42;
+//             uint8_t second = 17;    
+//             // sensor_manager_get_raw_data(&temp, &year, &month, &date, &hour, &minute, &second);
 
-            const char* is_wifi = "OK";
-            const char* is_net = "OK";
+//             const char* is_wifi = "OK";
+//             const char* is_net = "OK";
 
-            char payload[128];
-            int len = snprintf(payload, sizeof(payload),
-                               "{\"Wifi\":%s,\"Net\":%s,\"T\":%.2f,\"Time\":\"%04d-%02d-%02d %02d:%02d:%02d\"}",
-                               is_wifi, is_net, temp, year, month, date, hour, minute, second);
+//             char payload[128];
+//             int len = snprintf(payload, sizeof(payload),
+//                                "{\"Wifi\":%s,\"Net\":%s,\"T\":%.2f,\"Time\":\"%04d-%02d-%02d %02d:%02d:%02d\"}",
+//                                is_wifi, is_net, temp, year, month, date, hour, minute, second);
 
-            if (sensor_profile_notify_data(s_active_conn_handle, (const uint8_t *)payload, len) != ESP_OK)
-            {
-                ESP_LOGW(TAG, "Connection lost silently, stop notifying.");
-                s_active_conn_handle = 0xFFFF;
-            }
-        }
-        vTaskDelay(pdMS_TO_TICKS(1000));
-    }
-}
+//             if (sensor_profile_notify_data(s_active_conn_handle, (const uint8_t *)payload, len) != ESP_OK)
+//             {
+//                 ESP_LOGW(TAG, "Connection lost silently, stop notifying.");
+//                 s_active_conn_handle = 0xFFFF;
+//             }
+//         }
+//         vTaskDelay(pdMS_TO_TICKS(1000));
+//     }
+// }
 
 // Init
 void ble_manager_init(void)
@@ -446,7 +446,7 @@ void ble_manager_init(void)
     nimble_port_freertos_init(ble_host_task);
 
     // notify task
-    xTaskCreate(ble_notify_task, "ble_notify", 4096, NULL, 5, NULL);
+    // xTaskCreate(ble_notify_task, "ble_notify", 4096, NULL, 5, NULL);
 }
 
 // Deinit

@@ -24,9 +24,12 @@ typedef enum {
     INA226_NOTIFY,
     SENSOR_MAX_NOTIFY, // Total number of notify cmd
 
+    SET_SAMPLE_RATE = 127,
     ALL_CONNECT = 128,
     ALL_DISCONNECT = 129,
     MQTT_PUBLISH = 130,
+    ALL_READ = 131,
+    ALL_STOP_READ = 132,
 } ble_cmd_recv_t;
 
 typedef struct {
